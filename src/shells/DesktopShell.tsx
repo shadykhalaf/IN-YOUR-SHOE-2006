@@ -123,7 +123,7 @@ export default function DesktopShell() {
     hadBrowser.current = hasBrowser;
   }, [hasBrowser, location.pathname, navigate]);
 
-  // 2:13 AM — PJOYS comes online once per session, a few seconds after browsing starts.
+  // 2:13 AM - PJOYS comes online once per session, a few seconds after browsing starts.
   useEffect(() => {
     if (booting || !hasBrowser || useSession.getState().pjoysPinged) return;
     const t = window.setTimeout(() => {
@@ -173,7 +173,7 @@ export default function DesktopShell() {
           <br />
           {cat ? `${formatCount(cat.products.length)} real products · snapshot ${cat.generatedAt.slice(0, 10)}` : 'Loading catalogue...'}
           <br />
-          IN YOUR SHOE — 2006 · built with Omar Akram
+          IN YOUR SHOE - 2006 · built with Omar Akram
         </div>
         <div className="win-layer">
           {windows.map((w) => (

@@ -11,7 +11,7 @@ export default defineConfig({
       injectRegister: false,
       includeAssets: ['favicon.svg', 'robots.txt', 'icons/apple-touch-icon.png'],
       manifest: {
-        name: 'In Your Shoe — 2006',
+        name: 'In Your Shoe - 2006',
         short_name: 'IYS 2006',
         description: 'today’s In Your Shoe catalogue inside a 2000s computer, with real checkout.',
         lang: 'en',

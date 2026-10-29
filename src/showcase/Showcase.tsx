@@ -103,7 +103,7 @@ export default function Showcase() {
   }, [record]);
 
   useEffect(() => {
-    document.title = 'IN YOUR SHOE — 2006 · showcase';
+    document.title = 'IN YOUR SHOE - 2006 · showcase';
     const tl = buildTimeline(stage.current!);
     const api = {
       play: () => {
@@ -472,7 +472,7 @@ export default function Showcase() {
             <p className="sc-end__small">2000s INTERNET CONCEPT</p>
             <p className="sc-end__name">OMAR AKRAM · 2026</p>
             <p className="sc-end__disc">
-              IN YOUR SHOE — 2006
+              IN YOUR SHOE - 2006
               <br />
               BUILT WITH OMAR AKRAM
             </p>
@@ -521,7 +521,7 @@ export default function Showcase() {
           <span>
             {t.toFixed(2)} / {DURATION.toFixed(1)}s
           </span>
-          <span className="sc-controls__note">IN YOUR SHOE — 2006 · built with Omar Akram</span>
+          <span className="sc-controls__note">IN YOUR SHOE - 2006 · built with Omar Akram</span>
         </div>
       )}
     </div>

@@ -1,10 +1,10 @@
 /**
  * COPY REGISTRY
  *
- * OFFICIAL — existing In Your Shoe language, re-verified on the public
+ * OFFICIAL - existing In Your Shoe language, re-verified on the public
  *            Egyptian storefront on 2026-09-29, with where it appears.
  *            Promotions are volatile: re-verify before each publish.
- * CONCEPT  — campaign lines for IN YOUR SHOE 2006 (built with Omar Akram, 2026).
+ * CONCEPT  - campaign lines for IN YOUR SHOE 2006 (built with Omar Akram, 2026).
  *            Never present these as IYS copy.
  */
 
@@ -36,7 +36,7 @@ export const officialSources = {
   collections: 'https://inyourshoe.com/collections/all-products',
 } as const;
 
-/** ── CONCEPT COPY — NOT OFFICIAL BRAND LANGUAGE ─────────────────────── */
+/** ── CONCEPT COPY - NOT OFFICIAL BRAND LANGUAGE ─────────────────────── */
 export const concept = {
   name: 'IYS INTERNET 2006',
   os: 'IYS OS',
@@ -77,7 +77,7 @@ export const concept = {
     /** Live checkout only: Shopify answered but couldn't take a line exactly as it is in the bag. */
     liveMismatch: 'IYS SAYS ONE OF UR ITEMS ISN’T AVAILABLE LIKE THAT RIGHT NOW (size or quantity). open it to check - ur bag is still here xo',
   },
-  /** IYS MAIL — real support mail to orders@inyourshoe.com. */
+  /** IYS MAIL - real support mail to orders@inyourshoe.com. */
   mail: {
     title: 'IYS MAIL',
     send: 'SEND MAIL :)',
@@ -113,7 +113,7 @@ export const concept = {
     used: 'SAVED IN MY BAG :)',
     note: 'Real IYS code. IYS applies its own terms at checkout.',
   },
-  /** IYS NEWSLETTER — the cool list. The code is revealed only after a real, confirmed signup. */
+  /** IYS NEWSLETTER - the cool list. The code is revealed only after a real, confirmed signup. */
   newsletter: {
     title: 'IYS NEWSLETTER',
     headline: 'JOIN THE COOL LIST :)',
@@ -147,7 +147,7 @@ export const concept = {
     placeholder: 'Odoo form will load here',
     open: 'OPEN FORM ↗',
   },
-  /** Easter-egg graffiti signature. Concept copy — never inside official IYS lines. */
+  /** Easter-egg graffiti signature. Concept copy - never inside official IYS lines. */
   catchy: {
     footer: 'Catchy was here XD',
     notFound: 'Catchy was here ;P',
@@ -161,7 +161,7 @@ export const concept = {
     '',
     'Every product, price and photo inside is real and public,',
     'copied from inyourshoe.com at the snapshot time shown in',
-    'Control Panel. Add to bag here — real checkout on inyourshoe.com.',
+    'Control Panel. Add to bag here - real checkout on inyourshoe.com.',
     '',
     '- Omar Akram, 2026',
     '',
@@ -176,7 +176,7 @@ export const concept = {
   counterNote: 'Fictional counter. Not analytics.',
   messenger: {
     pjoysOpener: 'u awake?',
-    /** Egyptian Franco-Arabic ("are you awake?") — period-accurate chat script. */
+    /** Egyptian Franco-Arabic ("are you awake?") - period-accurate chat script. */
     pjoysFranco: 'enta sa7y?',
     pjoysAfter: ['omg found these 4 the sleepover XD'],
     /** Early/mid-2000s IM voice (MSN/AIM era). Text only - the Messenger UI itself is unchanged. */
@@ -195,7 +195,7 @@ export const concept = {
   },
   /**
    * Y2K voice (team feedback, 2026-09): 2000s-internet slang used on CTAs and
-   * small UI moments. One slang beat per line, max — readable first.
+   * small UI moments. One slang beat per line, max - readable first.
    */
   y2k: {
     heroKicker: 'omg new drop just landed :)',
@@ -302,7 +302,7 @@ export const concept = {
     askMobile: 'CONTACT IYS ↗',
   },
   disclaimer: [
-    'IN YOUR SHOE — 2006.',
+    'IN YOUR SHOE - 2006.',
     'Our store, in a 2006 computer.',
     'Built with Omar Akram, 2026.',
     'Products, prices, stock and checkout are handled by In Your Shoe (inyourshoe.com).',
