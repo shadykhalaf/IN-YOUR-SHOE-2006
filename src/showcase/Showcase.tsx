@@ -103,7 +103,7 @@ export default function Showcase() {
   }, [record]);
 
   useEffect(() => {
-    document.title = 'IYS INTERNET 2006 - showcase (unofficial concept by Omar Akram)';
+    document.title = 'IN YOUR SHOE — 2006 · showcase';
     const tl = buildTimeline(stage.current!);
     const api = {
       play: () => {
@@ -160,7 +160,7 @@ export default function Showcase() {
   return (
     <div className={`sc-root${record ? ' sc-root--record' : ''}`}>
       <div className="sc-frame" style={record ? undefined : { transform: `scale(${scale})` }}>
-        <div className="sc-stage showcase" ref={stage} role="img" aria-label="IYS INTERNET 2006 showcase film - unofficial In Your Shoe concept by Omar Akram">
+        <div className="sc-stage showcase" ref={stage} role="img" aria-label="IN YOUR SHOE 2006 showcase film">
           {/* ── Desktop ─────────────────────────────────────────── */}
           <div className="sc-desk">
             <div className="sc-wall" data-sc="wall1" style={{ backgroundImage: `url("${SC.wallpaper}")` }} />
@@ -185,7 +185,7 @@ export default function Showcase() {
               <br />
               {formatCount(SC.total)} real IYS products
               <br />
-              unofficial concept
+              in a 2006 computer
             </div>
 
             <SWin id="portal" title="IN YOUR SHOE | The Coolest Apparel In Town! - IYS INTERNET" icon="internet" chrome="http://www.inyourshoe.com/" style={{ left: 12, top: 30, width: 516, height: 640 }} status={`${formatCount(SC.total)} products found.`}>
@@ -472,9 +472,9 @@ export default function Showcase() {
             <p className="sc-end__small">2000s INTERNET CONCEPT</p>
             <p className="sc-end__name">OMAR AKRAM · 2026</p>
             <p className="sc-end__disc">
-              UNOFFICIAL SPECULATIVE CONCEPT
+              IN YOUR SHOE — 2006
               <br />
-              NOT AFFILIATED WITH IN YOUR SHOE
+              BUILT WITH OMAR AKRAM
             </p>
           </div>
 
@@ -521,7 +521,7 @@ export default function Showcase() {
           <span>
             {t.toFixed(2)} / {DURATION.toFixed(1)}s
           </span>
-          <span className="sc-controls__note">Unofficial concept by Omar Akram - not affiliated with In Your Shoe</span>
+          <span className="sc-controls__note">IN YOUR SHOE — 2006 · built with Omar Akram</span>
         </div>
       )}
     </div>

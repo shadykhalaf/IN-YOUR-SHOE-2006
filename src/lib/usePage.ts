@@ -5,7 +5,7 @@ import { useBrowserStatus } from '../state/status';
 /** Sets the document title, the IYS INTERNET window title and the status line. */
 export function usePage(title: string, status?: string) {
   useEffect(() => {
-    document.title = `${title} - IYS INTERNET 2006 (unofficial concept)`;
+    document.title = `${title} - IYS INTERNET 2006`;
     useOS.getState().setTitle('internet', `${title} - IYS INTERNET`);
   }, [title]);
   useEffect(() => {

@@ -127,7 +127,7 @@ export function StartMenu() {
         </ul>
       </div>
       <div className="startmenu__foot">
-        <span>Unofficial concept · Omar Akram 2026</span>
+        <span>IN YOUR SHOE · 2006</span>
         <button type="button" className="btn btn--small" data-mi role="menuitem" onClick={() => { setStart(false); useOS.getState().showDialog({ kind: 'confirm-reset' }); }}>
           <Icon name="shutdown" size={16} /> Reset
         </button>

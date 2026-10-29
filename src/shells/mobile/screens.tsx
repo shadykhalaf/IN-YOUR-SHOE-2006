@@ -42,7 +42,7 @@ const PER = 24;
 
 function useTitle(t: string) {
   useEffect(() => {
-    document.title = `${t} - IYS MOBILE (unofficial concept)`;
+    document.title = `${t} - IYS MOBILE`;
   }, [t]);
 }
 
@@ -181,7 +181,7 @@ export function MHome({ open, active = true }: { open: (o: Overlay) => void; act
         <p className="m-news__note">{concept.y2k.newsletterNote}</p>
       </section>
       <p className="m-home__foot">
-        <b>{concept.y2k.wasHere}</b> · Unofficial concept by Omar Akram · not affiliated with In Your Shoe
+        <b>{concept.y2k.wasHere}</b>
       </p>
     </div>
   );

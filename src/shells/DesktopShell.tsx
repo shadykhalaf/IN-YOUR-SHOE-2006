@@ -158,7 +158,7 @@ export default function DesktopShell() {
         )}
       </header>
       <main className="desktop" ref={deskRef} aria-label="IYS OS desktop" onMouseDown={() => setStart(false)}>
-        <h1 className="sr-only">IYS INTERNET 2006 - an unofficial In Your Shoe concept desktop</h1>
+        <h1 className="sr-only">IYS INTERNET 2006 - In Your Shoe desktop</h1>
         <Wallpaper />
         <DesktopIcons />
         {catchy && !booting && (
@@ -172,7 +172,7 @@ export default function DesktopShell() {
           <br />
           {cat ? `${formatCount(cat.products.length)} real products · snapshot ${cat.generatedAt.slice(0, 10)}` : 'Loading catalogue...'}
           <br />
-          Unofficial concept by Omar Akram · not affiliated with In Your Shoe
+          IN YOUR SHOE — 2006 · built with Omar Akram
         </div>
         <div className="win-layer">
           {windows.map((w) => (

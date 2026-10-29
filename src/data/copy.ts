@@ -4,7 +4,7 @@
  * OFFICIAL — existing In Your Shoe language, re-verified on the public
  *            Egyptian storefront on 2026-09-29, with where it appears.
  *            Promotions are volatile: re-verify before each publish.
- * CONCEPT  — lines written for this unofficial concept (Omar Akram, 2026).
+ * CONCEPT  — campaign lines for IN YOUR SHOE 2006 (built with Omar Akram, 2026).
  *            Never present these as IYS copy.
  */
 
@@ -156,12 +156,12 @@ export const concept = {
   readme: [
     'you made a cool decision.',
     '',
-    'IYS INTERNET 2006 is an unofficial concept:',
-    'today’s In Your Shoe, running on a computer from 2006.',
+    'this is IN YOUR SHOE, running on a computer from 2006:',
+    'the real store, the whole catalogue, dressed up like it’s 2006.',
     '',
     'Every product, price and photo inside is real and public,',
     'copied from inyourshoe.com at the snapshot time shown in',
-    'Control Panel. Nothing here can place an order.',
+    'Control Panel. Add to bag here — real checkout on inyourshoe.com.',
     '',
     '- Omar Akram, 2026',
     '',
@@ -190,7 +190,7 @@ export const concept = {
     howTo: { title: 'How 2 use IYS Messenger :)', lines: ['1. pick a buddy', '2. type ur msg', '3. hit send', 'ttyl :)'] },
     about: {
       title: 'About IYS Messenger',
-      lines: ['IYS MESSENGER is part of IYS Retro V2, an unofficial concept by Omar Akram.', 'Buddies are real IYS collections. Chats are scripted concept copy: no real people, no bots.', 'Not affiliated with In Your Shoe.'],
+      lines: ['IYS MESSENGER is part of IN YOUR SHOE 2006.', 'Buddies are real IYS collections. Chats are scripted copy: no real people, no bots.'],
     },
   },
   /**
@@ -302,9 +302,9 @@ export const concept = {
     askMobile: 'CONTACT IYS ↗',
   },
   disclaimer: [
-    'UNOFFICIAL SPECULATIVE DIGITAL CONCEPT.',
-    'NOT AFFILIATED WITH IN YOUR SHOE.',
-    'DESIGN & DEVELOPMENT CONCEPT - OMAR AKRAM / 2026.',
-    'Product names, logo and photography belong to their respective rights holders and are used here for a non-commercial concept.',
+    'IN YOUR SHOE — 2006.',
+    'Our store, in a 2006 computer.',
+    'Built with Omar Akram, 2026.',
+    'Products, prices, stock and checkout are handled by In Your Shoe (inyourshoe.com).',
   ],
 } as const;
