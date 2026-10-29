@@ -1,7 +1,12 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { loadCatalogue } from './lib/catalogue/load';
+import { applyEnter2006 } from './lib/enter2006';
 import { useMediaQuery } from './lib/motion';
+
+// Arrival from the real store's time-machine portal: seed the bag before the
+// shells render. Runs once (module scope), cannot throw, no-op without ?enter=2006.
+applyEnter2006();
 
 const DesktopShell = lazy(() => import('./shells/DesktopShell'));
 const MobileShell = lazy(() => import('./shells/MobileShell'));
