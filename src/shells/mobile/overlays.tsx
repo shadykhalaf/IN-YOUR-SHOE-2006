@@ -21,10 +21,10 @@ import { play, unlockAudio } from '../../lib/sound';
 import { collectionPath, productPath } from '../../lib/useBrowse';
 import { useShopQuery } from '../../lib/useShopQuery';
 import { itemCount, subtotal, useCart } from '../../state/cart';
+import { useFavorites } from '../../state/favorites';
 import { useOS } from '../../state/os';
 import { usePreferences } from '../../state/preferences';
 import { useClaimCenter } from './chrome';
-import { useCatchyEnabled, writeEnabled } from '../../features/catchy/storage';
 
 export function MBag({ close }: { close: () => void }) {
   const items = useCart((s) => s.items);
@@ -179,13 +179,21 @@ export function MMenu({ close, openOverlay }: { close: () => void; openOverlay: 
   const cat = useCatalogue();
   const navigate = useNavigate();
   const prefs = usePreferences();
-  const catchy = useCatchyEnabled();
+  const favs = useFavorites((st) => st.handles.length);
   useClaimCenter(null);
   return (
     <div className="m-page">
       <h1 className="m-h1">MENU</h1>
       <p className="m-meta">{concept.y2k.menuHint}</p>
       <ul className="m-menu">
+        {/* FAVS left the IYS MOBILE bar for GAMES: same /favorites screen, same saved list */}
+        <li>
+          <button type="button" onClick={() => { close(); navigate('/favorites'); }}>
+            <Icon name="favorites" size={24} />
+            <span>FAVS · MY FAVORITES</span>
+            <small>{favs} saved</small>
+          </button>
+        </li>
         <li>
           <button type="button" onClick={() => openOverlay('chat')}>
             <Icon name="messenger" size={24} />
@@ -240,10 +248,6 @@ export function MMenu({ close, openOverlay }: { close: () => void; openOverlay: 
       <label className="m-setting">
         <input type="checkbox" className="check" checked={prefs.crt} onChange={(e) => prefs.setCrt(e.target.checked)} />
         CRT filter
-      </label>
-      <label className="m-setting">
-        <input type="checkbox" className="check" checked={catchy} onChange={(e) => writeEnabled(e.target.checked)} />
-        Catchy on the home screen
       </label>
       <button type="button" className="btn" onClick={() => { prefs.reset(); useOS.getState().notify(concept.wallpaperUpdated); }}>
         Reset wallpaper

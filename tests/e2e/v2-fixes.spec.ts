@@ -20,6 +20,8 @@ test.describe('IYS Retro V2 fixes', () => {
 
   test('P3: Set as Wallpaper on a product photo fills the desktop (Stretch = cover); Center/Tile still work; persists', async ({ page }) => {
     await desktop(page, '/product/cereal-killer-pjoys');
+    // the full gallery (not the instant shell shown while the product's details download, which has no image menu)
+    await expect(browserWin(page).getByRole('button', { name: 'View full size' })).toBeVisible();
     await browserWin(page).locator('.gallery__stage').click({ button: 'right' });
     await page.getByRole('menuitem', { name: 'Set as Wallpaper' }).click();
     let wp = await wallpaper(page);
@@ -104,6 +106,7 @@ test.describe('IYS MESSENGER menus', () => {
     await expect(page.getByRole('menuitem', { name: 'New Conversation...' })).toBeFocused();
     await page.keyboard.press('ArrowRight');
     await expect(page.getByRole('menu', { name: 'Contacts' })).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: 'PJOYS' })).toBeFocused(); // → lands on the next menu's first item (one frame later)
     await page.keyboard.press('ArrowDown');
     await expect(page.getByRole('menuitem', { name: 'NEW STUFF' })).toBeFocused();
     await page.keyboard.press('Escape');

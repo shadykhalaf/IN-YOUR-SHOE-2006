@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { Icon } from '../../../components/os/Icon';
 import { Busy } from '../../../components/shop/Busy';
 import { Pagination } from '../../../components/shop/Pagination';
 import { Price } from '../../../components/shop/Price';
 import { RemoteImage } from '../../../components/shop/RemoteImage';
+import { FreshPicks, useSearchCombobox } from '../../../components/shop/SearchAssist';
 import { formatCount } from '../../../lib/catalogue/format';
 import { paginate } from '../../../lib/catalogue/query';
 import { usePage } from '../../../lib/usePage';
-import { productPath } from '../../../lib/useBrowse';
+import { collectionPath, productPath } from '../../../lib/useBrowse';
 import { useSearch } from '../../../lib/useSearch';
 
 const PER = 20;
@@ -16,6 +17,7 @@ const TRY = ['cairo', 'pjoys', 'hoodie', 'ceral', 'socks', 'kids', 'jeans', 'bla
 
 export default function Search() {
   const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
   const q = params.get('q') ?? '';
   const page = Number(params.get('page') ?? '1') || 1;
   const [typed, setTyped] = useState(q);
@@ -24,11 +26,29 @@ export default function Search() {
   const pg = results ? paginate(results, page, PER) : null;
   usePage(q ? `${q} - Search` : 'Search', pending ? 'Searching...' : results ? `${formatCount(results.length)} products found.` : 'Done.');
 
+  const run = (v: string) => {
+    const t = v.trim();
+    setParams(t ? { q: t } : {});
+  };
+  // suggestions while typing; a suggested search runs, a category / product opens (never picks a size, never adds to the bag)
+  const box = useSearchCombobox({
+    value: typed,
+    onChange: setTyped,
+    layout: 'popup',
+    onChoose: (c) => {
+      if (c.kind === 'term') {
+        setTyped(c.query);
+        run(c.query);
+      } else navigate(c.kind === 'product' ? productPath(c.handle) : collectionPath(c.handle));
+    },
+  });
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    const v = typed.trim();
-    setParams(v ? { q: v } : {});
+    box.close();
+    run(typed);
   };
+  // the box emptied (or never filled): FRESH PICKS instead of results
+  const showResults = Boolean(q) && typed.trim() !== '';
 
   return (
     <div className="page search">
@@ -40,10 +60,14 @@ export default function Search() {
           <label htmlFor="iys-search" className="sr-only">
             Search {cat ? formatCount(cat.products.length) : ''} products
           </label>
-          <input id="iys-search" className="input search__input" type="search" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder="e.g. cairo, pjoys, hoodie" autoComplete="off" data-autofocus />
+          <div className="suggest">
+            <input id="iys-search" className="input search__input" type="search" placeholder="e.g. cairo, pjoys, hoodie" data-autofocus {...box.inputProps} />
+            {box.panel}
+          </div>
           <button type="submit" className="btn btn--primary">
             Search
           </button>
+          {box.status}
         </div>
         <p className="search__hint">
           Searching {cat ? formatCount(cat.products.length) : '…'} real products by name, type, collection and tags. Typos are OK, and so is Arabic.{' '}
@@ -63,7 +87,9 @@ export default function Search() {
         </p>
       </form>
 
-      {q && pg && results && (
+      {!showResults && <FreshPicks variant="desktop" />}
+
+      {showResults && pg && results && (
         <section aria-label="Search results" className="results">
           <p className="results__meta">
             Results <b>{formatCount(pg.from)}</b> - <b>{formatCount(pg.to)}</b> of <b>{formatCount(pg.total)}</b> for <b dir="auto">{q}</b> ({(ms / 1000).toFixed(3)} seconds)
@@ -115,7 +141,7 @@ export default function Search() {
           <Pagination page={pg.page} pageCount={pg.pageCount} onPage={(n) => setParams({ q, page: String(n) })} label="Result pages" />
         </section>
       )}
-      {q && !results && (
+      {showResults && !results && (
         <p className="results__meta">
           <Busy inline label="Searching..." />
         </p>

@@ -14,10 +14,11 @@ const statusBox = (page: Page) =>
   });
 
 test.describe('IYS GAMES (mobile)', () => {
-  test('home launcher → folder → Snake with the D-pad; soft keys pause, BACK returns; status bar untouched', async ({ page }) => {
+  test('GAMES key → folder → Snake with the D-pad; soft keys pause, BACK returns; status bar untouched', async ({ page }) => {
     await boot(page);
     const s0 = await statusBox(page);
-    await page.getByRole('button', { name: /IYS GAMES/ }).first().click();
+    // the launcher is the IYS MOBILE bar's GAMES key now (the old home-screen tile is gone)
+    await page.getByRole('navigation', { name: 'IYS MOBILE bar' }).getByRole('button', { name: 'IYS GAMES, 6 games' }).click();
     await expect(page.locator('.m-title')).toHaveText('IYS MOBILE › GAMES');
     for (const t of ['PURBALE CATCHY', 'IYS TOWER', 'CATCHY CHOMP', 'IYS STACKS', 'CATCHY SNAKE', 'CATCHY INVADERS']) await expect(page.getByRole('button', { name: `PLAY ${t}` })).toBeVisible();
     await axe(page, '.m-content');
@@ -92,7 +93,7 @@ test.describe('IYS GAMES (mobile)', () => {
     test(`touch controls fit at ${width}px: no sideways scroll, real tap targets, play area visible`, async ({ page }) => {
       await page.setViewportSize({ width, height: 740 });
       await boot(page);
-      await page.getByRole('button', { name: /IYS GAMES/ }).first().click();
+      await page.getByRole('navigation', { name: 'IYS MOBILE bar' }).getByRole('button', { name: 'IYS GAMES, 6 games' }).click();
       for (const title of ['CATCHY SNAKE', 'IYS STACKS', 'CATCHY INVADERS', 'IYS TOWER']) {
         await page.getByRole('button', { name: `PLAY ${title}` }).click();
         await expect(game(page)).toBeVisible();

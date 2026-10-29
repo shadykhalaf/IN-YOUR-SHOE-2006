@@ -69,16 +69,26 @@ body:has(.m-splash) {
   gap: 8px;
 }
 /*
- * MENU (left) · 2006 / REAL IYS (centre) · MY BAG (right): the same glossy
- * chrome as the desktop top strip, phone-sized. Same overlay handlers as the
- * soft keys (one menu, one bag).
+ * MENU · IYS (left) · 2006 / REAL IYS (centre) · MY BAG (right): the same
+ * glossy chrome as the desktop top strip, phone-sized. Same overlay handlers
+ * as the soft keys (one menu, one bag); IYS goes home.
  */
 .m-realbar--nav {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 4px;
   height: 38px;
   padding: 0 8px 0 4px;
+}
+/* the side groups take what they need; the switch is centred in what's left */
+.m-realbar--nav .realswitch {
+  justify-self: center;
+}
+.m-topnav__start {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
 }
 .m-topkey {
   display: inline-flex;
@@ -115,9 +125,29 @@ body:has(.m-splash) {
   outline: 2px solid #ffe45c;
   outline-offset: 1px;
 }
-.m-topkey__mark {
-  width: auto;
-  height: 10px;
+/* MY BAG + IYS: the shortcut keys' glossy ice face (tokens.css); open bag = the keys' green "current" */
+.m-topkey--ice {
+  border-color: var(--ice-border);
+  background: var(--ice-face);
+  box-shadow: var(--ice-shadow);
+  color: var(--ice-ink);
+  text-shadow: none;
+}
+.m-topkey--ice:active,
+.m-topkey--ice[aria-expanded='true'] {
+  border-color: var(--ice-pressed-border);
+  background: var(--ice-pressed-face);
+  box-shadow: var(--ice-pressed-shadow);
+  color: var(--ice-pressed-ink);
+}
+.m-topkey--home {
+  padding: 0 7px;
+}
+/* the official IYS mark is a square with the letters across its middle: show just the letters */
+.m-topkey__iys {
+  width: 34px;
+  height: 12px;
+  object-fit: cover;
 }
 .m-topkey__badge {
   position: absolute;
@@ -128,15 +158,13 @@ body:has(.m-splash) {
   border: 1px solid #fff;
   border-radius: 8px;
   background: var(--iys-coral);
+  color: #fff;
   font-size: 10px;
   line-height: 13px;
   text-align: center;
 }
-/* below 400px: a tighter switch and "BAG"; below 375px: no IYS mark on MENU either */
-@media (max-width: 399px) {
-  .m-topkey__my {
-    display: none;
-  }
+/* below 440px: the tighter switch (room for IYS beside MENU, so MY BAG keeps its label); below 400px: "BAG"; below 375px: tighter keys */
+@media (max-width: 439px) {
   .m-realbar--nav .realswitch {
     gap: 5px;
     padding: 0 5px 0 2px;
@@ -146,14 +174,46 @@ body:has(.m-splash) {
     width: 18px;
   }
 }
+@media (max-width: 399px) {
+  .m-topkey__my {
+    display: none;
+  }
+}
 @media (max-width: 374px) {
   .m-topkey {
     padding: 0 6px;
     font-size: 11px;
   }
-  .m-topkey__mark,
-  .m-topkey__my {
-    display: none;
+  .m-topkey--home {
+    padding: 0 5px;
+  }
+}
+/* 320–359px: a compact switch and a smaller IYS mark, so MENU · IYS · switch · BAG never overlap */
+@media (max-width: 359px) {
+  .m-realbar--nav {
+    gap: 3px;
+    padding: 0 4px 0 3px;
+  }
+  .m-realbar--nav .realswitch {
+    gap: 4px;
+    padding: 0 4px 0 2px;
+    font-size: 10px;
+  }
+  .m-realbar--nav .realswitch__side--on {
+    padding: 2px 3px;
+  }
+  .m-realbar--nav .realswitch__track {
+    width: 14px;
+  }
+  .m-topkey {
+    padding: 0 5px;
+  }
+  .m-topkey--home {
+    padding: 0 4px;
+  }
+  .m-topkey__iys {
+    width: 28px;
+    height: 10px;
   }
 }
 .m-bar {
@@ -161,25 +221,14 @@ body:has(.m-splash) {
   border-bottom: 3px solid var(--grass);
   box-shadow: 0 1px 0 var(--grass-light);
 }
-/* the path title: same glossy bar, now a slim caption over the shop keys */
-.m-title {
-  padding: 3px 12px 0;
-  color: var(--sky-deep);
-  font-family: var(--system-font);
-  font-size: 12px;
-  font-weight: bold;
-  line-height: 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-/* SHOP ALL · SEARCH · FAVS · STORES · ✉ — glossy portal keys inside the bar */
+/* SHOP ALL · SEARCH · GAMES · STORES · ✉ — glossy portal keys, the bar's only row
+   (the path title .m-title is screen-reader text now: no caption line above the keys) */
 .m-bar__keys {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 0.8fr);
   gap: 4px;
   margin: 0;
-  padding: 3px 6px 5px;
+  padding: 5px 6px;
   list-style: none;
 }
 .m-bar__key {
@@ -192,11 +241,11 @@ body:has(.m-splash) {
   width: 100%;
   min-height: 44px;
   padding: 2px 1px;
-  border: 1px solid #9cc8f2;
+  border: 1px solid var(--ice-border);
   border-radius: 8px;
-  background: linear-gradient(#ffffff, #eaf5ff 48%, #d3e9ff 52%, #e4f2ff);
-  box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(0, 45, 100, 0.18);
-  color: var(--sky-deep);
+  background: var(--ice-face);
+  box-shadow: var(--ice-shadow);
+  color: var(--ice-ink);
   font-family: var(--system-font);
   font-size: 10px;
   font-weight: bold;
@@ -211,13 +260,13 @@ body:has(.m-splash) {
 }
 .m-bar__key:active,
 .m-bar__key[aria-current='page'] {
-  border-color: var(--grass-deep);
-  background: linear-gradient(#f3ffe9, var(--grass-pale));
-  box-shadow: inset 1px 1px 3px rgba(0, 60, 0, 0.25);
-  color: var(--grass-deep);
+  border-color: var(--ice-pressed-border);
+  background: var(--ice-pressed-face);
+  box-shadow: var(--ice-pressed-shadow);
+  color: var(--ice-pressed-ink);
 }
 .m-bar__key:focus-visible {
-  outline: 2px solid #ffe45c;
+  outline: 2px solid var(--ice-focus);
   outline-offset: 1px;
 }
 .m-bar__key--msg {
@@ -226,7 +275,7 @@ body:has(.m-splash) {
 @media (max-width: 340px) {
   .m-bar__keys {
     gap: 3px;
-    padding: 3px 4px 5px;
+    padding: 5px 4px;
   }
   .m-bar__key {
     font-size: 9px;
@@ -1091,40 +1140,6 @@ body:has(.m-splash) {
   font-size: 16px;
 }
 
-/* IYS GAMES launcher row on the home screen. */
-.m-gamesentry {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  min-height: 52px;
-  padding: 6px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  border-radius: 10px;
-  background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(222, 239, 255, 0.92));
-  box-shadow: 0 3px 8px rgba(0, 45, 100, 0.25);
-  color: var(--sky-deep);
-  font-family: var(--system-font);
-  text-align: left;
-}
-.m-gamesentry > span:nth-child(2) {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-}
-.m-gamesentry b {
-  font-size: 13px;
-}
-.m-gamesentry small {
-  color: #3c5f87;
-  font-size: 11px;
-}
-.m-gamesentry:active,
-.m-gamesentry:focus-visible {
-  outline: none;
-  border-color: var(--grass-deep);
-  background: linear-gradient(#f3ffe9, var(--grass-pale));
-}
 .m-games {
   padding: 0;
 }

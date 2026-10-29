@@ -516,8 +516,12 @@ function Pet({ mode }: { mode: Mode }) {
   );
 }
 
-/** CATCHY.EXE — the IYS 2006 desktop buddy (desktop) or home-screen companion (mobile). */
-export default function CatchyPet({ mode }: { mode: Mode }) {
+/**
+ * CATCHY.EXE — the IYS 2006 desktop buddy. Desktop only: IYS MOBILE has no
+ * Catchy (2026-10, the home screen is for the clothes), so the mobile mode is
+ * not mountable from outside; his games and art stay where they are.
+ */
+export default function CatchyPet({ mode }: { mode: Extract<Mode, 'desktop'> }) {
   return (
     <CatchyBoundary>
       <Pet mode={mode} />

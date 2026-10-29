@@ -255,7 +255,7 @@ test.describe('JOURNEY E (escape route): repeated presses that do nothing', () =
     const menu = (await page.getByRole('button', { name: 'MENU', exact: true }).boundingBox())!;
     await rage(page, menu.x + menu.width / 2, menu.y + menu.height / 2, 4);
     await page.goto('/search');
-    await w.getByRole('searchbox').first().fill('hoodie');
+    await w.getByRole('combobox', { name: /Search/ }).first().fill('hoodie');
     await page.waitForTimeout(2500);
     await expect(dialog(page)).toHaveCount(0);
   });

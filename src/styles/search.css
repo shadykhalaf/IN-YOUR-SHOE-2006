@@ -1,0 +1,222 @@
+/* ══ Search assistance ════════════════════════════════════════════════
+   Suggestions under the box while typing (a 2000s "suggest" list: plain
+   rows, group captions, the OS's own selection blue) and FRESH PICKS when
+   the box is empty. Desktop: a list floating under the IYS INTERNET search
+   box. IYS MOBILE: the same list in the page under the form, 44px rows,
+   never wider than the screen. Loaded with the component, not by /showcase. */
+
+.suggest {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+.suggest > .input {
+  flex: 1;
+  min-width: 0;
+}
+.suggest__pop {
+  border: 1px solid #7f9db9;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--system-font);
+  font-size: var(--fs-chrome);
+  text-align: left;
+}
+.suggest__pop--popup {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 1px);
+  left: 0;
+  right: 0;
+  max-height: min(430px, 62vh);
+  overflow-y: auto;
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.16);
+}
+.suggest__pop--inline {
+  margin: -4px 0 12px;
+  overflow: hidden;
+  border-color: #9cc8f2;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.suggest__understood {
+  padding: 4px 8px;
+  border-bottom: 1px solid #dfe7f2;
+  color: var(--grass-deep);
+}
+.suggest__head {
+  padding: 2px 8px;
+  border-top: 1px solid #dfe7f2;
+  background: linear-gradient(#f4f7fb, #e3ebf5);
+  color: var(--iys-blue);
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+}
+.suggest__list > [role='group']:first-child .suggest__head {
+  border-top: 0;
+}
+.suggest__opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+.suggest__pop--inline .suggest__opt {
+  min-height: 44px;
+  padding: 4px 10px;
+}
+.suggest__opt svg {
+  flex: none;
+}
+.suggest__opt[aria-selected='true'] {
+  background: var(--selection);
+  color: var(--selection-ink);
+}
+.suggest__opt[aria-selected='true'] * {
+  color: var(--selection-ink);
+}
+.suggest__text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: normal;
+}
+.suggest__note {
+  flex: none;
+  margin-left: auto;
+  color: var(--muted);
+  font-size: var(--fs-small);
+}
+.suggest__thumb {
+  position: relative;
+  flex: none;
+  width: 36px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background: #f4f3ef;
+}
+.suggest__pop--inline .suggest__thumb {
+  width: 40px;
+}
+.suggest__thumb img,
+.suggest__thumb .img-offline {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.suggest__thumb .img-offline {
+  font-size: 0;
+}
+.suggest__ptext {
+  display: grid;
+  min-width: 0;
+}
+.suggest__pname {
+  overflow: hidden;
+  color: var(--link);
+  font-weight: bold;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.suggest__pmeta {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+.suggest__out {
+  color: var(--sale);
+  font-size: var(--fs-small);
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.suggest__none {
+  padding: 8px;
+}
+
+/* ── FRESH PICKS 4 U (empty box) ── */
+.fresh {
+  max-width: 820px;
+  margin: 0 auto 12px;
+  text-align: left;
+}
+.fresh__grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+}
+@media (max-width: 900px) {
+  .fresh__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.fresh__sub,
+.m-fresh__sub {
+  margin: 4px 8px 0;
+  color: var(--iys-blue);
+  font-family: var(--system-font);
+  font-size: var(--fs-small);
+  letter-spacing: 0.06em;
+}
+.fresh__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 6px 8px 2px;
+  list-style: none;
+}
+.fresh__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  padding: 2px 8px;
+  border: 1px solid var(--ice-border);
+  border-radius: 999px;
+  background: var(--ice-face);
+  box-shadow: var(--ice-shadow);
+  color: var(--ice-ink);
+  font-family: var(--system-font);
+  font-size: var(--fs-small);
+  font-weight: bold;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.fresh__chip:visited {
+  color: var(--ice-ink);
+}
+.fresh__chip:hover,
+.fresh__chip:active {
+  border-color: var(--ice-pressed-border);
+  background: var(--ice-pressed-face);
+  color: var(--ice-pressed-ink);
+}
+.fresh__chip small {
+  color: var(--muted);
+  font-weight: normal;
+}
+
+/* IYS MOBILE: the same block as a home panel; chips are full touch targets */
+.m-fresh {
+  margin-top: 4px;
+}
+.m-fresh__sub {
+  margin: 10px 0 0;
+}
+.m-fresh .fresh__chips {
+  padding: 6px 0 0;
+}
+.m-fresh .fresh__chip {
+  min-height: 44px;
+  padding: 2px 12px;
+  font-size: 12px;
+}

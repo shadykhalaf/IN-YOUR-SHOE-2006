@@ -883,9 +883,10 @@
   }
 }
 
-/* ── Top strip doors: MENU (left) · MY BAG (right) ─────────────────────
-   Same chrome as the taskbar: the menu door is the coral IYS menu button,
-   MY BAG is a glossy taskbar-blue button with the desktop icon's badge. */
+/* ── Top strip doors: MENU · IYS (left) · MY BAG (right) ───────────────
+   Same chrome as the taskbar: the menu door is the coral IYS menu button;
+   IYS (home) and MY BAG wear the IYS MOBILE shortcut keys' glossy ice face
+   (tokens.css --ice-*), at the strip's own height. */
 .realbar--nav {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -895,6 +896,7 @@
 .realbar__side {
   display: flex;
   align-items: center;
+  gap: 6px;
   min-width: 0;
 }
 .realbar__side--end {
@@ -950,6 +952,38 @@
 }
 .topnav__caret {
   font-size: 9px;
+}
+.topnav--ice {
+  border-color: var(--ice-border);
+  background: var(--ice-face);
+  box-shadow: var(--ice-shadow);
+  color: var(--ice-ink);
+  text-shadow: none;
+}
+.topnav--ice:hover {
+  border-color: #fff;
+  background: var(--ice-face-hover);
+  box-shadow: var(--ice-shadow), 0 0 0 1px var(--sky-light), 0 0 6px rgba(127, 192, 247, 0.9);
+}
+.topnav--ice:active {
+  border-color: var(--ice-pressed-border);
+  background: var(--ice-pressed-face);
+  box-shadow: var(--ice-pressed-shadow);
+  color: var(--ice-pressed-ink);
+}
+.topnav--ice:focus-visible {
+  outline: 2px solid var(--ice-focus);
+  outline-offset: 1px;
+}
+.topnav--home {
+  gap: 4px;
+  padding: 0 7px;
+}
+/* the official IYS mark is a square with the letters across its middle: show just the letters */
+.topnav__iys {
+  width: 34px;
+  height: 12px;
+  object-fit: cover;
 }
 .topnav__badge {
   min-width: 16px;

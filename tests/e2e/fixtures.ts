@@ -21,11 +21,16 @@ export const test = base.extend<{ page: Page }>({
 });
 export { expect };
 
-/** Desktop without boot/welcome (session flags pre-set). */
+/**
+ * Desktop without boot/welcome (session flags pre-set), once IYS INTERNET itself is up: its
+ * "Loading IYS INTERNET..." window has the same name but no menu bar, and is swapped out when the app arrives.
+ */
 export async function desktop(page: Page, path = '/') {
   await page.addInitScript(() => sessionStorage.setItem('iys2006.session', JSON.stringify({ state: { bootSeen: true, welcomeSeen: true, pjoysPinged: true }, version: 1 })));
   await page.goto(path);
-  await expect(page.getByRole('dialog', { name: /IYS INTERNET/ })).toBeVisible();
+  const browser = page.getByRole('dialog', { name: /IYS INTERNET/ });
+  await expect(browser).toBeVisible();
+  await expect(browser.getByRole('menubar')).toBeVisible();
 }
 
 export async function axe(page: Page, include?: string) {

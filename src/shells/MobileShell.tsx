@@ -15,7 +15,7 @@ import { useOS } from '../state/os';
 import { usePjoysUnread, useSession } from '../state/preferences';
 import { FEATURES } from '../config/features';
 import storesData from '../data/stores.generated.json';
-import { gameMeta, type GameId } from '../games/registry';
+import { GAMES, gameMeta, type GameId } from '../games/registry';
 import { MBar, StatusBar, useCenterKey, type BarKey } from './mobile/chrome';
 import { MGames } from './mobile/games';
 import { MBag, MCamera, MChat, MFilters, MMenu } from './mobile/overlays';
@@ -115,9 +115,18 @@ export default function MobileShell() {
     if (path === to && !overlay) content.current?.scrollTo(0, 0);
     else navigate(to);
   };
+  /** IYS (top left): always the IYS MOBILE home, from any screen or overlay. No reload; bag, favorites and settings untouched. */
+  const goHome = () => {
+    play('click');
+    setOverlay(null);
+    setGame(null);
+    if (path === '/' && !location.search) content.current?.scrollTo(0, 0);
+    else navigate('/');
+  };
   let current: BarKey | null = null;
   if (overlay === 'chat') current = 'msg';
-  else if (!overlay) current = path === '/shop' ? 'shop' : path === '/search' ? 'search' : path === '/favorites' ? 'favs' : path === '/stores' ? 'stores' : null;
+  else if (overlay === 'games') current = 'games';
+  else if (!overlay) current = path === '/shop' ? 'shop' : path === '/search' ? 'search' : path === '/stores' ? 'stores' : null;
 
   const back = () => {
     play('click');
@@ -160,16 +169,20 @@ export default function MobileShell() {
         <StatusBar />
         <div className={`m-realbar${FEATURES.topNav ? ' m-realbar--nav' : ''}`}>
           {FEATURES.topNav && (
-            <button type="button" className="m-topkey m-topkey--menu" aria-label="IYS MENU" aria-expanded={overlay === 'menu'} onClick={() => toggle('menu')}>
-              <img className="m-topkey__mark" src={brand.markWhite} alt="" width={20} height={10} />
-              <span>MENU</span>
-            </button>
+            <div className="m-topnav__start">
+              <button type="button" className="m-topkey m-topkey--menu" aria-label="IYS MENU" aria-expanded={overlay === 'menu'} onClick={() => toggle('menu')}>
+                <span>MENU</span>
+              </button>
+              <button type="button" className="m-topkey m-topkey--ice m-topkey--home" aria-label="Go to IYS Retro home" title="IYS home" onClick={goHome}>
+                <img className="m-topkey__iys" src={brand.mark} alt="" width={34} height={12} />
+              </button>
+            </div>
           )}
           <RealSwitch />
           {FEATURES.topNav && (
             <button
               type="button"
-              className="m-topkey m-topkey--bag"
+              className="m-topkey m-topkey--ice m-topkey--bag"
               aria-expanded={overlay === 'bag'}
               aria-label={bag ? `MY BAG: ${bag} ${bag === 1 ? 'item' : 'items'}` : 'MY BAG: empty'}
               onClick={() => toggle('bag')}
@@ -188,9 +201,13 @@ export default function MobileShell() {
         <MBar
           title={title}
           current={current}
-          counts={{ shop: cat?.products.length, stores: storesData.storeCount }}
+          counts={{ shop: cat?.products.length, games: GAMES.length, stores: storesData.storeCount }}
           unread={unread}
           onKey={goKey}
+          onGames={() => {
+            play('click');
+            open('games');
+          }}
           onMessages={() => {
             play('click');
             open('chat');
@@ -211,7 +228,7 @@ export default function MobileShell() {
         {overlay === 'games' && <MGames game={game} setGame={setGame} close={() => setOverlay(null)} />}
         <div className="m-routes" hidden={Boolean(overlay)}>
           <Routes>
-            <Route path="/" element={<MHome open={open} active={!overlay} />} />
+            <Route path="/" element={<MHome />} />
             <Route path="/shop" element={<MList open={open} />} />
             <Route path="/collections/:handle" element={<MList open={open} />} />
             <Route path="/search" element={<MSearch />} />

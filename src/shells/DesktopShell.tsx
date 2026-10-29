@@ -13,7 +13,7 @@ import { Balloon, CRT, TransferDialog } from '../components/os/Overlays';
 import { Screensaver } from '../components/os/Screensaver';
 import { StartMenu } from '../components/os/StartMenu';
 import { Taskbar, useOnline } from '../components/os/Taskbar';
-import { TopBagButton, TopMenuButton } from '../components/os/TopNav';
+import { TopBagButton, TopHomeButton, TopMenuButton } from '../components/os/TopNav';
 import { FEATURES } from '../config/features';
 import { Window } from '../components/os/Window';
 import { Busy } from '../components/shop/Busy';
@@ -148,6 +148,7 @@ export default function DesktopShell() {
         {FEATURES.topNav && (
           <div className="realbar__side">
             <TopMenuButton />
+            <TopHomeButton />
           </div>
         )}
         <RealSwitch />

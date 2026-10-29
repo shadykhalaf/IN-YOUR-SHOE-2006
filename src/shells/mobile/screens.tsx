@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { Icon } from '../../components/os/Icon';
 import { VariantPicker } from '../../components/product/VariantPicker';
@@ -14,6 +14,7 @@ import { Pagination } from '../../components/shop/Pagination';
 import { Price, SaleBadge, StockNote } from '../../components/shop/Price';
 import { RemoteImage } from '../../components/shop/RemoteImage';
 import { EssentialLinks } from '../../components/shop/EssentialLinks';
+import { FreshPicks, useSearchCombobox } from '../../components/shop/SearchAssist';
 import { assets, brand } from '../../data/assets';
 import { concept, official, officialSources } from '../../data/copy';
 import storesData from '../../data/stores.generated.json';
@@ -33,9 +34,6 @@ import { useFavorites } from '../../state/favorites';
 import { usePreferences, useSession } from '../../state/preferences';
 import { play } from '../../lib/sound';
 import { useClaimCenter } from './chrome';
-import { useCatchyEnabled } from '../../features/catchy/storage';
-
-const CatchyPet = lazy(() => import('../../features/catchy/CatchyPet'));
 
 export type Overlay = 'bag' | 'camera' | 'chat' | 'menu' | 'filters' | 'games' | null;
 const PER = 24;
@@ -62,8 +60,12 @@ function MDropCard({ p }: { p: Product }) {
   );
 }
 
-export function MHome({ open, active = true }: { open: (o: Overlay) => void; active?: boolean }) {
-  const catchy = useCatchyEnabled();
+/**
+ * The IYS MOBILE home: welcome.htm, JUST DROPPED, IYS's own shelves. No
+ * mascot here (Catchy lives on the desktop only) and no games tile (GAMES is
+ * in the bar), so the clothes get the room.
+ */
+export function MHome() {
   const cat = useCatalogue();
   const navigate = useNavigate();
   const wp = usePreferences((s) => s.wallpaper);
@@ -142,19 +144,6 @@ export function MHome({ open, active = true }: { open: (o: Overlay) => void; act
           {concept.y2k.seeAllNew} ({formatCount(n('newest'))}) ›
         </Link>
       </section>
-      {catchy && active && (
-        <Suspense fallback={null}>
-          <CatchyPet mode="mobile" />
-        </Suspense>
-      )}
-      <button type="button" className="m-gamesentry" onClick={() => open('games')}>
-        <Icon name="games" size={32} />
-        <span>
-          <b>IYS GAMES</b>
-          <small>6 games starring Catchy</small>
-        </span>
-        <span aria-hidden="true">›</span>
-      </button>
       {shelves.map((sh) => (
         <section key={sh.handle} className="m-panel" aria-labelledby={`m-shelf-${sh.handle}`}>
           <h2 className="m-panel__title" id={`m-shelf-${sh.handle}`}>
@@ -248,6 +237,7 @@ export function MList({ open }: { open: (o: Overlay) => void }) {
 
 export function MSearch() {
   const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
   const q = params.get('q') ?? '';
   const [typed, setTyped] = useState(q);
   const { results, understood } = useSearch(q);
@@ -255,10 +245,29 @@ export function MSearch() {
   const pg = results ? paginate(results, page, PER) : null;
   const input = useRef<HTMLInputElement>(null);
   useTitle(q ? `${q} - Search` : 'Search');
-  useClaimCenter({ label: 'GO', run: () => setParams(typed.trim() ? { q: typed.trim() } : {}) });
+  const run = (v: string) => {
+    const t = v.trim();
+    setParams(t ? { q: t } : {});
+    input.current?.blur();
+  };
+  useClaimCenter({ label: 'GO', run: () => run(typed) });
+  useEffect(() => setTyped(q), [q]);
   useEffect(() => {
     if (!q) input.current?.focus();
   }, [q]);
+  // suggestions in the page under the box while typing; a suggested search runs, a category / product opens
+  const box = useSearchCombobox({
+    value: typed,
+    onChange: setTyped,
+    layout: 'inline',
+    onChoose: (c) => {
+      if (c.kind === 'term') {
+        setTyped(c.query);
+        run(c.query);
+      } else navigate(c.kind === 'product' ? productPath(c.handle) : collectionPath(c.handle));
+    },
+  });
+  const showResults = Boolean(q) && typed.trim() !== '' && !box.open;
   return (
     <div className="m-page">
       <form
@@ -266,26 +275,31 @@ export function MSearch() {
         role="search"
         onSubmit={(e) => {
           e.preventDefault();
-          setParams(typed.trim() ? { q: typed.trim() } : {});
-          input.current?.blur();
+          box.close();
+          run(typed);
         }}
       >
         <label htmlFor="m-q" className="m-h1">
           SEARCH
         </label>
         <div className="m-search__row">
-          <input ref={input} id="m-q" className="input" type="search" enterKeyHint="search" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder={concept.y2k.searchPlaceholder} />
+          <div className="suggest">
+            <input ref={input} id="m-q" className="input" type="search" enterKeyHint="search" placeholder={concept.y2k.searchPlaceholder} {...box.inputProps} />
+          </div>
           <button type="submit" className="btn btn--go">
             Go
           </button>
         </div>
+        {box.status}
       </form>
-      {q && !pg && (
+      {box.panel}
+      {!box.open && !showResults && <FreshPicks variant="mobile" />}
+      {showResults && q && !pg && (
         <p className="m-meta">
           <Busy inline label="Searching..." />
         </p>
       )}
-      {pg && (
+      {showResults && pg && (
         <>
           <p className="m-meta">
             {pg.total ? `${formatCount(pg.total)} results 4 ` : '0 results 4 '}

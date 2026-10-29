@@ -1,72 +1,79 @@
 import type { Page } from '@playwright/test';
 import { axe, expect, test } from './fixtures';
 
+/**
+ * IYS MOBILE has no Catchy (navigation pass, 2026-10-27): no character, no
+ * ledge, no bubbles, no sounds, nothing invisible over the shop, and his code
+ * never even loads on a phone. Desktop Catchy is covered by v2-catchy.spec.ts
+ * (and the desktop ↔ mobile resize by v2-nav.spec.ts); his games stay.
+ */
 async function boot(page: Page) {
   await page.addInitScript(() => sessionStorage.setItem('iys2006.session', JSON.stringify({ state: { bootSeen: true, welcomeSeen: true, pjoysPinged: true }, version: 1 })));
   await page.goto('/');
   await expect(page.locator('.m-status')).toBeVisible();
 }
-const pet = (page: Page) => page.locator('.cpet');
-const status = (page: Page) =>
-  page.evaluate(() => {
-    const r = document.querySelector('.m-status')!.getBoundingClientRect();
-    return [r.x, r.y, r.width, r.height, document.querySelector('.m-status')!.textContent];
+const CATCHY = '.cpet, .catchy-layer, .cpet__bubble, .cpet__menu, [aria-label="Catchy, IYS desktop buddy"]';
+/** Catchy's code (CatchyPet chunk) requested by the page, if ever. */
+function watchCatchyCode(page: Page) {
+  const hits: string[] = [];
+  page.on('request', (r) => {
+    if (/CatchyPet|catchy\.css|features\/catchy\/(CatchyPet|behaviour|movement|adapters)/.test(r.url())) hits.push(r.url());
   });
+  return hits;
+}
 
 for (const width of [320, 390, 430]) {
-  test(`Catchy on IYS Mobile home at ${width}px: fits, taps, hides away from home and comes back`, async ({ page }) => {
+  test(`JOURNEY 5 at ${width}px: Catchy never appears on IYS MOBILE (home, scroll, SEARCH, GAMES, home again)`, async ({ page }) => {
+    const code = watchCatchyCode(page);
     await page.setViewportSize({ width, height: 800 });
     await boot(page);
-    const s0 = await status(page);
-    await expect(pet(page)).toBeVisible();
-    const p = (await pet(page).boundingBox())!;
-    expect(p.height).toBeGreaterThanOrEqual(48);
-    expect(p.height).toBeLessThanOrEqual(64);
-    expect(p.x).toBeGreaterThanOrEqual(0);
-    expect(p.x + p.width).toBeLessThanOrEqual(width);
+    // well past his old first move (4 s) and bubble time
+    await page.waitForTimeout(5500);
+    await expect(page.locator(CATCHY)).toHaveCount(0);
+    // no leftover ledge: every home panel follows the one before at the same gap
+    const gaps = await page.evaluate(() => {
+      const panels = [...document.querySelectorAll<HTMLElement>('.m-home > section')];
+      return panels.slice(1).map((p, i) => Math.round(p.getBoundingClientRect().top - panels[i]!.getBoundingClientRect().bottom));
+    });
+    expect(gaps.length).toBeGreaterThan(1);
+    expect(Math.max(...gaps) - Math.min(...gaps)).toBeLessThanOrEqual(1);
+    // scroll the whole home: still nothing, and nothing over the shop where he used to stand
+    await page.locator('#m-main').evaluate((m) => m.scrollTo(0, m.scrollHeight));
+    await page.waitForTimeout(400);
+    await expect(page.locator(CATCHY)).toHaveCount(0);
+    const below = await page.evaluate(() => {
+      const r = document.querySelector('.m-panel--drop')!.getBoundingClientRect();
+      const el = document.elementFromPoint(r.left + r.width * 0.72, r.bottom + 24);
+      return el?.closest('.cpet, .catchy-layer') ? 'catchy' : 'ok';
+    });
+    expect(below).toBe('ok');
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
-    // never on top of the app shortcuts
-    for (const b of await page.locator('.m-bar__key, .m-gamesentry').all()) {
-      const r = (await b.boundingBox())!;
-      expect(p.y >= r.y + r.height || p.y + p.height <= r.y).toBe(true);
-    }
-    await page.getByRole('button', { name: 'Catchy, IYS desktop buddy' }).tap();
-    await expect(pet(page)).toHaveAttribute('data-catchy-state', /happy|wake/);
-    await expect(page.locator('.cpet__bubble')).toBeVisible();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    await page.locator('#m-main').evaluate((m) => m.scrollTo(0, 0));
     await axe(page, '.m-home');
-    // an app opens → Catchy steps away; home again → he's back
-    await page.getByRole('button', { name: 'SEARCH' }).click();
+    // apps and home again
+    await page.getByRole('navigation', { name: 'IYS MOBILE bar' }).getByRole('button', { name: 'SEARCH' }).click();
     await expect(page).toHaveURL(/\/search$/);
-    await expect(pet(page)).toHaveCount(0);
-    await page.getByRole('button', { name: '◀ BACK' }).click();
-    await expect(pet(page)).toBeVisible();
-    // overlays (MENU, BAG, GAMES) suspend him too
-    await page.getByRole('button', { name: 'MENU', exact: true }).click();
-    await expect(pet(page)).toHaveCount(0);
-    await page.getByRole('button', { name: '◀ BACK' }).click();
-    await expect(pet(page)).toBeVisible();
-    await page.getByRole('button', { name: /My Bag, 0 items/ }).click();
-    await expect(pet(page)).toHaveCount(0);
-    await page.getByRole('button', { name: /My Bag, 0 items/ }).click();
-    await expect(pet(page)).toBeVisible();
-    expect(await status(page)).toEqual(s0);
+    await expect(page.locator(CATCHY)).toHaveCount(0);
+    await page.getByRole('navigation', { name: 'IYS MOBILE bar' }).getByRole('button', { name: /IYS GAMES/ }).click();
+    await expect(page.getByRole('button', { name: 'PLAY CATCHY SNAKE' })).toBeVisible(); // his games are still here
+    await expect(page.locator(CATCHY)).toHaveCount(0);
+    await page.getByRole('button', { name: 'Go to IYS Retro home' }).click();
+    await expect(page.locator('.m-hero')).toBeVisible();
+    await page.waitForTimeout(4500);
+    await expect(page.locator(CATCHY)).toHaveCount(0);
+    expect(code, 'Catchy code requested on a phone').toEqual([]);
   });
 }
 
-test('MENU › Settings: Catchy can be turned off and stays off', async ({ page }) => {
+test('MENU › SETTINGS has no Catchy switch any more; a saved desktop choice is left alone', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('iys2006.catchy.enabled', 'false'));
   await boot(page);
-  await expect(pet(page)).toBeVisible();
   await page.getByRole('button', { name: 'MENU', exact: true }).click();
-  await page.getByRole('checkbox', { name: 'Catchy on the home screen' }).uncheck();
+  await expect(page.getByRole('heading', { name: 'SETTINGS' })).toBeVisible();
+  await expect(page.getByRole('checkbox', { name: /Catchy/i })).toHaveCount(0);
+  await expect(page.getByRole('checkbox', { name: /Sounds/ })).toBeVisible();
   await page.getByRole('button', { name: '◀ BACK' }).click();
-  await expect(page.locator('.m-hero')).toBeVisible();
-  await expect(pet(page)).toHaveCount(0);
-  await page.reload();
-  await expect(page.locator('.m-hero')).toBeVisible();
-  await expect(pet(page)).toHaveCount(0);
-  await page.getByRole('button', { name: 'MENU', exact: true }).click();
-  await page.getByRole('checkbox', { name: 'Catchy on the home screen' }).check();
-  await page.getByRole('button', { name: '◀ BACK' }).click();
-  await expect(pet(page)).toBeVisible();
+  await expect(page.locator(CATCHY)).toHaveCount(0);
+  // the desktop's own on/off is untouched by the phone
+  expect(await page.evaluate(() => localStorage.getItem('iys2006.catchy.enabled'))).toBe('false');
 });

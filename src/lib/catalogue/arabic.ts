@@ -263,3 +263,48 @@ export function bridgeSearch(cat: Catalogue, u: Understood, texts: Map<Product, 
 export function explain(u: Understood): string[] {
   return [...u.concepts.map((c) => CONCEPTS[c]?.label ?? c), ...u.words, ...(u.size ? [`size ${u.size}`] : [])];
 }
+
+/** One spelling per normalised Arabic key (the first one written in AR), shown back when completing. */
+const AR_SPELLING = new Map<string, string>();
+for (const k of Object.keys(AR)) {
+  const n = normalizeArabic(k.replace(/_/g, ' '));
+  if (!AR_SPELLING.has(n)) AR_SPELLING.set(n, k.replace(/_/g, ' '));
+}
+
+/** True when a single typed word (or two-word phrase) is already a word this lexicon knows. */
+export function isKnownWord(w: string): boolean {
+  const n = normalizeArabic(w);
+  if (ARABIC.test(n)) return Boolean(lookupArabic(n) ?? AR_NORM.get(n));
+  return n in FRANCO || n in CONCEPTS || n in ENGLISH;
+}
+
+/**
+ * Autocomplete for the lexicon: the words that start with `prefix` (Arabic,
+ * with or without ال / وال / بال; or Latin: Franco, concept and English words),
+ * one per concept, in lexicon order, never the prefix itself. Pure, static
+ * data only: e.g. "هود" → هودي (hoodie), "bant" → bantalon (pants).
+ */
+export function completeWord(prefix: string, limit = 3): { word: string; concept: string }[] {
+  const p = normalizeArabic(prefix);
+  if (!p) return [];
+  const out: { word: string; concept: string }[] = [];
+  const seen = new Set<string>();
+  const push = (word: string, concept: string) => {
+    if (out.length >= limit || seen.has(concept) || normalizeArabic(word) === p) return;
+    seen.add(concept);
+    out.push({ word, concept });
+  };
+  if (ARABIC.test(p)) {
+    const article = /^((?:و|ب|ف)?ال)(.+)$/.exec(p);
+    for (const [bare, art] of [[p, ''], ...(article ? [[article[2]!, article[1]!]] : [])] as [string, string][]) {
+      for (const [n, concept] of AR_NORM) if (n.startsWith(bare)) push(art + (AR_SPELLING.get(n) ?? n), concept);
+    }
+    return out;
+  }
+  if (p.length < 2) return out;
+  for (const dict of [ENGLISH_CONCEPTS, FRANCO, ENGLISH] as Record<string, string>[]) for (const [w, concept] of Object.entries(dict)) if (w.startsWith(p)) push(w, concept);
+  return out;
+}
+
+/** Concept ids as their own English words ("hoodie", "black", …), for completing Latin words. */
+const ENGLISH_CONCEPTS: Record<string, string> = Object.fromEntries(Object.keys(CONCEPTS).map((id) => [id, id]));

@@ -3,8 +3,8 @@ import { readFileSync } from 'node:fs';
 import { axe, expect, index, test } from './fixtures';
 
 /**
- * Conversion pass, IYS MOBILE: the bar (SHOP ALL · SEARCH · FAVS · STORES ·
- * MSG), the PJOYS marker instead of a popup, JUST DROPPED in the first
+ * Conversion pass, IYS MOBILE: the bar (SHOP ALL · SEARCH · GAMES · STORES ·
+ * MSG; FAVS moved into MENU in the 2026-10-27 navigation pass), the PJOYS marker instead of a popup, JUST DROPPED in the first
  * screen, welcome.htm minimize, size guide, bag extras and journeys B + C.
  */
 type P = { h: string; t: string; a?: number; o?: string[]; p?: number; sz?: [string, number, number?, number?][] };
@@ -20,15 +20,15 @@ const session = (page: Page, state: Record<string, unknown> = { bootSeen: true, 
 const stubStore = (page: Page) => page.route('https://inyourshoe.com/cart/**', (r) => r.fulfill({ status: 200, contentType: 'text/html', body: '<title>IYS (test stub)</title>' }));
 const bar = (page: Page) => page.getByRole('navigation', { name: 'IYS MOBILE bar' });
 
-test('the bar holds SHOP ALL · SEARCH · FAVS · STORES and MSG at its end; 44px keys; the old tiles are gone', async ({ page }) => {
+test('the bar holds SHOP ALL · SEARCH · GAMES · STORES and MSG at its end; 44px keys; the old tiles are gone', async ({ page }) => {
   await session(page);
   await page.goto('/');
   const keys = bar(page).locator('.m-bar__key');
   await expect(keys).toHaveCount(5);
   const labels = await keys.allInnerTexts();
-  expect(labels.map((l) => l.trim())).toEqual(['SHOP ALL', 'SEARCH', 'FAVS', 'STORES', 'MSG']);
+  expect(labels.map((l) => l.trim())).toEqual(['SHOP ALL', 'SEARCH', 'GAMES', 'STORES', 'MSG']);
   for (const k of await keys.all()) expect((await k.boundingBox())!.height).toBeGreaterThanOrEqual(44);
-  await expect(page.locator('.m-grid, .m-notify')).toHaveCount(0);
+  await expect(page.locator('.m-grid, .m-notify, .m-gamesentry')).toHaveCount(0);
   await axe(page, '.m-bar');
 });
 
@@ -263,7 +263,7 @@ test('escape route never fires from game taps on IYS MOBILE', async ({ page }) =
   await session(page);
   await page.goto('/');
   await page.getByRole('navigation', { name: 'Soft keys' }).getByRole('button', { name: 'MENU', exact: true }).click();
-  await page.getByRole('button', { name: /IYS GAMES/ }).click();
+  await page.getByRole('button', { name: 'IYS GAMES · 6 GAMES' }).click(); // MENU's entry (the bar's GAMES key is "IYS GAMES, 6 games")
   await page.getByRole('button', { name: 'PLAY CATCHY SNAKE' }).click();
   await page.locator('.game__cta').click();
   const pad = (await page.locator('.pad').first().boundingBox())!;

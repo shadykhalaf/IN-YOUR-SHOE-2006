@@ -4,20 +4,25 @@ import { Icon, type IconName } from '../../components/os/Icon';
 import { useBatteryState, type BatteryState } from '../../lib/battery';
 import { useNetworkMode } from '../../lib/network';
 
-/** The four shop doors that live in the IYS MOBILE bar (they used to be home-screen tiles). */
-export const BAR_KEYS: { id: 'shop' | 'search' | 'favs' | 'stores'; label: string; icon: IconName; to: string }[] = [
+/**
+ * The four doors in front of MSG in the IYS MOBILE bar. GAMES opens the one
+ * IYS GAMES screen (an overlay, like MENU and MY BAG); the others are routes.
+ * FAVS moved into MENU (FAVORITES), the old home-screen tiles are long gone.
+ */
+export const BAR_KEYS: { id: 'shop' | 'search' | 'games' | 'stores'; label: string; icon: IconName; to: string | null }[] = [
   { id: 'shop', label: 'SHOP ALL', icon: 'hanger', to: '/shop' },
   { id: 'search', label: 'SEARCH', icon: 'search', to: '/search' },
-  { id: 'favs', label: 'FAVS', icon: 'favorites', to: '/favorites' },
+  { id: 'games', label: 'GAMES', icon: 'games', to: null },
   { id: 'stores', label: 'STORES', icon: 'stores', to: '/stores' },
 ];
 export type BarKey = (typeof BAR_KEYS)[number]['id'] | 'msg';
 
 /**
- * The IYS MOBILE bar: the path title on top, then SHOP ALL · SEARCH · FAVS ·
- * STORES as glossy portal keys, and the PJOYS message at the very end as a
- * small envelope that only carries a marker while that message is unread.
- * Same 44px+ targets as the soft keys; labels are always visible.
+ * The IYS MOBILE bar: SHOP ALL · SEARCH · GAMES · STORES as glossy portal
+ * keys, and the PJOYS message at the very end as a small envelope that only
+ * carries a marker while that message is unread. Same 44px+ targets as the
+ * soft keys; labels are always visible. The path title ("IYS MOBILE ›
+ * SEARCH") is kept for screen readers only: the screen itself shows where u r.
  */
 export function MBar({
   title,
@@ -25,6 +30,7 @@ export function MBar({
   counts,
   unread,
   onKey,
+  onGames,
   onMessages,
 }: {
   title: string;
@@ -32,18 +38,20 @@ export function MBar({
   counts: Partial<Record<BarKey, number | null | undefined>>;
   unread: boolean;
   onKey: (to: string) => void;
+  onGames: () => void;
   onMessages: () => void;
 }) {
   return (
     <div className="m-bar">
-      <p className="m-title">{title}</p>
+      <p className="m-title sr-only">{title}</p>
       <nav className="m-bar__nav" aria-label="IYS MOBILE bar">
         <ul className="m-bar__keys">
           {BAR_KEYS.map((k) => {
             const n = counts[k.id];
+            const name = k.id === 'games' ? `IYS GAMES${n ? `, ${n} games` : ''}` : `${k.label}${n ? `, ${n} items` : ''}`;
             return (
               <li key={k.id}>
-                <button type="button" className="m-bar__key" aria-current={current === k.id ? 'page' : undefined} aria-label={`${k.label}${n ? `, ${n} items` : ''}`} onClick={() => onKey(k.to)}>
+                <button type="button" className="m-bar__key" aria-current={current === k.id ? 'page' : undefined} aria-label={name} onClick={() => (k.to ? onKey(k.to) : onGames())}>
                   <Icon name={k.icon} size={20} />
                   <span>{k.label}</span>
                 </button>

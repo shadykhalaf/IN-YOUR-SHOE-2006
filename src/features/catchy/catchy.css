@@ -254,49 +254,11 @@
   color: #fff;
 }
 
-/* ── mobile: a little ledge on the home screen ── */
-.catchy-layer--mobile {
-  position: relative;
-  inset: auto;
-  height: 64px;
-  z-index: auto;
-  overflow: visible;
-}
-.catchy-layer--mobile .cpet__hit {
-  touch-action: pan-y;
-}
-.catchy-layer--mobile .cpet__bubble {
-  max-width: 150px;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .cpet *,
   .cpet__fig {
     animation: none !important;
   }
-}
-.catchy-layer--mobile .cpet__bubble {
-  bottom: auto;
-  top: 8px;
-  left: calc(100% + 8px);
-  right: auto;
-}
-.catchy-layer--mobile .cpet__bubble.is-right {
-  left: auto;
-  right: calc(100% + 8px);
-}
-.catchy-layer--mobile .cpet__bubble::after {
-  top: 6px;
-  left: -12px;
-  right: auto;
-  border-top-color: transparent;
-  border-right-color: #1d3f6e;
-}
-.catchy-layer--mobile .cpet__bubble.is-right::after {
-  left: auto;
-  right: -12px;
-  border-right-color: transparent;
-  border-left-color: #1d3f6e;
 }
 .cpet__bubble--float {
   position: fixed;

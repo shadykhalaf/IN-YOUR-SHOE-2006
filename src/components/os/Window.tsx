@@ -57,6 +57,11 @@ export function Window({
     }
     play('open');
     requestAnimationFrame(() => {
+      // an app that finished loading after u moved on (another window, the top strip, the taskbar, a dialog)
+      // never pulls the focus back: it lands only where nothing else took it since the window was asked for
+      const now = document.activeElement;
+      const movedOn = now !== null && now !== document.body && now !== openers.get(win.id) && !el.contains(now);
+      if (useOS.getState().activeId !== win.id || movedOn) return;
       const target = el.querySelector<HTMLElement>('[data-autofocus]') ?? el;
       target.focus({ preventScroll: true });
     });
