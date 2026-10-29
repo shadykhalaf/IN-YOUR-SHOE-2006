@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { Icon } from '../../components/os/Icon';
 import { VariantPicker } from '../../components/product/VariantPicker';
 import { hasSizes, SizeChartView, SizeGuideButton } from '../../components/product/SizeGuide';
+import { useHasSizeChart } from '../../lib/sizeCharts';
 import { MoreLikeThis } from '../../components/shop/ProductCarousel';
 import { ESSENTIALS } from '../../data/essentials';
 import { ProductInfo } from '../../components/product/ProductInfo';
@@ -340,6 +341,7 @@ export function MSearch() {
 export function MProduct() {
   const { handle } = useParams();
   const s = useProductState(handle);
+  const hasSizeChart = useHasSizeChart(handle);
   const { indexed, p, variant, detail } = s;
   const [idx, setIdx] = useState(0);
   const [guide, setGuide] = useState(false);
@@ -384,7 +386,7 @@ export function MProduct() {
           <>
             <StockNote available={variant ? variant.available : p.available} />
             <VariantPicker p={p} selected={s.selected} onSelect={s.select} />
-            {hasSizes(p) && (
+            {hasSizes(p) && hasSizeChart === true && (
               <>
                 <SizeGuideButton onOpen={() => setGuide((g) => !g)} expanded={guide} controls="m-sizeguide" />
                 {guide && (

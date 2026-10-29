@@ -6,6 +6,7 @@ import { ProductInfo } from '../../../components/product/ProductInfo';
 import { QuantityPicker } from '../../../components/product/QuantityPicker';
 import { VariantPicker } from '../../../components/product/VariantPicker';
 import { hasSizes, SizeGuideButton } from '../../../components/product/SizeGuide';
+import { useHasSizeChart } from '../../../lib/sizeCharts';
 import { FavoriteButton } from '../../../components/shop/FavoriteButton';
 import { MoreLikeThis } from '../../../components/shop/ProductCarousel';
 import { PageLoading } from '../../../components/shop/PageLoading';
@@ -37,6 +38,7 @@ function openSizeGuide(handle: string, title: string, sourceUrl: string) {
 export default function Product() {
   const { handle } = useParams();
   const s = useProductState(handle);
+  const hasSizeChart = useHasSizeChart(handle);
   const navigate = useNavigate();
   // After a real add, offer the next step (per product, so it resets on navigation).
   const [addedHandle, setAddedHandle] = useState<string | null>(null);
@@ -106,7 +108,7 @@ export default function Product() {
           {/* SIZE GUIDE shares the compact Qty row: the purchase controls never move down for it. */}
           <div className="props__qtyrow">
             <QuantityPicker value={s.qty} onChange={s.setQty} />
-            {hasSizes(p) && <SizeGuideButton onOpen={() => openSizeGuide(p.handle, p.title, p.sourceUrl)} />}
+            {hasSizes(p) && hasSizeChart === true && <SizeGuideButton onOpen={() => openSizeGuide(p.handle, p.title, p.sourceUrl)} />}
           </div>
           <div className="props__buy">
             <button

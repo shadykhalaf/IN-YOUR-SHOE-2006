@@ -36,6 +36,36 @@ export function chartState(f: SizeChartFile, handle: string): Exclude<SizeChartS
   return images.length ? { status: 'found', images, checkedOn } : { status: 'none', checkedOn, gone: (f.notPublic ?? []).includes(handle) };
 }
 
+/** Pure: does this product actually have a published chart? (Mirrors the real store, which hides the button otherwise.) */
+export function hasChart(f: SizeChartFile, handle: string): boolean {
+  return (f.products[handle] ?? []).some((id) => Boolean(f.charts[id]));
+}
+
+/**
+ * Whether to show the SIZE GUIDE button at all: true only when a chart exists.
+ * null while the (small, cached) charts file loads — callers hide the button
+ * until it resolves, so it never flashes in only to show a "no chart" message.
+ */
+export function useHasSizeChart(handle: string | undefined): boolean | null {
+  const [has, setHas] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (!handle) {
+      setHas(false);
+      return;
+    }
+    let alive = true;
+    setHas(null);
+    loadSizeCharts().then(
+      (f) => alive && setHas(hasChart(f, handle)),
+      () => alive && setHas(false),
+    );
+    return () => {
+      alive = false;
+    };
+  }, [handle]);
+  return has;
+}
+
 export function useSizeChart(handle: string | undefined): SizeChartState {
   const [state, setState] = useState<SizeChartState>({ status: 'loading' });
   useEffect(() => {

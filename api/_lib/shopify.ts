@@ -144,7 +144,7 @@ const PRODUCTS = `query Products($after: String) @inContext(country: EG, languag
       id handle title descriptionHtml productType vendor tags createdAt publishedAt
       options { name optionValues { name } }
       images(first: 50) { nodes { id url width height altText } }
-      variants(first: 100) { nodes { id title availableForSale selectedOptions { name value } price { amount currencyCode } compareAtPrice { amount currencyCode } image { id } } }
+      variants(first: 100) { nodes { id title availableForSale selectedOptions { name value } price { amount currencyCode } compareAtPrice { amount currencyCode } image { id } countHold: metafield(namespace: "custom", key: "count_hold") { value } } }
     }
   }
 }`;
@@ -175,7 +175,18 @@ export interface SfProduct {
   publishedAt: string | null;
   options: { name: string; optionValues: { name: string }[] }[];
   images: { nodes: { id: string | null; url: string; width: number | null; height: number | null; altText: string | null }[] };
-  variants: { nodes: { id: string; title: string; availableForSale: boolean; selectedOptions: { name: string; value: string }[]; price: Money; compareAtPrice: Money | null; image: { id: string | null } | null }[] };
+  variants: { nodes: { id: string; title: string; availableForSale: boolean; selectedOptions: { name: string; value: string }[]; price: Money; compareAtPrice: Money | null; image: { id: string | null } | null; countHold?: { value: string | null } | null }[] };
+}
+
+/**
+ * A variant on a cycle-count hold (custom.count_hold) is paused for counting on
+ * the real store, so it must read as sold out here too. Truthy = held; 'false',
+ * '0', '' or absent = not held. (Requires the metafield to be exposed to the
+ * Storefront API; without exposure it reads null and nothing is held.)
+ */
+export function isCountHeld(mf: { value: string | null } | null | undefined): boolean {
+  const v = mf?.value?.trim().toLowerCase();
+  return Boolean(v) && v !== 'false' && v !== '0' && v !== 'no';
 }
 
 const gidNum = (gid: string | null | undefined) => {
@@ -208,7 +219,8 @@ export function toStorefrontJson(p: SfProduct) {
         option3: vals[2] ?? null,
         price: v.price.amount,
         compare_at_price: v.compareAtPrice?.amount ?? null,
-        available: v.availableForSale,
+        // A held variant (cycle count) reads as sold out, matching the real store.
+        available: v.availableForSale && !isCountHeld(v.countHold),
         featured_image: v.image?.id ? { id: gidNum(v.image.id) } : null,
       };
     }),
