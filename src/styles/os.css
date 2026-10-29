@@ -1,0 +1,972 @@
+/* ── Desktop ───────────────────────────────────────────────────────── */
+.desktop {
+  position: fixed;
+  inset: var(--realbar-h) 0 var(--taskbar-h) 0;
+  overflow: hidden;
+  background-color: var(--desktop);
+  user-select: none;
+}
+.wallpaper {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-desktop);
+  background-color: var(--desktop);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.wallpaper--stretch {
+  background-size: cover;
+}
+.wallpaper--center {
+  background-size: auto min(78%, 900px);
+}
+.wallpaper--tile {
+  background-size: 180px auto;
+  background-repeat: repeat;
+}
+/* Default composition: official FW27 campaign photo printed onto an IYS-blue
+   "desktop", the way people used to set a photo as their background. */
+.wallpaper--preset-fw27 {
+  background:
+    linear-gradient(180deg, rgba(6, 71, 142, 0) 60%, rgba(6, 71, 142, 0.55)),
+    var(--wp-photo) center 32% / cover no-repeat,
+    var(--desktop);
+}
+.wallpaper__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' shape-rendering='crispEdges'%3E%3Crect width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23000'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.desktop__icons {
+  position: absolute;
+  z-index: var(--z-icons);
+  top: 8px;
+  left: 6px;
+  bottom: 8px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(auto-fill, 80px);
+  grid-auto-columns: 92px;
+  gap: 2px 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.desktop__icons--right {
+  left: auto;
+  right: 8px;
+  grid-auto-flow: column;
+  direction: rtl;
+}
+.desktop__icons--right > li {
+  direction: ltr;
+}
+.dicon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 90px;
+  padding: 3px 2px;
+  border: 1px solid transparent;
+  background: none;
+  color: #fff;
+  font-family: var(--system-font);
+  font-size: var(--fs-small);
+  line-height: 1.2;
+  text-align: center;
+  text-shadow:
+    1px 1px 1px #000,
+    0 0 3px rgba(0, 0, 0, 0.6);
+}
+.dicon {
+  /* movable like a real desktop: pointer drags, no text selection / touch scroll */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.dicon.is-dragging {
+  position: relative;
+  z-index: 2;
+  cursor: grabbing;
+}
+.dicon__img {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  filter: drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.35));
+}
+.dicon__label {
+  padding: 0 2px;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: none;
+}
+.dicon:hover .dicon__label {
+  text-decoration: underline;
+}
+.dicon:focus-visible {
+  outline: none;
+}
+.dicon:focus-visible .dicon__label,
+.dicon[aria-current='true'] .dicon__label {
+  background: var(--selection);
+  outline: 1px dotted #fff;
+  text-shadow: none;
+}
+.dicon:focus-visible .dicon__img,
+.dicon[aria-current='true'] .dicon__img {
+  filter: drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.35)) sepia(1) hue-rotate(180deg) saturate(3) brightness(0.8);
+}
+.dicon__badge {
+  position: absolute;
+  margin: -6px 0 0 30px;
+  min-width: 17px;
+  padding: 0 4px;
+  border: 1px solid #fff;
+  background: var(--iys-coral);
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 15px;
+  text-shadow: none;
+}
+
+.desktop__stamp {
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+  z-index: var(--z-icons);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--fs-small);
+  text-align: right;
+  text-shadow: 1px 1px 1px #000;
+  line-height: 1.35;
+  pointer-events: none;
+}
+.desktop__stamp strong {
+  font-size: var(--fs-chrome);
+}
+.desktop__stamp a {
+  color: #fff;
+  pointer-events: auto;
+}
+
+/* ── Windows ───────────────────────────────────────────────────────── */
+.win-layer {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-windows);
+  pointer-events: none;
+}
+.win-layer > * {
+  pointer-events: auto;
+}
+.win {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--os-border);
+  border-radius: var(--radius-window) var(--radius-window) 0 0;
+  background: var(--frame-inactive);
+  padding: 0 3px 3px;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.45),
+    3px 4px 0 rgba(0, 0, 0, 0.22);
+  color: var(--ink);
+}
+.win.is-active {
+  background: var(--frame-active);
+}
+/* The window itself takes programmatic focus; its controls show focus instead. */
+.win:focus {
+  outline: none;
+}
+.win.is-maximized {
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+.titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: var(--titlebar-h);
+  margin: 0 -3px;
+  padding: 0 4px 0 6px;
+  border-radius: calc(var(--radius-window) - 1px) calc(var(--radius-window) - 1px) 0 0;
+  background: linear-gradient(var(--titlebar-inactive-top), var(--titlebar-inactive) 48%, var(--titlebar-inactive-bottom) 52%, var(--titlebar-inactive));
+  color: #eef2f8;
+  cursor: var(--cursor-default);
+  touch-action: none;
+}
+.is-maximized .titlebar {
+  margin: 0;
+  border-radius: 0;
+}
+.is-active .titlebar {
+  background: linear-gradient(var(--titlebar-active-top), #1f64b4 40%, var(--titlebar-active) 52%, var(--titlebar-active-bottom));
+  color: #fff;
+}
+.titlebar__icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+.titlebar__title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--fs-chrome);
+  font-weight: bold;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.45);
+}
+.titlebar__buttons {
+  display: flex;
+  gap: 2px;
+}
+.tbtn {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid #0a2a52;
+  border-radius: 2px;
+  background: linear-gradient(#78aee8, #3f7fcb 50%, #1e5fae 51%, #2f72c1);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.55);
+  color: #fff;
+}
+.win:not(.is-active) .tbtn {
+  background: linear-gradient(#c3cedd, #9fb0c7 50%, #8a9cb6 51%, #97a8c0);
+  border-color: #56657d;
+}
+.tbtn--close {
+  background: linear-gradient(#ffb0a8, #ff7d72 50%, #ff6060 51%, #e9504f);
+  border-color: #7c1717;
+}
+.win:not(.is-active) .tbtn--close {
+  background: linear-gradient(#e9c3c0, #d8a3a0 50%, #c98d8a 51%, #d19996);
+  border-color: #7d5b5a;
+}
+.tbtn:hover {
+  filter: brightness(1.12);
+}
+.tbtn:active {
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.45);
+}
+.tbtn:focus-visible {
+  outline: 1px dotted #fff;
+  outline-offset: -4px;
+}
+.tbtn svg {
+  width: 10px;
+  height: 10px;
+}
+.win__menubar {
+  display: flex;
+  gap: 0;
+  padding: 1px 2px;
+  background: var(--os-face);
+  border-bottom: 1px solid var(--os-shadow);
+  font-size: var(--fs-chrome);
+}
+.win__menubar span {
+  padding: 2px 7px;
+  color: var(--ink-2);
+}
+/* Interactive menu bar (IYS INTERNET): same look, real dropdowns. */
+.menubar__item {
+  position: relative;
+}
+.menubar__top {
+  /* 1px border + 1px/6px padding = same box as the decorative 2px/7px span */
+  padding: 1px 6px;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+}
+.menubar__top:hover,
+.menubar__top[aria-expanded='true'],
+.menubar__top:focus-visible {
+  outline: none;
+  background: var(--selection);
+  color: #fff;
+}
+.menubar .menubar__drop {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 20;
+}
+.menubar__drop button:disabled {
+  color: #9b988f;
+  background: none;
+}
+.win__body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--os-face);
+  overflow: hidden;
+}
+.win__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.statusbar {
+  display: flex;
+  gap: 2px;
+  min-height: 22px;
+  padding: 2px;
+  background: var(--os-face);
+  border-top: 1px solid var(--os-light);
+  font-size: var(--fs-small);
+  color: var(--ink-2);
+}
+.statusbar > * {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 6px;
+  border: 1px solid;
+  border-color: var(--os-shadow) var(--os-light) var(--os-light) var(--os-shadow);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.statusbar > .grow {
+  flex: 1;
+  min-width: 0;
+}
+.statusbar svg {
+  flex: none;
+}
+
+/* react-rnd resize handles: generous hit area, invisible */
+.win-rnd .rnd-handle {
+  z-index: 2;
+}
+
+/* ── Taskbar ───────────────────────────────────────────────────────── */
+.taskbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-taskbar);
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  height: var(--taskbar-h);
+  padding: 3px 0 3px 0;
+  border-top: 1px solid #6fa3dd;
+  background: linear-gradient(var(--taskbar-top), var(--taskbar) 14%, var(--taskbar) 86%, var(--taskbar-bottom));
+  user-select: none;
+}
+.start {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 0;
+  padding: 0 14px 0 8px;
+  border: 1px solid #7c1717;
+  border-left: 0;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(#ff9a93, #ff6f69 45%, #ff6060 55%, #e54848);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  color: #fff;
+  font-family: var(--system-font);
+  font-weight: bold;
+  font-size: 13px;
+  text-shadow: 1px 1px 0 rgba(90, 0, 0, 0.5);
+}
+.start img {
+  height: 15px;
+  width: auto;
+}
+.start[aria-expanded='true'] {
+  background: linear-gradient(#d84545, #ff6060);
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+/* DESKTOP: the same coral corner button, now "show desktop"; pressed while the desktop is shown. */
+.start--desktop {
+  text-transform: lowercase;
+}
+.start--desktop svg {
+  flex: none;
+}
+.start--desktop[aria-pressed='true'] {
+  background: linear-gradient(#d84545, #ff6060);
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+.start:focus-visible {
+  outline: 1px dotted #fff;
+  outline-offset: -4px;
+}
+.quicklaunch {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 0 4px;
+  border-right: 1px solid #0a3161;
+  box-shadow: 1px 0 0 #3a78c0;
+}
+.quicklaunch button {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: none;
+  padding: 0;
+}
+.quicklaunch button:hover {
+  border-color: #7fb0e6;
+  background: rgba(255, 255, 255, 0.12);
+}
+.tasks {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 3px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.task {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 168px;
+  min-width: 44px;
+  height: 100%;
+  padding: 0 8px;
+  border: 1px solid #0a3161;
+  border-radius: 2px;
+  background: linear-gradient(#4f8fd6, #2a6cb8 50%, #1f5fab);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-size: var(--fs-chrome);
+  text-align: left;
+}
+.task span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.task[aria-pressed='true'] {
+  background: linear-gradient(#123f78, #1b4f8e);
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.55);
+  font-weight: bold;
+}
+.task.is-flashing {
+  animation: task-flash 1.2s steps(1) 3;
+}
+@keyframes task-flash {
+  50% {
+    background: linear-gradient(#ffb070, #ff7d52);
+  }
+}
+.tray {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px 0 10px;
+  border-left: 1px solid #041f3f;
+  background: linear-gradient(#154f8f, var(--tray));
+  box-shadow: inset 1px 0 0 #2d6fb5;
+  color: #fff;
+  font-size: var(--fs-chrome);
+}
+.tray button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid transparent;
+  background: none;
+  color: #fff;
+}
+.tray button:hover {
+  border-color: #6ea3dd;
+}
+.tray button:focus-visible {
+  outline: 1px dotted #fff;
+  outline-offset: -2px;
+}
+.tray .clock {
+  width: auto;
+  min-width: 58px;
+  padding: 0 4px;
+  font-size: var(--fs-chrome);
+}
+.blink {
+  animation: blink 1.6s steps(1) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0.15;
+  }
+}
+
+/* ── Start menu ─────────────────────────────────────────────────────── */
+.startmenu {
+  position: fixed;
+  left: 0;
+  bottom: var(--taskbar-h);
+  z-index: var(--z-menu);
+  width: 300px;
+  max-height: calc(100vh - var(--taskbar-h) - 8px);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--os-border);
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+  background: #fff;
+  box-shadow: 3px 0 0 rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+.startmenu__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: linear-gradient(var(--titlebar-active-top), var(--titlebar-active) 60%, var(--titlebar-active-bottom));
+  color: #fff;
+  border-bottom: 2px solid var(--iys-coral);
+}
+.startmenu__head img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  padding: 5px;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  background: var(--iys-coral);
+}
+.startmenu__head strong {
+  display: block;
+  font-size: 14px;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+}
+.startmenu__head small {
+  font-size: var(--fs-small);
+  opacity: 0.9;
+}
+.startmenu__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 0;
+  overflow: auto;
+}
+.startmenu__col {
+  padding: 6px 0;
+  margin: 0;
+  list-style: none;
+}
+.startmenu__col + .startmenu__col {
+  background: #dfe9f6;
+  border-left: 1px solid #a6bddc;
+}
+.startmenu__col li > a,
+.startmenu__col li > button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 30px;
+  padding: 3px 10px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-size: var(--fs-chrome);
+  text-align: left;
+  text-decoration: none;
+}
+.startmenu__col li > a:hover,
+.startmenu__col li > button:hover,
+.startmenu__col li > a:focus-visible,
+.startmenu__col li > button:focus-visible {
+  background: var(--selection);
+  color: #fff;
+  outline: none;
+}
+.startmenu__col li > a b,
+.startmenu__col li > button b {
+  display: block;
+  font-weight: bold;
+}
+.startmenu__col small {
+  display: block;
+  font-size: 10px;
+  opacity: 0.75;
+}
+.startmenu__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: linear-gradient(var(--titlebar-active), var(--titlebar-active-bottom));
+  color: #fff;
+  font-size: var(--fs-small);
+}
+
+/* ── System dialogs ─────────────────────────────────────────────────── */
+.modal-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-dialog);
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.08);
+}
+.dialog {
+  width: min(430px, calc(100vw - 24px));
+  border: 1px solid var(--os-border);
+  border-radius: var(--radius-window) var(--radius-window) 0 0;
+  background: var(--frame-active);
+  padding: 0 3px 3px;
+  box-shadow: 4px 5px 0 rgba(0, 0, 0, 0.3);
+}
+.dialog .titlebar {
+  background: linear-gradient(var(--titlebar-active-top), #1f64b4 40%, var(--titlebar-active) 52%, var(--titlebar-active-bottom));
+  color: #fff;
+}
+.dialog__body {
+  display: flex;
+  gap: 14px;
+  padding: 16px 16px 12px;
+  background: var(--os-face);
+}
+.dialog__body p + p {
+  margin-top: 8px;
+}
+.dialog__msg {
+  font-size: var(--fs-body);
+}
+.dialog__big {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--iys-blue);
+}
+.dialog__actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px 14px;
+  background: var(--os-face);
+}
+
+/* ── Notification balloon ───────────────────────────────────────────── */
+.balloon {
+  position: fixed;
+  right: 12px;
+  bottom: calc(var(--taskbar-h) + 10px);
+  z-index: var(--z-balloon);
+  display: flex;
+  gap: 10px;
+  width: 290px;
+  padding: 10px 12px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  background: #ffffe1;
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.25);
+  color: #000;
+  text-align: left;
+  font-size: var(--fs-chrome);
+}
+.balloon::after {
+  content: '';
+  position: absolute;
+  right: 62px;
+  bottom: -11px;
+  border: 10px solid transparent;
+  border-top-color: #000;
+  border-bottom: 0;
+}
+.balloon::before {
+  content: '';
+  position: absolute;
+  right: 63px;
+  bottom: -9px;
+  z-index: 1;
+  border: 9px solid transparent;
+  border-top-color: #ffffe1;
+  border-bottom: 0;
+}
+.balloon__photo {
+  flex: none;
+  width: 58px;
+  height: 58px;
+  object-fit: cover;
+  border: 1px solid #7a93b6;
+  background: #fff;
+  padding: 2px;
+}
+.balloon strong {
+  display: block;
+  margin-bottom: 2px;
+}
+.balloon__close {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+/* ── Context menu ───────────────────────────────────────────────────── */
+.ctxmenu {
+  position: fixed;
+  z-index: var(--z-menu);
+  min-width: 200px;
+  padding: 2px;
+  margin: 0;
+  list-style: none;
+  border: 1px solid #6b6b6b;
+  background: #fbfbf9;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.22);
+  font-size: var(--fs-chrome);
+}
+.ctxmenu button,
+.ctxmenu a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 26px;
+  padding: 3px 20px 3px 8px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  text-align: left;
+  text-decoration: none;
+}
+.ctxmenu button:hover,
+.ctxmenu a:hover,
+.ctxmenu button:focus-visible,
+.ctxmenu a:focus-visible {
+  background: var(--selection);
+  color: #fff;
+  outline: none;
+}
+.ctxmenu .is-default {
+  font-weight: bold;
+}
+.ctxmenu hr {
+  margin: 2px 0;
+  border: 0;
+  border-top: 1px solid var(--os-shadow);
+  border-bottom: 1px solid #fff;
+}
+
+/* ── Offline banner ─────────────────────────────────────────────────── */
+.offline {
+  position: fixed;
+  left: 50%;
+  top: calc(var(--realbar-h) + 10px);
+  z-index: var(--z-critical);
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  border: 1px solid #000;
+  background: #ffffe1;
+  font-size: var(--fs-chrome);
+  font-weight: bold;
+}
+
+/* ── IYS 2006 ↔ REAL IYS (desktop strip + mobile row share the control) ── */
+.realbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-taskbar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--realbar-h);
+  border-bottom: 1px solid #6fa3dd;
+  background: linear-gradient(var(--taskbar-top), var(--taskbar) 40%, var(--taskbar-bottom));
+  box-sizing: border-box;
+}
+.realswitch {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 18px;
+  padding: 0 7px 0 3px;
+  border: 1px solid #0a2e5c;
+  border-radius: 2px;
+  background: linear-gradient(#2b6fc0, #0d4a92);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-family: var(--system-font);
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.realswitch__side--on {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 5px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.55);
+}
+.realswitch__side--on::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7dff9a;
+  box-shadow: 0 0 3px #7dff9a;
+}
+.realswitch__track {
+  position: relative;
+  width: 26px;
+  height: 6px;
+  border: 1px solid #041f45;
+  border-radius: 1px;
+  background: #062a59;
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+.realswitch__thumb {
+  position: absolute;
+  top: -5px;
+  left: -2px;
+  width: 9px;
+  height: 14px;
+  border: 1px solid #1d3f6e;
+  border-radius: 2px;
+  background: linear-gradient(#ffffff, #e2e0d8);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+  transition: left 90ms steps(3);
+}
+.realswitch:hover .realswitch__thumb,
+.realswitch:focus-visible .realswitch__thumb {
+  left: 4px;
+}
+.realswitch:active .realswitch__thumb {
+  left: 17px;
+}
+.realswitch:hover .realswitch__side:last-child {
+  text-decoration: underline;
+}
+.realswitch:focus-visible {
+  outline: 2px dotted #fff;
+  outline-offset: 1px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .realswitch__thumb {
+    transition: none;
+  }
+}
+
+/* ── Top strip doors: MENU (left) · MY BAG (right) ─────────────────────
+   Same chrome as the taskbar: the menu door is the coral IYS menu button,
+   MY BAG is a glossy taskbar-blue button with the desktop icon's badge. */
+.realbar--nav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 8px;
+  padding: 0 4px;
+}
+.realbar__side {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.realbar__side--end {
+  justify-content: flex-end;
+}
+.topnav {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 21px;
+  padding: 0 9px;
+  border: 1px solid #0a2e5c;
+  border-radius: 3px;
+  background: linear-gradient(#3a82d4, #1659a8 50%, #0d4a92);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-family: var(--system-font);
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.topnav:hover {
+  background: linear-gradient(#4b92e2, #1d66b8 50%, #11549f);
+}
+.topnav:active,
+.topnav[aria-expanded='true'] {
+  background: linear-gradient(#0d4a92, #1659a8);
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+.topnav:focus-visible {
+  outline: 1px dotted #fff;
+  outline-offset: 1px;
+}
+.topnav--menu {
+  border-color: #7c1717;
+  background: linear-gradient(#ff9a93, #ff6f69 45%, #ff6060 55%, #e54848);
+  text-shadow: 1px 1px 0 rgba(90, 0, 0, 0.5);
+}
+.topnav--menu:hover {
+  background: linear-gradient(#ffaba5, #ff7d77 45%, #ff6d6d 55%, #ee5555);
+}
+.topnav--menu:active,
+.topnav--menu[aria-expanded='true'] {
+  background: linear-gradient(#d84545, #ff6060);
+}
+.topnav--menu img {
+  height: 11px;
+  width: auto;
+}
+.topnav__caret {
+  font-size: 9px;
+}
+.topnav__badge {
+  min-width: 16px;
+  padding: 0 4px;
+  border: 1px solid #fff;
+  background: var(--iys-coral);
+  color: #fff;
+  font-size: 10px;
+  line-height: 13px;
+  text-align: center;
+  text-shadow: none;
+}
+.startmenu--top {
+  top: var(--realbar-h);
+  bottom: auto;
+  max-height: calc(100vh - var(--realbar-h) - var(--taskbar-h) - 8px);
+  border-top: 0;
+  border-bottom: 1px solid var(--os-border);
+  border-radius: 0 0 4px 4px;
+}

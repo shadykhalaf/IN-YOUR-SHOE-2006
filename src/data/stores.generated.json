@@ -1,0 +1,118 @@
+{
+ "generatedAt": "2026-09-29T10:57:35.793Z",
+ "source": "https://inyourshoe.com/pages/store-locations",
+ "storeCount": 10,
+ "stores": [
+  {
+   "name": "CITY STARS",
+   "address": "second floor - in front of New Balance",
+   "hours": [
+    "Sat-Wed: 10 AM - 11 PM",
+    "Thu-Fri: 10 AM - 12 AM"
+   ],
+   "phone": "01034472437",
+   "mapsUrl": "https://maps.app.goo.gl/XasG7KVEHKx8godXA",
+   "photoSourceUrl": "https://inyourshoe.com/cdn/shop/files/WhatsApp_Image_2025-12-23_at_22.20.50.jpg"
+  },
+  {
+   "name": "U VENUES",
+   "address": "Gate 1, B1 floor - in front of Beano's Cafe",
+   "hours": [
+    "Sat-Wed: 10 AM - 11 PM",
+    "Thu-Fri: 10 AM - 12 AM"
+   ],
+   "phone": "01050499463",
+   "mapsUrl": "https://maps.app.goo.gl/yVk5D2Co6srqEi7x8",
+   "photoSourceUrl": "https://inyourshoe.com/cdn/shop/files/Screenshot_from_2025-11-30_12-53-03.png"
+  },
+  {
+   "name": "City Centre Almazah Mall",
+   "address": "Ground floor - in front of Pandora",
+   "hours": [
+    "Sat-Wed: 10 AM - 11 PM",
+    "Thu-Fri: 10 AM - 12 AM"
+   ],
+   "phone": "01025073377",
+   "mapsUrl": "https://maps.app.goo.gl/AvrRC977a2mi7eTf9",
+   "photoSourceUrl": "https://inyourshoe.com/cdn/shop/files/PHOTO-2023-12-07-15-25-34_85844759-b2a6-4aa5-b36e-9afd3d87f760.jpg"
+  },
+  {
+   "name": "District 5",
+   "address": "D5 Mall, near gate B - in front of Happy Vision",
+   "hours": [
+    "Sat-Wed: 10 AM - 11 PM",
+    "Thu-Fri: 10 AM - 12 AM"
+   ],
+   "phone": null,
+   "mapsUrl": "https://maps.app.goo.gl/k7SyJBRDoDA9L4Hc8",
+   "photoSourceUrl": "https://inyourshoe.com/cdn/shop/files/WhatsApp_Image_2025-09-21_at_06.24.15.jpg"
+  },
+  {
+   "name": "OPEN AIR MALL",
+   "address": "Gate 4 - next to Seha pharmacy",
+   "hours": [
+    "Sat-Wed: 10 AM - 11 PM",
+    "Thu-Fri: 10 AM - 12 AM"
+   ],
+   "phone": "01029909037",
+   "mapsUrl": "https://maps.app.goo.gl/YA9yBcq7nEmxhFAG6",
+   "photoSourceUrl": "https://inyourshoe.com/cdn/shop/files/1000141396.jpg"
+  },
+  {
+   "name": "Mall of Egypt",
+   "address": "Ground floor, near C1 gate - next to Nile Eyewear",
+   "hours": [
+    "Sat*-Wed: 10 AM - 11 PM",
+    "Thu-Fri: 10 AM - 12 AM",
+    "*Saturday, 26th Sep: 10 AM - 7 PM"
+   ],
+   "phone": "01025076633",
+   "mapsUrl": "https://maps.app.goo.gl/kcyFKmquxAYq381p8",
+   "photoSourceUrl": "https://inyourshoe.com/cdn/shop/files/IMG_6789.heic"
+  },
+  {
+   "name": "The Yard Mall",
+   "address": "near ElRehab's gate 5 - in front of Pixi",
+   "hours": [
+    "Sat-Wed: 10 AM - 11 PM",
+    "Thu-Fri: 10 AM - 12 AM"
+   ],
+   "phone": "01025077442",
+   "mapsUrl": "https://maps.app.goo.gl/wNLvpM4QyRmGmhen7",
+   "photoSourceUrl": "https://inyourshoe.com/cdn/shop/files/yard_1.jpg"
+  },
+  {
+   "name": "City Centre Alexandria Mall",
+   "address": "in front of BabyShop",
+   "hours": [
+    "Sat-Wed: 10 AM - 11 PM",
+    "Thu-Fri: 10 AM - 12 AM"
+   ],
+   "phone": "01025077223",
+   "mapsUrl": "https://maps.app.goo.gl/hj7iAqhi9ohF4uzD8",
+   "photoSourceUrl": "https://inyourshoe.com/cdn/shop/files/CITY_ALEX_bc620aad-7802-402b-8e74-1db44ecdc1d2.jpg"
+  },
+  {
+   "name": "El-Gouna",
+   "address": "Abo Tig Marina - near Malu's Deli",
+   "hours": [
+    "Sat-Wed: 10 AM - 10 PM",
+    "Thu-Fri: 10 AM - 12 AM"
+   ],
+   "phone": "01025076766",
+   "mapsUrl": "https://maps.app.goo.gl/N8wTVCiv2okf3y5V6?g_st=ic",
+   "photoSourceUrl": "https://inyourshoe.com/cdn/shop/files/98dcb071-e53a-49a1-b01f-59570bad4639_7287938e-67c1-4381-afdf-9d616098c153.jpg"
+  },
+  {
+   "name": "The Wing Outlet",
+   "address": "ground floor - in front of The Mind Space",
+   "hours": [
+    "Sat-Wed: 10 AM - 11 PM",
+    "Thu-Fri: 10 AM - 12 AM"
+   ],
+   "phone": "01025077448",
+   "mapsUrl": "https://maps.app.goo.gl/ajcZqGExBaHvGGty8",
+   "photoSourceUrl": "https://inyourshoe.com/cdn/shop/files/PHOTO-2024-03-07-17-14-21_a9f54e37-4cf0-48f2-bb83-3eef0465bd17.jpg"
+  }
+ ]
+}

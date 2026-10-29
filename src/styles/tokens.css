@@ -1,0 +1,97 @@
+/*
+ * IYS OS — design tokens.
+ *
+ * Layer 1: an original mid-2000s desktop system (warm grey faces, bevels,
+ *          glossy two-tone title bars, hard 1px borders, tiny radii).
+ * Layer 2: the CURRENT In Your Shoe brand kit, verified on inyourshoe.com
+ *          (theme brand_kit, 2026-09-29): primary #FF6060, text #06478E,
+ *          secondary text #4B87C8. IYS blue drives title bars and the taskbar;
+ *          IYS coral is the "act" colour (close, add to bag, start button).
+ */
+:root {
+  /* brand (verified) */
+  --iys-coral: #ff6060;
+  --iys-blue: #06478e;
+  --iys-blue-2: #4b87c8;
+
+  /* Y2K sky + grass (team feedback 2026-09): cheerful blue/green screen mood.
+     Original values for IYS — no third-party wallpaper or theme is reused. */
+  --sky-deep: #0f56b3;
+  --sky: #2f86e0;
+  --sky-light: #7fc0f7;
+  --sky-pale: #e3f2ff;
+  --grass-deep: #186d10;
+  --grass: #2c9420;
+  --grass-light: #6fd145;
+  --grass-pale: #e6f8d8;
+  --hills: url('/iys/os/hills.svg');
+
+  /* OS faces + bevels */
+  --os-face: #e7e5df;
+  --os-face-2: #f3f2ee;
+  --os-light: #ffffff;
+  --os-shadow: #a7a49b;
+  --os-dark: #5f5c55;
+  --os-border: #0b2f5c;
+  --os-well: #ffffff;
+  --os-sunken: #d9d6ce;
+
+  /* title bars */
+  --titlebar-active-top: #3b83d4;
+  --titlebar-active: #06478e;
+  --titlebar-active-bottom: #083b75;
+  --titlebar-inactive-top: #a9b8cc;
+  --titlebar-inactive: #8193ad;
+  --titlebar-inactive-bottom: #74869f;
+  --frame-active: #1756a0;
+  --frame-inactive: #8a9bb3;
+
+  /* taskbar */
+  --taskbar-top: #1c5ea8;
+  --taskbar: #06478e;
+  --taskbar-bottom: #053a74;
+  --tray: #0a3a6f;
+
+  /* content */
+  --ink: #111111;
+  --ink-2: #3c3c3c;
+  --muted: #5e5e5e;
+  --link: #06478e;
+  --link-hover: #d8373a;
+  --visited: #6a2c8e;
+  --selection: #2f6fbf;
+  --selection-ink: #ffffff;
+  --status: #ecebe6;
+  --sale: #d0021b;
+  --ok: #1a7a2e;
+  --focus: #06478e;
+  --desktop: #1f5c9e;
+
+  /* type — period system stacks, no webfonts */
+  --system-font: Tahoma, Verdana, 'DejaVu Sans', 'Segoe UI', Geneva, Arial, sans-serif;
+  --content-font: Verdana, Tahoma, 'DejaVu Sans', Arial, sans-serif;
+  --mono-font: 'Lucida Console', 'Courier New', 'DejaVu Sans Mono', monospace;
+  --fs-chrome: 12px;
+  --fs-body: 13px;
+  --fs-small: 11px;
+
+  /* geometry */
+  --radius-window: 4px;
+  --radius-control: 3px;
+  --taskbar-h: 34px;
+  --realbar-h: 26px; /* the top strip: MENU · IYS 2006 ↔ REAL IYS · MY BAG */
+  --titlebar-h: 26px;
+
+  /* layers — one scale, no 999999 */
+  --z-desktop: 0;
+  --z-icons: 10;
+  --z-windows: 100; /* + per-window stacking order */
+  --z-taskbar: 5000;
+  --z-menu: 5100;
+  --z-balloon: 5200;
+  --z-dialog: 6000;
+  --z-critical: 7000;
+  --z-screensaver: 8000;
+  --z-tooltip: 9000;
+  --z-crt: 9500;
+}

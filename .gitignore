@@ -1,0 +1,15 @@
+node_modules/
+dist/
+out/
+.frames/
+.qa/
+.cache/
+*.log
+*.mp4
+*.mov
+test-results/
+playwright-report/
+blob-report/
+.qa-screens/
+dev-dist/
+.DS_Store

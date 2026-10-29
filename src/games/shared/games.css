@@ -1,0 +1,429 @@
+/* IYS GAMES — shared shell. Loaded only with the games chunks. */
+.game {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: linear-gradient(#eaf5ff, #cfe6fb);
+  font-family: var(--system-font);
+  color: var(--ink);
+}
+.game__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 5px 8px;
+  border-bottom: 1px solid #8fb6e0;
+  background: linear-gradient(#ffffff, #dcecfb);
+}
+.game__title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--sky-deep);
+}
+.game__hud {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  font-size: 11px;
+}
+.game__hud div {
+  display: flex;
+  gap: 4px;
+}
+.game__hud dt {
+  color: #3c5f87;
+}
+.game__hud dd {
+  margin: 0;
+  min-width: 2ch;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.game__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-left: auto;
+}
+.game__tools .btn {
+  min-width: 0;
+}
+.game__stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #0b2f5e;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.game__stage:focus-visible {
+  outline: 2px solid var(--iys-coral, #ff6060);
+  outline-offset: -2px;
+}
+.game__fit {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+.game__fit canvas {
+  display: block;
+  image-rendering: auto;
+}
+.game__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  background: rgba(6, 40, 90, 0.55);
+  overflow: auto;
+}
+.game__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 340px;
+  padding: 14px 18px;
+  border: 2px solid #fff;
+  border-radius: 12px;
+  background: linear-gradient(#ffffff, #e3f2ff);
+  box-shadow: 0 6px 18px rgba(0, 20, 60, 0.45);
+  text-align: center;
+}
+.game__big {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--sky-deep);
+  letter-spacing: 0.03em;
+}
+.game__intro {
+  font-size: 12px;
+  line-height: 1.4;
+}
+.game__intro p {
+  margin: 0 0 4px;
+}
+.game__final {
+  margin: 0;
+  font-size: 13px;
+}
+.game__new {
+  margin: 0;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #f4c430;
+  color: #4a2a00;
+  font-weight: 700;
+}
+.game__reward-hint {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #7a2e00;
+}
+.game__reward {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px;
+  border: 2px dashed var(--iys-coral);
+  border-radius: 8px;
+  background: #fff7ef;
+  font-size: 12px;
+}
+.game__reward p {
+  margin: 0;
+}
+.game__reward-title {
+  font-weight: 700;
+  color: #7a2e00;
+}
+.game__reward-code code {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1px solid #333;
+  background: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  user-select: all;
+}
+.game__reward-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+.game__reward-error {
+  color: #8a1010;
+}
+.game__cta {
+  min-width: 140px;
+  min-height: 34px;
+  font-weight: 700;
+}
+.game__help {
+  margin: 0;
+  padding: 4px 8px;
+  border-top: 1px solid #b7d3ef;
+  background: #f4f9ff;
+  font-size: 11px;
+  color: #2b4a6e;
+}
+/* Touch controls: on in the mobile shell, and on any coarse pointer. */
+.game__touch {
+  display: none;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-top: 1px solid #8fb6e0;
+  background: linear-gradient(#dcecfb, #c3dbf5);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.game__touch.is-on {
+  display: flex;
+}
+@media (pointer: coarse) {
+  .game__touch {
+    display: flex;
+  }
+}
+.pad {
+  display: grid;
+  place-items: center;
+  min-width: 48px;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid #1d3f6e;
+  border-radius: 10px;
+  background: linear-gradient(#ffffff, #dbe9f8 50%, #c4d8f0);
+  color: var(--sky-deep);
+  font: 700 14px var(--system-font);
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.pad:active {
+  background: linear-gradient(#c4d8f0, #e6f0fb);
+}
+.pad:focus-visible {
+  outline: 2px solid var(--iys-coral, #ff6060);
+  outline-offset: 1px;
+}
+.pad--wide {
+  flex: 1;
+  max-width: 120px;
+}
+.pad--go {
+  background: linear-gradient(#fff3d2, #f4c430);
+  color: #4a2a00;
+}
+.dpad {
+  display: grid;
+  grid-template: 'a up b' 40px 'left c right' 40px 'd down e' 40px / 52px 52px 52px;
+  gap: 2px;
+}
+.dpad .pad {
+  min-height: 0;
+  min-width: 0;
+}
+.dpad__up {
+  grid-area: up;
+}
+.dpad__down {
+  grid-area: down;
+}
+.dpad__left {
+  grid-area: left;
+}
+.dpad__right {
+  grid-area: right;
+}
+.game--compact .game__bar {
+  padding: 4px 6px;
+  gap: 3px 8px;
+}
+.game--compact .game__title {
+  display: none;
+}
+.game--compact .game__tools .btn {
+  min-height: 30px;
+  padding: 2px 8px;
+}
+.game--compact .game__help {
+  font-size: 10px;
+}
+
+/* ── IYS GAMES folder ── */
+.gfolder {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  background: #fff;
+  font-family: var(--system-font);
+}
+.gfolder__side {
+  flex: none;
+  width: 176px;
+  padding: 10px;
+  overflow: auto;
+  background: linear-gradient(#7aa6e8, #5583cf);
+}
+.gfolder__box {
+  margin-bottom: 10px;
+  border-radius: 6px 6px 0 0;
+  background: #d6e3fa;
+  font-size: 11px;
+}
+.gfolder__box h3 {
+  margin: 0;
+  padding: 5px 8px;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(90deg, #fff, #c6d7f7);
+  color: #0c3c8a;
+  font-size: 11px;
+}
+.gfolder__box ul,
+.gfolder__box p {
+  margin: 0;
+  padding: 6px 8px 8px;
+  list-style: none;
+}
+.gfolder__box li {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 1px 0;
+}
+.gfolder__box b {
+  font-variant-numeric: tabular-nums;
+}
+.gfolder__main {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding: 10px 12px 14px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
+    repeating-linear-gradient(45deg, #e3f2ff 0 8px, #fff 8px 16px);
+}
+.gfolder__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #b9d3f2;
+}
+.gfolder__head h2 {
+  margin: 0;
+  font-size: 15px;
+  color: var(--sky-deep);
+}
+.gfolder__head p {
+  margin: 0;
+  font-size: 11px;
+  color: #3c5f87;
+}
+.gfolder__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gtile {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  grid-template-rows: auto auto 1fr;
+  column-gap: 8px;
+  padding: 6px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+}
+.gtile:hover,
+.gtile:focus-within {
+  border-color: #7da2ce;
+  background: #e8f1fd;
+}
+.gtile__icon {
+  grid-row: 1 / 4;
+  width: 56px;
+  height: 56px;
+}
+.gtile__title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0c3c8a;
+}
+.gtile__blurb {
+  margin: 1px 0 4px;
+  font-size: 11px;
+  color: #34465c;
+}
+.gtile__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+.gtile__best {
+  color: #3c5f87;
+}
+.gtile__play {
+  min-width: 64px;
+  font-weight: 700;
+}
+.gfolder--compact {
+  flex-direction: column-reverse;
+  height: auto;
+  min-height: 100%;
+}
+.gfolder--compact .gfolder__side {
+  width: auto;
+}
+.gfolder--compact .gfolder__list {
+  grid-template-columns: 1fr;
+}
+.gfolder--compact .gtile__play {
+  min-height: 36px;
+  min-width: 84px;
+}
+
+/* Mobile game screen fills the content area between title and soft keys. */
+.m-gamescreen {
+  height: 100%;
+  min-height: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game *,
+  .gfolder * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* DOM games (Purbale Catchy): light stage that scrolls instead of a canvas. */
+.game__stage--dom {
+  overflow: auto;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.86)),
+    repeating-linear-gradient(45deg, #ffe3ef 0 10px, #fff4f8 10px 20px);
+  touch-action: manipulation;
+}

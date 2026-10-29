@@ -1,0 +1,52 @@
+{
+  "name": "iys-2000s-v2",
+  "version": "2.0.0",
+  "private": true,
+  "description": "IYS 2000s V2 — revised IYS INTERNET 2006 concept (Y2K mobile, sky-and-hills screen, clearer CTAs, Y2K voice). Standalone project. Unofficial speculative digital concept by Omar Akram. Not affiliated with In Your Shoe.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5173",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "sync-products": "node scripts/sync-products.mjs",
+    "sync-stores": "node scripts/sync-stores.mjs",
+    "sync-size-charts": "node scripts/sync-size-charts.mjs",
+    "audit-data": "node scripts/audit-data.mjs",
+    "fetch-showcase-assets": "node scripts/fetch-showcase-assets.mjs",
+    "record": "node scripts/record.mjs",
+    "frames": "node scripts/frames.mjs",
+    "qa:screens": "node scripts/qa-screens.mjs",
+    "poster": "node scripts/poster.mjs",
+    "load:api": "vitest run --config tests/load/vitest.config.ts",
+    "load:static": "node scripts/load-static.mjs"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "fuse.js": "^7.5.0",
+    "gsap": "^3.15.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-rnd": "^10.5.3",
+    "react-router": "^7.18.4",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "sharp": "^0.35.5",
+    "typescript": "~6.0.3",
+    "vite": "^8.3.1",
+    "vite-plugin-pwa": "^1.3.0",
+    "vitest": "^5.0.2"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

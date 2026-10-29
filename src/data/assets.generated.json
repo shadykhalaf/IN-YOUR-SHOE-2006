@@ -1,0 +1,1075 @@
+{
+ "generatedAt": "2026-09-30T23:36:38.505Z",
+ "brand": {
+  "mark": "/iys/brand/iys-mark.svg",
+  "markWhite": "/iys/brand/iys-mark-white.svg",
+  "wordmarkWhite": "/iys/brand/in-your-shoe-white.png",
+  "wordmark": "/iys/brand/in-your-shoe-black.png"
+ },
+ "campaign": [
+  {
+   "id": "fw27-1",
+   "title": "FW27 campaign — desktop banner 1",
+   "group": "FW27",
+   "src": "/iys/campaign/fw27-1.webp",
+   "width": 1920,
+   "height": 806,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/FW27-DESKTOP-01_jpg.jpg"
+  },
+  {
+   "id": "fw27-2",
+   "title": "FW27 campaign — desktop banner 2",
+   "group": "FW27",
+   "src": "/iys/campaign/fw27-2.webp",
+   "width": 1920,
+   "height": 806,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/FW27-DESKTOP-02_jpg.jpg"
+  },
+  {
+   "id": "fw27-m1",
+   "title": "FW27 campaign — mobile banner 1",
+   "group": "FW27",
+   "src": "/iys/campaign/fw27-m1.webp",
+   "width": 991,
+   "height": 1717,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/FW27-MOBILE-01_jpg.jpg"
+  },
+  {
+   "id": "fw27-m2",
+   "title": "FW27 campaign — mobile banner 2",
+   "group": "FW27",
+   "src": "/iys/campaign/fw27-m2.webp",
+   "width": 991,
+   "height": 1717,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/FW27-MOBILE-02_jpg.jpg"
+  },
+  {
+   "id": "zed-1",
+   "title": "IYS × ZED — desktop banner",
+   "group": "IYS x ZED",
+   "src": "/iys/campaign/zed-1.webp",
+   "width": 1920,
+   "height": 806,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/DESKTOP-SLIDER-UPDATED-ZED_jpg.jpg"
+  },
+  {
+   "id": "zed-m1",
+   "title": "IYS × ZED — mobile banner",
+   "group": "IYS x ZED",
+   "src": "/iys/campaign/zed-m1.webp",
+   "width": 993,
+   "height": 1721,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/MOBILE-SLIDER-UPDATED-ZED_jpg.jpg"
+  }
+ ],
+ "stores": [
+  {
+   "name": "CITY STARS",
+   "src": "/iys/stores/city-stars.webp",
+   "width": 1200,
+   "height": 675,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/WhatsApp_Image_2025-12-23_at_22.20.50.jpg"
+  },
+  {
+   "name": "U VENUES",
+   "src": "/iys/stores/u-venues.webp",
+   "width": 1035,
+   "height": 548,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/Screenshot_from_2025-11-30_12-53-03.png"
+  },
+  {
+   "name": "City Centre Almazah Mall",
+   "src": "/iys/stores/city-centre-almazah-mall.webp",
+   "width": 1200,
+   "height": 1044,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/PHOTO-2023-12-07-15-25-34_85844759-b2a6-4aa5-b36e-9afd3d87f760.jpg"
+  },
+  {
+   "name": "District 5",
+   "src": "/iys/stores/district-5.webp",
+   "width": 1200,
+   "height": 1600,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/WhatsApp_Image_2025-09-21_at_06.24.15.jpg"
+  },
+  {
+   "name": "OPEN AIR MALL",
+   "src": "/iys/stores/open-air-mall.webp",
+   "width": 960,
+   "height": 1280,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/1000141396.jpg"
+  },
+  {
+   "name": "Mall of Egypt",
+   "src": "/iys/stores/mall-of-egypt.webp",
+   "width": 1200,
+   "height": 900,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/IMG_6789.heic"
+  },
+  {
+   "name": "The Yard Mall",
+   "src": "/iys/stores/the-yard-mall.webp",
+   "width": 1200,
+   "height": 1600,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/yard_1.jpg"
+  },
+  {
+   "name": "City Centre Alexandria Mall",
+   "src": "/iys/stores/city-centre-alexandria-mall.webp",
+   "width": 1200,
+   "height": 1600,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/CITY_ALEX_bc620aad-7802-402b-8e74-1db44ecdc1d2.jpg"
+  },
+  {
+   "name": "El-Gouna",
+   "src": "/iys/stores/el-gouna.webp",
+   "width": 757,
+   "height": 587,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/98dcb071-e53a-49a1-b01f-59570bad4639_7287938e-67c1-4381-afdf-9d616098c153.jpg"
+  },
+  {
+   "name": "The Wing Outlet",
+   "src": "/iys/stores/the-wing-outlet.webp",
+   "width": 960,
+   "height": 884,
+   "sourceUrl": "https://inyourshoe.com/cdn/shop/files/PHOTO-2024-03-07-17-14-21_a9f54e37-4cf0-48f2-bb83-3eef0465bd17.jpg"
+  }
+ ],
+ "products": {
+  "dropout-oversized-hoodie": {
+   "title": "Dropout Oversized Hoodie",
+   "price": 2099,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/dropout-oversized-hoodie-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/dropout-oversized-hoodie-printed-hoodies-in-your-shoe-209981.jpg"
+    },
+    {
+     "src": "/iys/products/dropout-oversized-hoodie-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/dropout-oversized-hoodie-printed-hoodies-in-your-shoe-217302.jpg"
+    }
+   ]
+  },
+  "cereal-killer-fluffy-pjoys": {
+   "title": "Cereal Killer Fluffy Pjoys",
+   "price": 999,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/cereal-killer-fluffy-pjoys-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cereal-killer-fluffy-pjoys-fluffy-pjoys-in-your-shoe-937572.jpg"
+    },
+    {
+     "src": "/iys/products/cereal-killer-fluffy-pjoys-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cereal-killer-fluffy-pjoys-fluffy-pjoys-in-your-shoe-943655.jpg"
+    }
+   ]
+  },
+  "egyptian-culture-oversized-long-sleeves": {
+   "title": "Egyptian Culture Oversized Long Sleeves",
+   "price": 1199,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/egyptian-culture-oversized-long-sleeves-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/egyptian-culture-oversized-long-sleeves-long-sleeves-in-your-shoe-282745.jpg"
+    },
+    {
+     "src": "/iys/products/egyptian-culture-oversized-long-sleeves-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/egyptian-culture-oversized-long-sleeves-long-sleeves-in-your-shoe-278377.jpg"
+    }
+   ]
+  },
+  "female-denim-blue-washed-wide-leg-jeans": {
+   "title": "Female Denim Blue Washed Wide Leg Jeans",
+   "price": 1799,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/female-denim-blue-washed-wide-leg-jeans-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/female-denim-blue-washed-wide-leg-jeans-jeans-in-your-shoe-101686.jpg"
+    },
+    {
+     "src": "/iys/products/female-denim-blue-washed-wide-leg-jeans-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/female-denim-blue-washed-wide-leg-jeans-jeans-in-your-shoe-430045.jpg"
+    }
+   ]
+  },
+  "kairo-pop-jersey": {
+   "title": "Kairo Pop Jersey",
+   "price": 1099,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/kairo-pop-jersey-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/kairo-pop-jersey-jersey-in-your-shoe-124269.jpg"
+    },
+    {
+     "src": "/iys/products/kairo-pop-jersey-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/kairo-pop-jersey-jersey-in-your-shoe-127870.jpg"
+    }
+   ]
+  },
+  "mustard-guarded-boxy-zip-up-hoodie": {
+   "title": "Mustard Guarded Boxy Zip-Up Hoodie",
+   "price": 2499,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/mustard-guarded-boxy-zip-up-hoodie-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/mustard-afterclass-boxy-zip-up-hoodie-zip-up-hoodies-in-your-shoe-160129.jpg"
+    },
+    {
+     "src": "/iys/products/mustard-guarded-boxy-zip-up-hoodie-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/mustard-afterclass-boxy-zip-up-hoodie-zip-up-hoodies-in-your-shoe-207971.jpg"
+    }
+   ]
+  },
+  "sunset-stripes-fluffy-pjoys": {
+   "title": "Sunset Stripes Fluffy Pjoys",
+   "price": 999,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/sunset-stripes-fluffy-pjoys-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/sunset-stripes-fluffy-pjoys-fluffy-pjoys-in-your-shoe-750530.jpg"
+    },
+    {
+     "src": "/iys/products/sunset-stripes-fluffy-pjoys-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/sunset-stripes-fluffy-pjoys-fluffy-pjoys-in-your-shoe-600684.jpg"
+    }
+   ]
+  },
+  "blue-checkered-laptop-sleeve": {
+   "title": "Blue Checkered Laptop Sleeve",
+   "price": 899,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/blue-checkered-laptop-sleeve-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/blue-checkered-laptop-sleeve-laptop-sleeve-in-your-shoe-715670.jpg"
+    },
+    {
+     "src": "/iys/products/blue-checkered-laptop-sleeve-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/blue-checkered-laptop-sleeve-laptop-sleeve-in-your-shoe-578753.jpg"
+    }
+   ]
+  },
+  "cereal-killer-pjoys": {
+   "title": "Cereal Killer Pjoys",
+   "price": 799,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/cereal-killer-pjoys-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cereal-killer-pjoys-pjoys-in-your-shoe-901214.jpg"
+    },
+    {
+     "src": "/iys/products/cereal-killer-pjoys-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cereal-killer-pjoys-pjoys-in-your-shoe-683352.jpg"
+    }
+   ]
+  },
+  "love-you-so-matcha-pjoys": {
+   "title": "Love You So Matcha Pjoys",
+   "price": 799,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/love-you-so-matcha-pjoys-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/love-you-so-matcha-pjoys-pjoys-in-your-shoe-148812.jpg"
+    },
+    {
+     "src": "/iys/products/love-you-so-matcha-pjoys-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/love-you-so-matcha-pjoys-pjoys-in-your-shoe-845552.jpg"
+    }
+   ]
+  },
+  "not-your-habibi-pjoys": {
+   "title": "Not Your Habibi Pjoys",
+   "price": 799,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/not-your-habibi-pjoys-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/not-your-habibi-pjoys-pjoys-in-your-shoe-998920.jpg"
+    },
+    {
+     "src": "/iys/products/not-your-habibi-pjoys-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/not-your-habibi-pjoys-pjoys-in-your-shoe-885757.jpg"
+    }
+   ]
+  },
+  "game-night-pjoys": {
+   "title": "Game Night Pjoys",
+   "price": 799,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/game-night-pjoys-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/game-night-pjoys-pjoys-in-your-shoe-868530.jpg"
+    },
+    {
+     "src": "/iys/products/game-night-pjoys-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/game-night-pjoys-pjoys-in-your-shoe-209765.jpg"
+    }
+   ]
+  },
+  "touch-grass-pjoys": {
+   "title": "Touch Grass Pjoys",
+   "price": 699,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/touch-grass-pjoys-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/touch-grass-pjoys-pjoys-in-your-shoe-742415.jpg"
+    },
+    {
+     "src": "/iys/products/touch-grass-pjoys-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/touch-grass-pjoys-pjoys-in-your-shoe-854001.jpg"
+    }
+   ]
+  },
+  "main-character-pjoys": {
+   "title": "Main Character Pjoys",
+   "price": 799,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/main-character-pjoys-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/main-character-pjoys-pjoys-in-your-shoe-765906.jpg"
+    },
+    {
+     "src": "/iys/products/main-character-pjoys-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/main-character-pjoys-pjoys-in-your-shoe-925694.jpg"
+    }
+   ]
+  },
+  "cairo-desert-pjoys": {
+   "title": "Cairo Desert Pjoys",
+   "price": 799,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/cairo-desert-pjoys-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cairo-desert-pjoys-pjoys-in-your-shoe-208161.jpg"
+    },
+    {
+     "src": "/iys/products/cairo-desert-pjoys-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cairo-desert-pjoys-pjoys-in-your-shoe-967817.jpg"
+    }
+   ]
+  },
+  "dont-go-out-fluffy-pjoys": {
+   "title": "Don't Go Out Fluffy Pjoys",
+   "price": 999,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/dont-go-out-fluffy-pjoys-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/dont-go-out-fluffy-pjoys-fluffy-pjoys-in-your-shoe-560177.jpg"
+    },
+    {
+     "src": "/iys/products/dont-go-out-fluffy-pjoys-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/dont-go-out-fluffy-pjoys-fluffy-pjoys-in-your-shoe-693605.jpg"
+    }
+   ]
+  },
+  "cairo-is-a-mindset-oversized-hoodie": {
+   "title": "Cairo Is A Mindset Oversized Hoodie",
+   "price": 2099,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/cairo-is-a-mindset-oversized-hoodie-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cairo-is-a-mindset-oversized-hoodie-printed-hoodies-in-your-shoe-798730.jpg"
+    },
+    {
+     "src": "/iys/products/cairo-is-a-mindset-oversized-hoodie-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cairo-is-a-mindset-oversized-hoodie-printed-hoodies-in-your-shoe-959651.jpg"
+    }
+   ]
+  },
+  "universal-cairo-club-double-sleeve-tee": {
+   "title": "Universal Cairo Club Double Long Sleeves",
+   "price": 1199,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/universal-cairo-club-double-sleeve-tee-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/universal-cairo-club-double-sleeve-tee-double-sleeve-tee-in-your-shoe-703793.jpg"
+    },
+    {
+     "src": "/iys/products/universal-cairo-club-double-sleeve-tee-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/universal-cairo-club-double-sleeve-tee-double-sleeve-tee-in-your-shoe-294501.jpg"
+    }
+   ]
+  },
+  "qasr-el-nile-regular-tee": {
+   "title": "Qasr El Nile Regular Tee",
+   "price": 999,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/qasr-el-nile-regular-tee-1.webp",
+     "width": 900,
+     "height": 1117,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/qasr-el-nile-regular-tee-printed-regular-tees-in-your-shoe-585613.jpg"
+    },
+    {
+     "src": "/iys/products/qasr-el-nile-regular-tee-2.webp",
+     "width": 900,
+     "height": 1117,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/qasr-el-nile-regular-tee-printed-regular-tees-in-your-shoe-567565.jpg"
+    }
+   ]
+  },
+  "heliopolis-regular-tee": {
+   "title": "Heliopolis Regular Tee",
+   "price": 999,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/heliopolis-regular-tee-1.webp",
+     "width": 900,
+     "height": 1117,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/heliopolis-regular-tee-printed-regular-tees-in-your-shoe-396171.jpg"
+    },
+    {
+     "src": "/iys/products/heliopolis-regular-tee-2.webp",
+     "width": 900,
+     "height": 1117,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/heliopolis-regular-tee-printed-regular-tees-in-your-shoe-457785.jpg"
+    }
+   ]
+  },
+  "masr-washed-cap": {
+   "title": "Masr Washed Cap",
+   "price": 749,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/masr-washed-cap-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/masr-washed-cap-washed-cap-in-your-shoe-699948.jpg"
+    },
+    {
+     "src": "/iys/products/masr-washed-cap-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/masr-washed-cap-washed-cap-in-your-shoe-729994.jpg"
+    }
+   ]
+  },
+  "i-love-cairo-neck-socks": {
+   "title": "I Love Cairo Neck Socks",
+   "price": 159,
+   "compareAtPrice": null,
+   "images": [
+    {
+     "src": "/iys/products/i-love-cairo-neck-socks-1.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/i-love-cairo-neck-socks-neck-socks-in-your-shoe-316817.jpg"
+    },
+    {
+     "src": "/iys/products/i-love-cairo-neck-socks-2.webp",
+     "width": 900,
+     "height": 1125,
+     "alt": null,
+     "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/i-love-cairo-neck-socks-neck-socks-in-your-shoe-974684.jpg"
+    }
+   ]
+  }
+ },
+ "tiles": [
+  {
+   "handle": "cereal-killer-pjoys",
+   "title": "Cereal Killer Pjoys",
+   "src": "/iys/tiles/cereal-killer-pjoys.webp",
+   "width": 640,
+   "height": 800,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cereal-killer-pjoys-pjoys-in-your-shoe-201261.jpg"
+  },
+  {
+   "handle": "love-you-so-matcha-pjoys",
+   "title": "Love You So Matcha Pjoys",
+   "src": "/iys/tiles/love-you-so-matcha-pjoys.webp",
+   "width": 640,
+   "height": 800,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/love-you-so-matcha-pjoys-pjoys-in-your-shoe-325392.jpg"
+  },
+  {
+   "handle": "dont-go-out-fluffy-pjoys",
+   "title": "Don't Go Out Fluffy Pjoys",
+   "src": "/iys/tiles/dont-go-out-fluffy-pjoys.webp",
+   "width": 640,
+   "height": 800,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/dont-go-out-fluffy-pjoys-fluffy-pjoys-in-your-shoe-560177.jpg"
+  }
+ ],
+ "camera": [
+  {
+   "folder": "PJOYS",
+   "handle": "cereal-killer-pjoys",
+   "title": "Cereal Killer Pjoys",
+   "src": "/iys/camera/pjoys-01.webp",
+   "width": 1000,
+   "height": 1250,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cereal-killer-pjoys-pjoys-in-your-shoe-683352.jpg"
+  },
+  {
+   "folder": "PJOYS",
+   "handle": "cereal-killer-pjoys",
+   "title": "Cereal Killer Pjoys",
+   "src": "/iys/camera/pjoys-02.webp",
+   "width": 1000,
+   "height": 1250,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cereal-killer-pjoys-pjoys-in-your-shoe-901214.jpg"
+  },
+  {
+   "folder": "PJOYS",
+   "handle": "love-you-so-matcha-pjoys",
+   "title": "Love You So Matcha Pjoys",
+   "src": "/iys/camera/pjoys-03.webp",
+   "width": 1000,
+   "height": 1250,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/love-you-so-matcha-pjoys-pjoys-in-your-shoe-845552.jpg"
+  },
+  {
+   "folder": "PJOYS",
+   "handle": "dont-go-out-fluffy-pjoys",
+   "title": "Don't Go Out Fluffy Pjoys",
+   "src": "/iys/camera/pjoys-04.webp",
+   "width": 1000,
+   "height": 1250,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/dont-go-out-fluffy-pjoys-fluffy-pjoys-in-your-shoe-693605.jpg"
+  },
+  {
+   "folder": "PJOYS",
+   "handle": "cereal-killer-pjoys",
+   "title": "Cereal Killer Pjoys",
+   "src": "/iys/camera/pjoys-05.webp",
+   "width": 1000,
+   "height": 1250,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cereal-killer-pjoys-pjoys-in-your-shoe-712347.jpg"
+  },
+  {
+   "folder": "PJOYS",
+   "handle": "game-night-pjoys",
+   "title": "Game Night Pjoys",
+   "src": "/iys/camera/pjoys-06.webp",
+   "width": 1000,
+   "height": 1250,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/game-night-pjoys-pjoys-in-your-shoe-868530.jpg"
+  },
+  {
+   "folder": "CAIRO",
+   "handle": "cairo-is-a-mindset-oversized-hoodie",
+   "title": "Cairo Is A Mindset Oversized Hoodie",
+   "src": "/iys/camera/cairo-07.webp",
+   "width": 1000,
+   "height": 1250,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cairo-is-a-mindset-oversized-hoodie-printed-hoodies-in-your-shoe-798730.jpg"
+  },
+  {
+   "folder": "CAIRO",
+   "handle": "cairo-is-a-mindset-oversized-hoodie",
+   "title": "Cairo Is A Mindset Oversized Hoodie",
+   "src": "/iys/camera/cairo-08.webp",
+   "width": 1000,
+   "height": 1250,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/cairo-is-a-mindset-oversized-hoodie-printed-hoodies-in-your-shoe-667690.jpg"
+  },
+  {
+   "folder": "CAIRO",
+   "handle": "kairo-pop-jersey",
+   "title": "Kairo Pop Jersey",
+   "src": "/iys/camera/cairo-09.webp",
+   "width": 1000,
+   "height": 1250,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/kairo-pop-jersey-jersey-in-your-shoe-124269.jpg"
+  },
+  {
+   "folder": "CAIRO",
+   "handle": "universal-cairo-club-double-sleeve-tee",
+   "title": "Universal Cairo Club Double Long Sleeves",
+   "src": "/iys/camera/cairo-10.webp",
+   "width": 1000,
+   "height": 1250,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/universal-cairo-club-double-sleeve-tee-double-sleeve-tee-in-your-shoe-703793.jpg"
+  },
+  {
+   "folder": "CAIRO",
+   "handle": "egyptian-culture-oversized-long-sleeves",
+   "title": "Egyptian Culture Oversized Long Sleeves",
+   "src": "/iys/camera/cairo-11.webp",
+   "width": 1000,
+   "height": 1250,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/egyptian-culture-oversized-long-sleeves-long-sleeves-in-your-shoe-282745.jpg"
+  },
+  {
+   "folder": "CAIRO",
+   "handle": "qasr-el-nile-regular-tee",
+   "title": "Qasr El Nile Regular Tee",
+   "src": "/iys/camera/cairo-12.webp",
+   "width": 1000,
+   "height": 1241,
+   "sourceUrl": "https://cdn.shopify.com/s/files/1/0050/2729/9397/files/qasr-el-nile-regular-tee-printed-regular-tees-in-your-shoe-585613.jpg"
+  }
+ ],
+ "thumbs": {
+  "dropout-oversized-hoodie": {
+   "title": "Dropout Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/dropout-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "mustard-guarded-boxy-zip-up-hoodie": {
+   "title": "Mustard Guarded Boxy Zip-Up Hoodie",
+   "price": 2499,
+   "src": "/iys/thumbs/mustard-guarded-boxy-zip-up-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "dark-grey-guarded-boxy-zip-up-hoodie": {
+   "title": "Dark Grey Guarded Boxy Zip-Up Hoodie",
+   "price": 2499,
+   "src": "/iys/thumbs/dark-grey-guarded-boxy-zip-up-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "afterclass-oversized-quarter-zipper": {
+   "title": "Afterclass Oversized Quarter Zipper",
+   "price": 1999,
+   "src": "/iys/thumbs/afterclass-oversized-quarter-zipper.webp",
+   "width": 280,
+   "height": 350
+  },
+  "off-white-raglan-oversized-pullover": {
+   "title": "Off White Raglan Oversized Pullover",
+   "price": 1499,
+   "src": "/iys/thumbs/off-white-raglan-oversized-pullover.webp",
+   "width": 280,
+   "height": 350
+  },
+  "butter-yellow-raglan-oversized-pullover": {
+   "title": "Butter Yellow Raglan Oversized Pullover",
+   "price": 1499,
+   "src": "/iys/thumbs/butter-yellow-raglan-oversized-pullover.webp",
+   "width": 280,
+   "height": 350
+  },
+  "pink-raglan-oversized-pullover": {
+   "title": "Pink Raglan Oversized Pullover",
+   "price": 1499,
+   "src": "/iys/thumbs/pink-raglan-oversized-pullover.webp",
+   "width": 280,
+   "height": 350
+  },
+  "claimed-territory-oversized-long-sleeves": {
+   "title": "Claimed Territory Oversized Long Sleeves",
+   "price": 1199,
+   "src": "/iys/thumbs/claimed-territory-oversized-long-sleeves.webp",
+   "width": 280,
+   "height": 350
+  },
+  "egyptian-culture-oversized-long-sleeves": {
+   "title": "Egyptian Culture Oversized Long Sleeves",
+   "price": 1199,
+   "src": "/iys/thumbs/egyptian-culture-oversized-long-sleeves.webp",
+   "width": 280,
+   "height": 350
+  },
+  "city-runners-oversized-long-sleeves": {
+   "title": "City Runners Oversized Long Sleeves",
+   "price": 1199,
+   "src": "/iys/thumbs/city-runners-oversized-long-sleeves.webp",
+   "width": 280,
+   "height": 350
+  },
+  "brown-plaid-balloon-pants": {
+   "title": "Brown Plaid Balloon Pants",
+   "price": 1799,
+   "src": "/iys/thumbs/brown-plaid-balloon-pants.webp",
+   "width": 280,
+   "height": 350
+  },
+  "navy-plaid-balloon-pants": {
+   "title": "Navy Plaid Balloon Pants",
+   "price": 1799,
+   "src": "/iys/thumbs/navy-plaid-balloon-pants.webp",
+   "width": 280,
+   "height": 350
+  },
+  "female-brown-baggy-leather-pants": {
+   "title": "Female Brown Baggy Leather Pants",
+   "price": 2299,
+   "src": "/iys/thumbs/female-brown-baggy-leather-pants.webp",
+   "width": 280,
+   "height": 350
+  },
+  "female-green-corduroy-pants-1": {
+   "title": "Female Green Corduroy Pants",
+   "price": 1799,
+   "src": "/iys/thumbs/female-green-corduroy-pants-1.webp",
+   "width": 280,
+   "height": 350
+  },
+  "female-brown-corduroy-pants-1": {
+   "title": "Female Brown Corduroy Pants",
+   "price": 1799,
+   "src": "/iys/thumbs/female-brown-corduroy-pants-1.webp",
+   "width": 280,
+   "height": 350
+  },
+  "female-denim-blue-washed-wide-leg-jeans": {
+   "title": "Female Denim Blue Washed Wide Leg Jeans",
+   "price": 1799,
+   "src": "/iys/thumbs/female-denim-blue-washed-wide-leg-jeans.webp",
+   "width": 280,
+   "height": 350
+  },
+  "female-navy-washed-barrel-fit-jeans": {
+   "title": "Female Navy Washed Barrel Fit Jeans",
+   "price": 1799,
+   "src": "/iys/thumbs/female-navy-washed-barrel-fit-jeans.webp",
+   "width": 280,
+   "height": 350
+  },
+  "male-black-loose-parachute-pants": {
+   "title": "Male Black Loose Parachute Pants",
+   "price": 1799,
+   "src": "/iys/thumbs/male-black-loose-parachute-pants.webp",
+   "width": 280,
+   "height": 350
+  },
+  "green-basic-boxy-zip-up-hoodie": {
+   "title": "Green Basic Boxy Zip-Up Hoodie",
+   "price": 2499,
+   "src": "/iys/thumbs/green-basic-boxy-zip-up-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "heather-grey-basic-boxy-zip-up-hoodie": {
+   "title": "Heather Grey Basic Boxy Zip-Up Hoodie",
+   "price": 2499,
+   "src": "/iys/thumbs/heather-grey-basic-boxy-zip-up-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "black-basic-boxy-zip-up-hoodie": {
+   "title": "Black Basic Boxy Zip-Up Hoodie",
+   "price": 2499,
+   "src": "/iys/thumbs/black-basic-boxy-zip-up-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "greige-oversized-quarter-zipper": {
+   "title": "Greige Oversized Quarter Zipper",
+   "price": 1999,
+   "src": "/iys/thumbs/greige-oversized-quarter-zipper.webp",
+   "width": 280,
+   "height": 350
+  },
+  "iys-racing-club-oversized-crewneck": {
+   "title": "IYS Racing Club Oversized Crewneck",
+   "price": 1699,
+   "src": "/iys/thumbs/iys-racing-club-oversized-crewneck.webp",
+   "width": 280,
+   "height": 350
+  },
+  "blue-basic-boxy-crewneck": {
+   "title": "Blue Basic Boxy Crewneck",
+   "price": 1699,
+   "src": "/iys/thumbs/blue-basic-boxy-crewneck.webp",
+   "width": 280,
+   "height": 350
+  },
+  "green-basic-oversized-crewneck": {
+   "title": "Green Basic Oversized Crewneck",
+   "price": 1699,
+   "src": "/iys/thumbs/green-basic-oversized-crewneck.webp",
+   "width": 280,
+   "height": 350
+  },
+  "black-basic-oversized-crewneck": {
+   "title": "Black Basic Oversized Crewneck",
+   "price": 1699,
+   "src": "/iys/thumbs/black-basic-oversized-crewneck.webp",
+   "width": 280,
+   "height": 350
+  },
+  "burgundy-basic-oversized-crewneck": {
+   "title": "Burgundy Basic Oversized Crewneck",
+   "price": 1699,
+   "src": "/iys/thumbs/burgundy-basic-oversized-crewneck.webp",
+   "width": 280,
+   "height": 350
+  },
+  "el-hob-moqawma-boxy-hoodie": {
+   "title": "El Hob Moqawma Boxy Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/el-hob-moqawma-boxy-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "brown-basic-heavy-boxy-hoodie-1": {
+   "title": "Brown Basic Heavy Boxy Hoodie",
+   "price": 1399,
+   "src": "/iys/thumbs/brown-basic-heavy-boxy-hoodie-1.webp",
+   "width": 280,
+   "height": 350
+  },
+  "heather-grey-basic-heavy-boxy-hoodie": {
+   "title": "Heather Grey Basic Heavy Boxy Hoodie",
+   "price": 1399,
+   "src": "/iys/thumbs/heather-grey-basic-heavy-boxy-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "male-dark-blue-striped-loose-fit-jeans": {
+   "title": "Male Dark Blue Striped Loose Fit Jeans",
+   "price": 1799,
+   "src": "/iys/thumbs/male-dark-blue-striped-loose-fit-jeans.webp",
+   "width": 280,
+   "height": 350
+  },
+  "international-council-oversized-hoodie": {
+   "title": "International Council Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/international-council-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "cairo-is-a-mindset-oversized-hoodie": {
+   "title": "Cairo Is A Mindset Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/cairo-is-a-mindset-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "dont-panic-oversized-hoodie": {
+   "title": "Don't Panic Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/dont-panic-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "insane-oversized-hoodie": {
+   "title": "Insane Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/insane-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "horse-race-club-oversized-hoodie": {
+   "title": "Horse Race Club Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/horse-race-club-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "anti-running-oversized-hoodie": {
+   "title": "Anti-Running Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/anti-running-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "world-wide-tour-oversized-hoodie": {
+   "title": "Worldwide Tour Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/world-wide-tour-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "cairo-legacy-oversized-hoodie": {
+   "title": "Cairo Legacy Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/cairo-legacy-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "brown-embroidered-oversized-leather-jacket": {
+   "title": "Brown Embroidered Oversized Leather Jacket",
+   "price": 3099,
+   "src": "/iys/thumbs/brown-embroidered-oversized-leather-jacket.webp",
+   "width": 280,
+   "height": 350
+  },
+  "teal-embroidered-oversized-leather-jacket": {
+   "title": "Teal Embroidered Oversized Leather Jacket",
+   "price": 3099,
+   "src": "/iys/thumbs/teal-embroidered-oversized-leather-jacket.webp",
+   "width": 280,
+   "height": 350
+  },
+  "give-me-a-raise-oversized-hoodie": {
+   "title": "Give Me A Raise Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/give-me-a-raise-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "heritage-culture-oversized-hoodie": {
+   "title": "Heritage Culture Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/heritage-culture-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "save-the-turtles-oversized-hoodie": {
+   "title": "Save The Turtles Oversized Hoodie",
+   "price": 2099,
+   "src": "/iys/thumbs/save-the-turtles-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "blue-basic-oversized-hoodie": {
+   "title": "Blue Basic Oversized Hoodie",
+   "price": 1399,
+   "src": "/iys/thumbs/blue-basic-oversized-hoodie.webp",
+   "width": 280,
+   "height": 350
+  },
+  "gingham-fluffy-pjoys": {
+   "title": "Gingham Fluffy Pjoys",
+   "price": 999,
+   "src": "/iys/thumbs/gingham-fluffy-pjoys.webp",
+   "width": 280,
+   "height": 350
+  },
+  "green-plaid-fluffy-pjoys": {
+   "title": "Green Plaid Fluffy Pjoys",
+   "price": 999,
+   "src": "/iys/thumbs/green-plaid-fluffy-pjoys.webp",
+   "width": 280,
+   "height": 350
+  },
+  "red-plaid-fluffy-pjoys": {
+   "title": "Red Plaid Fluffy Pjoys",
+   "price": 999,
+   "src": "/iys/thumbs/red-plaid-fluffy-pjoys.webp",
+   "width": 280,
+   "height": 350
+  }
+ }
+}

@@ -1,0 +1,315 @@
+/* PURBALE CATCHY — menu + three DOM mini games. */
+.purbale {
+  height: 100%;
+  overflow: auto;
+  padding: 0 0 12px;
+  font-family: var(--system-font);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.92)),
+    url('/iys/os/purbale-catchy.webp') center / cover;
+}
+.purbale__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: linear-gradient(90deg, #ff9ec7, #ffd6e7 60%, rgba(255, 255, 255, 0));
+  border-bottom: 2px solid #fff;
+}
+.purbale__head h2 {
+  margin: 0;
+  color: #b0236b;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+}
+.purbale__head p {
+  margin: 0;
+  font-size: 12px;
+  color: #6a2348;
+}
+.purbale__back {
+  margin-left: auto;
+  min-width: 0;
+}
+.purbale__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 12px;
+  list-style: none;
+}
+.purbale__mini {
+  padding: 10px;
+  border: 2px solid #fff;
+  border-radius: 12px;
+  background: linear-gradient(#fff, #ffeef6);
+  box-shadow: 0 3px 10px rgba(176, 35, 107, 0.2);
+}
+.purbale__mini h3 {
+  margin: 0 0 4px;
+  color: #b0236b;
+  font-size: 13px;
+}
+.purbale__mini p {
+  margin: 0 0 8px;
+  font-size: 11px;
+  color: #34465c;
+}
+.purbale--compact .purbale__list {
+  grid-template-columns: 1fr;
+}
+.purbale--compact .gtile__play {
+  min-height: 36px;
+}
+
+/* Catchy Closet */
+.closet {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  color: var(--ink);
+}
+.closet__looks {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+.closet__looks figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 6px 8px;
+  border: 1px solid #f4a6c8;
+  border-radius: 10px;
+  background: #fff;
+  max-width: 46%;
+}
+.closet__looks figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11px;
+  text-align: center;
+}
+.closet__looks figcaption b {
+  color: #b0236b;
+}
+.closet__note {
+  margin: 0;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #fff6c8;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+.closet__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.closet__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 4px 6px 6px;
+  border: 1px solid #c9d8ea;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+}
+.closet__row legend {
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sky-deep);
+}
+.closet__opt {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 3px 8px 3px 4px;
+  border: 1px solid #9cb6d4;
+  border-radius: 8px;
+  background: #fff;
+  font: 11px var(--system-font);
+  color: var(--ink);
+  text-align: left;
+}
+.closet__opt[aria-pressed='true'] {
+  border-color: #b0236b;
+  background: #ffe3ef;
+  box-shadow: 0 0 0 2px #ff9ec7;
+  font-weight: 700;
+}
+.closet__opt:focus-visible,
+.pcard:focus-visible,
+.pack__item:focus-visible {
+  outline: 2px solid var(--iys-blue-2, #06478e);
+  outline-offset: 2px;
+}
+.closet__go {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.closet__go .btn {
+  min-height: 36px;
+  font-weight: 700;
+}
+.closet__timer {
+  flex: 1;
+  height: 10px;
+  border: 1px solid #1d3f6e;
+  border-radius: 5px;
+  background: #fff;
+  overflow: hidden;
+}
+.closet__timer span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #ff6060, #f4c430);
+}
+
+/* Pjoy Pairs */
+.pairs__diff {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 6px 0 0;
+  padding: 4px 8px;
+  border: 1px solid #b7d3ef;
+  border-radius: 6px;
+  text-align: left;
+}
+.pairs {
+  display: grid;
+  gap: 6px;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 10px;
+  list-style: none;
+}
+.pcard {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  background: repeating-linear-gradient(45deg, #ff9ec7 0 6px, #ffc6dc 6px 12px);
+  box-shadow: 0 2px 5px rgba(0, 30, 80, 0.3);
+  overflow: hidden;
+  transition: transform 0.18s ease;
+}
+.pcard.is-up {
+  background: #fff;
+  transform: rotateY(0);
+}
+.pcard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pcard.is-matched {
+  border-color: #2fbf4a;
+  opacity: 0.8;
+}
+
+/* Pack the Drop */
+.pack {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px;
+}
+.pack h3 {
+  margin: 0 0 4px;
+  font-size: 11px;
+  color: var(--sky-deep);
+}
+.pack section {
+  padding: 6px 8px 8px;
+  border: 1px solid #c9d8ea;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+}
+.pack ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0 0 6px;
+  padding: 0;
+  list-style: none;
+}
+.pack__list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  font-size: 12px;
+  font-weight: 700;
+}
+.pack img {
+  border-radius: 6px;
+  object-fit: cover;
+  background: #eef4fb;
+}
+.pack__ph {
+  display: inline-block;
+  border-radius: 6px;
+  background: #c9d8ea;
+}
+.pack__box {
+  display: flex;
+  flex-direction: column;
+  background: repeating-linear-gradient(90deg, #e8c497 0 12px, #e0b886 12px 24px) !important;
+}
+.pack__empty {
+  margin: 0 0 6px;
+  font-size: 11px;
+  color: #6a4a22;
+}
+.pack__go {
+  margin-top: auto;
+  min-height: 36px;
+  font-weight: 700;
+}
+.pack__shelf {
+  grid-column: 1 / -1;
+}
+.pack__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid #9cb6d4;
+  border-radius: 8px;
+  background: #fff;
+  font: 700 10px var(--system-font);
+  color: var(--ink);
+}
+.pack__item--shelf {
+  width: 78px;
+  min-height: 70px;
+}
+.pack .closet__note {
+  grid-column: 1 / -1;
+}
+.game--compact .pack {
+  grid-template-columns: 1fr;
+}
+.game--compact .closet__opt span {
+  font-size: 10px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pcard {
+    transition: none;
+  }
+}

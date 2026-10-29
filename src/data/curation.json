@@ -1,0 +1,124 @@
+{
+  "_note": "Hand-picked REAL product handles from the 2026-09-29 Egyptian catalogue snapshot. Chosen for current season (IYS's own Newest collection leads with FW27 hoodies/zip-ups), range, Pjoys and Cairo. Every handle is validated against the synced catalogue by `npm test` and by fetch-showcase-assets; the UI silently drops any handle that disappears after a sync. Image indexes refer to the product's public image order.",
+  "top8": [
+    "dropout-oversized-hoodie",
+    "cereal-killer-fluffy-pjoys",
+    "egyptian-culture-oversized-long-sleeves",
+    "female-denim-blue-washed-wide-leg-jeans",
+    "kairo-pop-jersey",
+    "mustard-guarded-boxy-zip-up-hoodie",
+    "sunset-stripes-fluffy-pjoys",
+    "blue-checkered-laptop-sleeve"
+  ],
+  "pjoysMessenger": [
+    "cereal-killer-pjoys",
+    "love-you-so-matcha-pjoys",
+    "not-your-habibi-pjoys",
+    "game-night-pjoys",
+    "touch-grass-pjoys",
+    "main-character-pjoys",
+    "cairo-desert-pjoys",
+    "dont-go-out-fluffy-pjoys"
+  ],
+  "cairo": [
+    "cairo-is-a-mindset-oversized-hoodie",
+    "kairo-pop-jersey",
+    "universal-cairo-club-double-sleeve-tee",
+    "egyptian-culture-oversized-long-sleeves",
+    "qasr-el-nile-regular-tee",
+    "heliopolis-regular-tee",
+    "masr-washed-cap",
+    "i-love-cairo-neck-socks"
+  ],
+  "hero": "cairo-is-a-mindset-oversized-hoodie",
+  "jokes": {
+    "touchGrass": "touch-grass-pjoys",
+    "gameNight": "game-night-pjoys"
+  },
+  "camera": [
+    {
+      "folder": "PJOYS",
+      "handle": "cereal-killer-pjoys",
+      "image": 1
+    },
+    {
+      "folder": "PJOYS",
+      "handle": "cereal-killer-pjoys",
+      "image": 0
+    },
+    {
+      "folder": "PJOYS",
+      "handle": "love-you-so-matcha-pjoys",
+      "image": 1
+    },
+    {
+      "folder": "PJOYS",
+      "handle": "dont-go-out-fluffy-pjoys",
+      "image": 1
+    },
+    {
+      "folder": "PJOYS",
+      "handle": "cereal-killer-pjoys",
+      "image": 2
+    },
+    {
+      "folder": "PJOYS",
+      "handle": "game-night-pjoys",
+      "image": 0
+    },
+    {
+      "folder": "CAIRO",
+      "handle": "cairo-is-a-mindset-oversized-hoodie",
+      "image": 0
+    },
+    {
+      "folder": "CAIRO",
+      "handle": "cairo-is-a-mindset-oversized-hoodie",
+      "image": 2
+    },
+    {
+      "folder": "CAIRO",
+      "handle": "kairo-pop-jersey",
+      "image": 0
+    },
+    {
+      "folder": "CAIRO",
+      "handle": "universal-cairo-club-double-sleeve-tee",
+      "image": 0
+    },
+    {
+      "folder": "CAIRO",
+      "handle": "egyptian-culture-oversized-long-sleeves",
+      "image": 0
+    },
+    {
+      "folder": "CAIRO",
+      "handle": "qasr-el-nile-regular-tee",
+      "image": 0
+    }
+  ],
+  "tiles": [
+    {
+      "handle": "cereal-killer-pjoys",
+      "image": 5
+    },
+    {
+      "handle": "love-you-so-matcha-pjoys",
+      "image": 3
+    },
+    {
+      "handle": "dont-go-out-fluffy-pjoys",
+      "image": 0
+    }
+  ],
+  "screensaver": [
+    "cereal-killer-pjoys",
+    "cairo-is-a-mindset-oversized-hoodie",
+    "kairo-pop-jersey",
+    "game-night-pjoys"
+  ],
+  "showcaseGrid": {
+    "collection": "newest",
+    "count": 48
+  }
+}

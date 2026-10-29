@@ -1,0 +1,229 @@
+{
+ "concept": "IYS INTERNET 2006 — unofficial speculative concept. Snapshot of public data; not live commerce.",
+ "generatedAt": "2026-09-30T22:38:01.482Z",
+ "storefront": "https://inyourshoe.com",
+ "market": "Egypt",
+ "currency": "EGP",
+ "productCount": 1249,
+ "publicProductsTotal": 1249,
+ "allProductsCollectionCount": 1224,
+ "productsOutsideAllProducts": {
+  "count": 25,
+  "handles": [
+   "black-zed-stars-sworts",
+   "black-zed-stars-wide-leg-swants",
+   "blue-future-stars-towel",
+   "breaking-brgr-hoodie",
+   "christmas-joy-fluffy-blanket",
+   "distorted-youth-dept-jersey",
+   "dna-is-football-oversized-tee",
+   "everyday-black-denim-tote-bag",
+   "green-future-stars-towel",
+   "green-holly-jolly-fluffy-socks",
+   "green-zed-stars-sworts",
+   "olive-green-acid-washed-hoodie",
+   "out-of-service-oversized-tee",
+   "road-trippin-oversized-tee",
+   "silver-sands-live-life-towel",
+   "silver-sands-summer-swim-shorts",
+   "silver-sands-summer-towel",
+   "silver-sands-sun-neck-socks",
+   "silver-sands-under-the-sea-swim-shorts",
+   "stars-zed-neck-socks",
+   "striped-youth-dept-jersey",
+   "team-stars-jersey",
+   "white-zed-stars-wide-leg-swants",
+   "zed-green-striped-swim-shorts",
+   "zed-stars-jersey"
+  ]
+ },
+ "variantCount": 4843,
+ "variantsTotal": 4843,
+ "sitemapNotPublic": [
+  "hot-wheels-pjoys"
+ ],
+ "sourceMethods": [
+  "sitemap.xml",
+  "products.json",
+  "collection products.json"
+ ],
+ "careGuides": {
+  "source": "public product page: the theme’s care-guide block (Section Rendering API, full-page cross-checked)",
+  "section": "template--23057185112285__product_overview",
+  "withCareGuide": 1175,
+  "withoutPublishedCareGuide": 74
+ },
+ "navCollections": [
+  "newest",
+  "outwear",
+  "all-tops",
+  "hoodies",
+  "long-sleeves-and-polos",
+  "crewnecks",
+  "jackets-sweaters",
+  "t-shirts",
+  "jerseys",
+  "shirts",
+  "tops-vests",
+  "all-bottoms",
+  "pants",
+  "jeans",
+  "sweatpants",
+  "shorts",
+  "boxer-pants",
+  "skirts",
+  "leggings",
+  "swimmies",
+  "denims",
+  "linens",
+  "the-vacation-edit",
+  "knitwear",
+  "sportswear",
+  "homewear",
+  "fluffy-pjoys",
+  "pjoys",
+  "pshorts",
+  "pshirts",
+  "pantoufles",
+  "boxer-shorts",
+  "all-accessories",
+  "all-socks",
+  "hats-caps",
+  "flowy-wraps",
+  "all-bags",
+  "bandanas",
+  "headbands",
+  "beach-towels",
+  "others",
+  "women",
+  "baby-tees-jerseys",
+  "shirts-polos",
+  "pants-jeans",
+  "shorts-jorts",
+  "all-dresses",
+  "womens-sets",
+  "bags-for-her",
+  "all-kids-products",
+  "bundles",
+  "on-sale",
+  "all-products",
+  "end-of-season-sale",
+  "best-sellers"
+ ],
+ "report": {
+  "discovered": 1249,
+  "normalized": 1249,
+  "uniqueHandles": 1249,
+  "duplicateHandles": [],
+  "withImages": 1249,
+  "withoutImages": [],
+  "withPrices": 1249,
+  "withoutPrices": [],
+  "withCompareAt": 474,
+  "variantCount": 4843,
+  "collectionCount": 66,
+  "productTypeCount": 162,
+  "invalidUrls": [],
+  "unparseable": [],
+  "currencyMismatches": [],
+  "internationalContamination": [],
+  "missingFromSync": [],
+  "sitemapNotPublic": [
+   "hot-wheels-pjoys"
+  ],
+  "priceChecks": [
+   {
+    "handle": "big-grill-energy-oversized-hoodie",
+    "productsJson": 2099,
+    "productJs": 2099,
+    "ok": true
+   },
+   {
+    "handle": "sweet-tooth-pjoys",
+    "productsJson": 799,
+    "productJs": 799,
+    "ok": true
+   },
+   {
+    "handle": "purple-zigzag-crochet-bandana",
+    "productsJson": 399,
+    "productJs": 399,
+    "ok": true
+   },
+   {
+    "handle": "blue-mint-color-block-neck-socks",
+    "productsJson": 159,
+    "productJs": 159,
+    "ok": true
+   },
+   {
+    "handle": "teal-linen-shorts",
+    "productsJson": 549,
+    "productJs": 549,
+    "ok": true
+   }
+  ],
+  "notInSitemap": [],
+  "notInAllProducts": [
+   "black-zed-stars-sworts",
+   "black-zed-stars-wide-leg-swants",
+   "blue-future-stars-towel",
+   "breaking-brgr-hoodie",
+   "christmas-joy-fluffy-blanket",
+   "distorted-youth-dept-jersey",
+   "dna-is-football-oversized-tee",
+   "everyday-black-denim-tote-bag",
+   "green-future-stars-towel",
+   "green-holly-jolly-fluffy-socks",
+   "green-zed-stars-sworts",
+   "olive-green-acid-washed-hoodie",
+   "out-of-service-oversized-tee",
+   "road-trippin-oversized-tee",
+   "silver-sands-live-life-towel",
+   "silver-sands-summer-swim-shorts",
+   "silver-sands-summer-towel",
+   "silver-sands-sun-neck-socks",
+   "silver-sands-under-the-sea-swim-shorts",
+   "stars-zed-neck-socks",
+   "striped-youth-dept-jersey",
+   "team-stars-jersey",
+   "white-zed-stars-wide-leg-swants",
+   "zed-green-striped-swim-shorts",
+   "zed-stars-jersey"
+  ],
+  "care": {
+   "section": "template--23057185112285__product_overview",
+   "total": 1249,
+   "withCareGuide": 1175,
+   "withoutPublished": 74,
+   "parseFailures": [],
+   "distinctTexts": 154,
+   "mostReused": [
+    {
+     "n": 118,
+     "text": "- Machine wash as usual.\n- Avoid rubbing.\n- Do not iron.\n- Made of 100% polyester."
+    },
+    {
+     "n": 56,
+     "text": "- Machine wash inside out with cold water.\n- Iron inside out on low heat.\n- Made of 100% cotton."
+    },
+    {
+     "n": 51,
+     "text": "- Machine wash inside out with cold water.\n- Avoid rubbing.\n- Iron on low heat."
+    },
+    {
+     "n": 50,
+     "text": "- Machine wash inside out with cold water.\n- Iron on low heat.\n- Made of 70% cotton, 30% polyester."
+    },
+    {
+     "n": 49,
+     "text": "- Machine wash inside out with cold water.\n- Avoid rubbing.\n- Iron on low heat.\n- Made of 100% cotton"
+    }
+   ],
+   "fullPageCrossCheck": {
+    "checked": 25,
+    "mismatches": []
+   }
+  }
+ }
+}

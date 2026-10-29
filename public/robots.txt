@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /
+# Unofficial portfolio concept — not the official In Your Shoe website (https://inyourshoe.com/).

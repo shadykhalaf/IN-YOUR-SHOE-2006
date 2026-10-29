@@ -1,0 +1,307 @@
+/* CATCHY.EXE — desktop buddy. Lives on the desktop: above the wallpaper and
+   icons, below every application window (so windows naturally cover him). */
+.catchy-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 20; /* > --z-icons (10), < --z-windows (100) */
+  pointer-events: none;
+  overflow: hidden;
+}
+.cpet {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+.cpet.is-hidden {
+  visibility: hidden;
+}
+.cpet__hit {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.cpet--dragged .cpet__hit {
+  cursor: grabbing;
+}
+.cpet__hit:focus-visible {
+  outline: 1px dotted #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 1px #06478e;
+  border-radius: 6px;
+}
+.cpet__fig {
+  position: absolute;
+  inset: 0;
+  display: block;
+  animation: catchy-hop 0.32s steps(4, end);
+}
+.cpet[data-facing='-1'] .csprite {
+  transform: scaleX(-1);
+}
+.csprite {
+  display: block;
+  overflow: visible;
+}
+/* a small, flat, period shadow (no modern blur) */
+.cpet__shadow {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: -2px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(0, 20, 50, 0.28);
+}
+.cpet--dragged .cpet__shadow {
+  bottom: -14px;
+  left: 28%;
+  right: 28%;
+  opacity: 0.6;
+}
+
+/* ── poses: low-frame-count, old-school steps (≈ 6–10 fps) ── */
+.csprite__walk,
+.csprite__head {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+.cpet--idle .csprite__head,
+.cpet--look .csprite__head {
+  animation: catchy-breathe 2.4s steps(2, jump-none) infinite;
+}
+.cpet--walk .csprite__walk {
+  animation: catchy-bob 0.5s steps(2, jump-none) infinite;
+}
+.cpet--run .csprite__walk,
+.cpet--carry-sock .csprite__walk,
+.cpet--carry-pjoy .csprite__walk {
+  animation: catchy-bob 0.25s steps(2, jump-none) infinite;
+}
+.cpet--sit .csprite__walk {
+  transform: translateY(3px);
+}
+.cpet--sleep .csprite__walk {
+  transform: translateY(5px) rotate(-6deg);
+}
+.cpet--sleep .csprite__head {
+  animation: catchy-snore 3s steps(2, jump-none) infinite;
+}
+.cpet--wake .csprite__walk,
+.cpet--stretch .csprite__walk {
+  animation: catchy-stretch 0.8s steps(4, end) 1;
+}
+.cpet--happy .csprite__walk,
+.cpet--excited .csprite__walk,
+.cpet--surprised .csprite__walk {
+  animation: catchy-jump 0.6s steps(4, end) 2;
+}
+.cpet--curious .csprite__head,
+.cpet--peek .csprite__head {
+  transform: rotate(-7deg);
+}
+.cpet--dragged .csprite__walk {
+  transform: rotate(6deg) translateY(-6px);
+}
+.cpet--wave .csprite__walk {
+  animation: catchy-wave 0.36s steps(2, jump-none) infinite;
+}
+
+@keyframes catchy-hop {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+@keyframes catchy-breathe {
+  from { transform: translateY(0); }
+  to { transform: translateY(1px); }
+}
+@keyframes catchy-snore {
+  from { transform: translateY(0); }
+  to { transform: translateY(1px); }
+}
+@keyframes catchy-bob {
+  from { transform: translateY(0); }
+  to { transform: translateY(-3px); }
+}
+@keyframes catchy-stretch {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px) rotate(-3deg); }
+  100% { transform: translateY(0); }
+}
+@keyframes catchy-jump {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+@keyframes catchy-wave {
+  from { transform: rotate(-6deg); }
+  to { transform: rotate(6deg); }
+}
+
+/* ── reaction symbols + speech bubble (early messenger style) ── */
+.cpet__sym {
+  position: absolute;
+  left: 50%;
+  top: -14px;
+  transform: translateX(-50%);
+  font: 700 13px var(--system-font, Tahoma, sans-serif);
+  color: #fff;
+  text-shadow:
+    1px 1px 0 #06478e,
+    -1px -1px 0 #06478e,
+    1px -1px 0 #06478e,
+    -1px 1px 0 #06478e;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.cpet__sym--pop {
+  color: #f4b51f;
+}
+.cpet__sym--zzz {
+  left: 74%;
+  font-size: 11px;
+  letter-spacing: 1px;
+  animation: catchy-zzz 2s steps(4, end) infinite;
+}
+@keyframes catchy-zzz {
+  from { transform: translate(0, 0); opacity: 1; }
+  to { transform: translate(6px, -10px); opacity: 0.4; }
+}
+.cpet__bubble {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 10px;
+  margin: 0;
+  max-width: 170px;
+  padding: 4px 8px;
+  border: 1px solid #1d3f6e;
+  border-radius: 3px;
+  background: linear-gradient(#ffffff, #fff8d8);
+  box-shadow: 2px 2px 0 rgba(0, 30, 70, 0.35);
+  color: #111;
+  font: 11px/1.3 var(--system-font, Tahoma, sans-serif);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.cpet__bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 16px;
+  border: 6px solid transparent;
+  border-top-color: #1d3f6e;
+}
+.cpet__bubble.is-right {
+  left: auto;
+  right: 10px;
+}
+.cpet__bubble.is-right::after {
+  left: auto;
+  right: 16px;
+}
+.cpet__bubble.is-below {
+  bottom: auto;
+  top: calc(100% + 10px);
+}
+.cpet__bubble.is-below::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1d3f6e;
+}
+.cpet__menu {
+  position: fixed;
+  z-index: var(--z-menu, 5100);
+  min-width: 112px;
+  margin: 0;
+  padding: 2px;
+  border: 1px solid #1d3f6e;
+  background: #fff;
+  box-shadow: 2px 2px 0 rgba(0, 30, 70, 0.35);
+  list-style: none;
+  font: 11px var(--system-font, Tahoma, sans-serif);
+  pointer-events: auto;
+}
+.cpet__menu-title {
+  padding: 2px 6px;
+  border-bottom: 1px solid #c9d8ea;
+  background: linear-gradient(90deg, #0f56b3, #4b87c8);
+  color: #fff;
+  font-weight: 700;
+}
+.cpet__menu button {
+  display: block;
+  width: 100%;
+  padding: 3px 8px;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: #111;
+}
+.cpet__menu button:hover,
+.cpet__menu button:focus-visible {
+  outline: none;
+  background: #0f56b3;
+  color: #fff;
+}
+
+/* ── mobile: a little ledge on the home screen ── */
+.catchy-layer--mobile {
+  position: relative;
+  inset: auto;
+  height: 64px;
+  z-index: auto;
+  overflow: visible;
+}
+.catchy-layer--mobile .cpet__hit {
+  touch-action: pan-y;
+}
+.catchy-layer--mobile .cpet__bubble {
+  max-width: 150px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cpet *,
+  .cpet__fig {
+    animation: none !important;
+  }
+}
+.catchy-layer--mobile .cpet__bubble {
+  bottom: auto;
+  top: 8px;
+  left: calc(100% + 8px);
+  right: auto;
+}
+.catchy-layer--mobile .cpet__bubble.is-right {
+  left: auto;
+  right: calc(100% + 8px);
+}
+.catchy-layer--mobile .cpet__bubble::after {
+  top: 6px;
+  left: -12px;
+  right: auto;
+  border-top-color: transparent;
+  border-right-color: #1d3f6e;
+}
+.catchy-layer--mobile .cpet__bubble.is-right::after {
+  left: auto;
+  right: -12px;
+  border-right-color: transparent;
+  border-left-color: #1d3f6e;
+}
+.cpet__bubble--float {
+  position: fixed;
+  z-index: 4500; /* above windows, below the taskbar, menus and dialogs */
+  bottom: auto;
+  left: 0;
+  top: 0;
+}

@@ -1,0 +1,175 @@
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-critical);
+  display: grid;
+  place-items: center;
+  background: #000;
+  color: #d8e6f5;
+  font-family: var(--mono-font);
+  font-size: 15px;
+  overflow: hidden;
+}
+.boot__dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 24px 8px rgba(190, 220, 255, 0.9);
+  transform: scale(0);
+}
+.boot__screen {
+  width: min(640px, calc(100vw - 48px));
+}
+.boot__machine {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 0.06em;
+}
+.boot__sub {
+  margin-top: 2px;
+  color: #7f9fc6;
+  font-size: 12px;
+}
+.boot__lines {
+  margin: 22px 0 18px;
+  padding: 0;
+  list-style: none;
+  min-height: 7.2em;
+}
+.boot__lines li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  line-height: 1.8;
+}
+.boot__dots {
+  flex: 1;
+  border-bottom: 2px dotted #3e5877;
+  transform: translateY(-4px);
+}
+.boot__lines b {
+  color: #7dff9a;
+}
+.boot__target {
+  opacity: 0;
+  text-align: left;
+}
+.boot__logo {
+  width: min(360px, 70vw);
+  height: auto;
+  margin: 0 0 14px;
+}
+.boot__target p {
+  color: #fff;
+  font-weight: bold;
+}
+.boot__connecting {
+  margin: 4px 0 8px;
+  color: #ffb3b3 !important;
+}
+.boot__bar {
+  max-width: 360px;
+  border-color: #7f9fc6;
+  background: #000;
+}
+.boot__skip {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  min-height: 32px;
+  padding: 4px 14px;
+  border: 1px solid #7f9fc6;
+  background: #000;
+  color: #d8e6f5;
+  font-family: var(--mono-font);
+  font-size: 13px;
+}
+.boot__skip:hover,
+.boot__skip:focus-visible {
+  background: #d8e6f5;
+  color: #000;
+  outline: none;
+}
+
+/* ── CRT treatment (decorative, aria-hidden) ─────────────────────────── */
+.crt {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-crt);
+  pointer-events: none;
+}
+.crt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.06) 0 1px, transparent 1px 3px);
+  opacity: 0.55;
+}
+.crt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 62%, rgba(0, 0, 0, 0.22) 100%);
+}
+.crt--boot::before {
+  opacity: 1;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.28) 0 1px, transparent 1px 3px);
+}
+.crt--boot::after {
+  background: radial-gradient(ellipse at center, rgba(120, 170, 255, 0.05) 40%, rgba(0, 0, 0, 0.55) 100%);
+  animation: crt-flicker 0.12s steps(2) infinite;
+}
+@keyframes crt-flicker {
+  50% {
+    opacity: 0.92;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .crt::before {
+    opacity: 0.3;
+  }
+  .crt--boot::after {
+    animation: none;
+  }
+}
+
+/* ── Screensaver ─────────────────────────────────────────────────────── */
+.screensaver {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-screensaver);
+  background: #000;
+  overflow: hidden;
+  cursor: none;
+}
+.screensaver__item {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+.screensaver__item img {
+  width: 150px;
+  height: auto;
+  border: 3px solid #fff;
+  box-shadow: 4px 4px 0 rgba(255, 96, 96, 0.8);
+}
+.screensaver__logo {
+  width: 220px;
+  filter: drop-shadow(0 0 12px rgba(75, 135, 200, 0.8));
+}
+.screensaver__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  color: #7f9fc6;
+  font-family: var(--mono-font);
+  font-size: 12px;
+}

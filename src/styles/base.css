@@ -1,0 +1,165 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+}
+body {
+  background: #000;
+  color: var(--ink);
+  font-family: var(--system-font);
+  font-size: var(--fs-body);
+  line-height: 1.4;
+  -webkit-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+  cursor: var(--cursor-default);
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+a {
+  color: var(--link);
+}
+a:visited {
+  color: var(--visited);
+}
+a:hover {
+  color: var(--link-hover);
+}
+::selection {
+  background: var(--selection);
+  color: var(--selection-ink);
+}
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -40px;
+  z-index: var(--z-critical);
+  background: #fff;
+  color: var(--iys-blue);
+  padding: 6px 10px;
+  border: 1px solid var(--os-border);
+}
+.skip-link:focus {
+  top: 8px;
+}
+
+/* Period focus: dotted, but thick enough to actually see. */
+:focus-visible {
+  outline: 2px dotted var(--focus);
+  outline-offset: 1px;
+}
+
+/* ── Cursors: small original bitmaps with native fallbacks ─────────── */
+:root {
+  --cursor-default: url('/iys/os/cursor-default.svg') 1 1, default;
+  --cursor-pointer: url('/iys/os/cursor-pointer.svg') 6 1, pointer;
+  --cursor-busy: url('/iys/os/cursor-busy.svg') 8 8, progress;
+  --cursor-move: url('/iys/os/cursor-move.svg') 10 10, move;
+}
+a,
+button,
+select,
+label,
+[role='button'],
+summary {
+  cursor: var(--cursor-pointer);
+}
+input[type='text'],
+input[type='search'],
+input[type='email'],
+input[type='number'],
+textarea {
+  cursor: text;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+.is-busy,
+.is-busy * {
+  cursor: var(--cursor-busy) !important;
+}
+
+/* ── Scrollbars (native, restyled where supported) ─────────────────── */
+* {
+  scrollbar-color: #8fa9c9 #eceae4;
+}
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+::-webkit-scrollbar-track {
+  background: #eceae4 repeating-conic-gradient(#e2dfd7 0 25%, #f3f1ec 0 50%) 0 0 / 2px 2px;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #d3e1f3, #b3c9e6);
+  border: 1px solid #5c7fae;
+  border-radius: 2px;
+  box-shadow: inset 1px 1px 0 #fff;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #e2ecf8, #c2d6ef);
+}
+::-webkit-scrollbar-button:single-button {
+  display: block;
+  height: 16px;
+  width: 16px;
+  background-color: #d8e4f3;
+  border: 1px solid #5c7fae;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h1v1h1v1h1v1h1v1H0V3h1V2h1V1h1z' fill='%2306478e'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h7v1H6v1H5v1H4v1H3V3H2V2H1V1H0z' fill='%2306478e'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:single-button:horizontal:decrement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h1v7H3V6H2V5H1V4H0V3h1V2h1V1h1z' fill='%2306478e'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:single-button:horizontal:increment {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h1v1h1v1h1v1h1v1H3v1H2v1H1v1H0z' fill='%2306478e'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

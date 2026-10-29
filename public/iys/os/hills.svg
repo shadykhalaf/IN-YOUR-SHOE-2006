@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
+  <!-- IYS HILLS — original Y2K-mood landscape drawn for the IYS Internet 2006
+       concept (Omar Akram, 2026). Pure vector, no photo, no third-party asset. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1765c9"/>
+      <stop offset=".45" stop-color="#4c9eef"/>
+      <stop offset=".78" stop-color="#9fd1fb"/>
+      <stop offset="1" stop-color="#d9efff"/>
+    </linearGradient>
+    <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fd86a"/>
+      <stop offset="1" stop-color="#3f9a33"/>
+    </linearGradient>
+    <linearGradient id="mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6fd145"/>
+      <stop offset="1" stop-color="#2b8a1c"/>
+    </linearGradient>
+    <linearGradient id="near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7ee04f"/>
+      <stop offset=".55" stop-color="#3aa826"/>
+      <stop offset="1" stop-color="#1d7412"/>
+    </linearGradient>
+    <radialGradient id="shine" cx=".35" cy=".1" r=".6">
+      <stop offset="0" stop-color="#e9ffb8" stop-opacity=".7"/>
+      <stop offset="1" stop-color="#e9ffb8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sun" cx=".82" cy=".12" r=".35">
+      <stop offset="0" stop-color="#fffbe0" stop-opacity=".9"/>
+      <stop offset=".3" stop-color="#fff6c0" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#fff6c0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-20%" y="-50%" width="140%" height="200%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="900" fill="url(#sky)"/>
+  <rect width="1200" height="900" fill="url(#sun)"/>
+  <g fill="#fff" filter="url(#soft)">
+    <g opacity=".92">
+      <ellipse cx="190" cy="170" rx="120" ry="34"/>
+      <ellipse cx="250" cy="148" rx="80" ry="40"/>
+      <ellipse cx="140" cy="158" rx="60" ry="30"/>
+    </g>
+    <g opacity=".85">
+      <ellipse cx="760" cy="110" rx="150" ry="30"/>
+      <ellipse cx="820" cy="92" rx="90" ry="36"/>
+      <ellipse cx="700" cy="98" rx="60" ry="26"/>
+    </g>
+    <g opacity=".75">
+      <ellipse cx="520" cy="300" rx="110" ry="22"/>
+      <ellipse cx="560" cy="286" rx="60" ry="24"/>
+    </g>
+    <g opacity=".7">
+      <ellipse cx="1060" cy="330" rx="130" ry="24"/>
+      <ellipse cx="1010" cy="316" rx="70" ry="26"/>
+    </g>
+  </g>
+  <path d="M0 600 C 180 520 360 520 560 575 S 940 640 1200 540 V900 H0Z" fill="url(#far)"/>
+  <path d="M0 690 C 220 590 470 600 700 668 S 1060 700 1200 640 V900 H0Z" fill="url(#mid)"/>
+  <path d="M-40 900 C 120 700 420 640 640 700 C 860 760 1020 740 1240 700 V900Z" fill="url(#near)"/>
+  <path d="M-40 900 C 120 700 420 640 640 700 C 860 760 1020 740 1240 700 V900Z" fill="url(#shine)"/>
+</svg>

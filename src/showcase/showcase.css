@@ -1,0 +1,667 @@
+/* /showcase — a 540×960 stage rendered at 2× (1080×1920). Uses the site's own
+   OS/app styles; these rules only place things on the fixed stage. */
+.sc-root {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-bottom: 56px;
+  background: #0d0d0d;
+  overflow: hidden;
+}
+.sc-root--record {
+  display: block;
+  padding: 0;
+  background: #000;
+}
+.sc-frame {
+  width: 540px;
+  height: 960px;
+  transform-origin: center center;
+}
+.sc-stage {
+  position: relative;
+  width: 540px;
+  height: 960px;
+  overflow: hidden;
+  background: #000;
+  font-family: var(--system-font);
+  cursor: default;
+}
+.showcase *,
+.showcase *::before,
+.showcase *::after {
+  animation: none !important;
+  transition: none !important;
+}
+.sc-desk {
+  position: absolute;
+  inset: 0 0 34px 0;
+  overflow: hidden;
+}
+.sc-wall {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 28%;
+}
+.sc-icons {
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  display: grid;
+  grid-template-rows: repeat(7, 78px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sc-icon {
+  position: relative;
+}
+.sc-stamp {
+  position: absolute;
+  right: 12px;
+  bottom: 14px;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: right;
+  text-shadow: 1px 1px 1px #000;
+}
+.sc-stamp b {
+  font-size: 13px;
+}
+
+.sc-win.win {
+  position: absolute;
+  z-index: 5;
+}
+.sc-win .win__body {
+  background: #fff;
+}
+.sc-addr {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  background: var(--os-face);
+  border-bottom: 1px solid var(--os-shadow);
+  font-size: 11px;
+}
+.sc-addr .input {
+  flex: 1;
+  min-height: 20px;
+  padding: 2px 5px;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* portal */
+.sc-portal {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  padding: 8px;
+  overflow: hidden;
+  font-family: var(--content-font);
+}
+.sc-portal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.sc-portal__head img {
+  width: 190px;
+  height: auto;
+}
+.sc-portal__head p {
+  max-width: 230px;
+  color: var(--iys-coral);
+  font-family: var(--system-font);
+  font-size: 15px;
+  font-weight: bold;
+  text-align: right;
+  line-height: 1.2;
+}
+.sc-marquee {
+  padding: 0 6px;
+  font-size: 11px;
+}
+.sc-top8 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sc-top8 li {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid #c9d5e6;
+  background: #f7f9fc;
+  font-size: 10px;
+}
+.sc-top8 img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+.sc-top8 b {
+  color: var(--link);
+  text-decoration: underline;
+  line-height: 1.2;
+  height: 2.4em;
+  overflow: hidden;
+}
+.sc-top8 .price {
+  font-size: 10px;
+}
+
+/* chat */
+.sc-chat {
+  height: 100%;
+}
+.sc-chat__log {
+  flex: 1;
+  padding: 8px 10px;
+  overflow: hidden;
+}
+.sc-big {
+  font-size: 26px !important;
+  line-height: 1.2;
+}
+.sc-atts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.sc-atts li {
+  display: grid;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid #c3d3e8;
+  background: #f7faff;
+  font-size: 10px;
+}
+.sc-atts img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+.sc-atts .price {
+  font-size: 10px;
+}
+
+/* shop + search */
+.sc-shop {
+  position: relative;
+  height: 100%;
+  padding: 8px;
+  overflow: hidden;
+  font-family: var(--content-font);
+}
+.sc-shop .page__title {
+  font-size: 20px;
+}
+.sc-shop .page__meta {
+  margin: 2px 0 6px;
+  font-size: 12px;
+}
+.sc-odo {
+  display: inline-block;
+  height: 16px;
+  overflow: hidden;
+  vertical-align: bottom;
+  font-weight: bold;
+  color: var(--iys-coral);
+}
+.sc-odo__col {
+  display: block;
+}
+.sc-odo__col span {
+  display: block;
+  height: 16px;
+  line-height: 16px;
+}
+.sc-shop__view {
+  height: 680px;
+  overflow: hidden;
+  border-top: 2px solid var(--iys-blue);
+  padding-top: 6px;
+}
+.sc-shop__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sc-shop__grid li {
+  display: grid;
+  gap: 2px;
+  height: 176px;
+  padding: 3px;
+  border: 1px solid #cfd6df;
+  font-size: 9px;
+  overflow: hidden;
+}
+.sc-shop__grid img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  background: #f0efe9;
+}
+.sc-shop__grid span {
+  color: var(--link);
+  text-decoration: underline;
+  line-height: 1.2;
+}
+.sc-search {
+  position: absolute;
+  inset: 0;
+  padding: 18px 12px;
+  background: #fff;
+}
+.sc-search .search__title {
+  display: flex;
+  justify-content: center;
+  font-size: 18px;
+}
+.sc-search__row {
+  display: flex;
+  gap: 6px;
+  margin: 10px 0 12px;
+}
+.sc-search__input {
+  flex: 1;
+  min-height: 34px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.sc-type {
+  display: inline-block;
+}
+.sc-results {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.sc-results .result {
+  grid-template-columns: 96px minmax(0, 1fr);
+}
+.sc-results img {
+  width: 96px;
+  height: 120px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+.sc-results .result__title {
+  font-size: 15px;
+}
+
+/* product */
+.sc-product {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.sc-product__img {
+  position: relative;
+  height: 470px;
+  background: #fff;
+}
+.sc-product__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+.sc-product__img .gallery__file {
+  position: absolute;
+  left: 6px;
+  bottom: 4px;
+  padding: 1px 4px;
+  background: rgba(255, 255, 255, 0.85);
+}
+.sc-product__props {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  padding: 10px 12px;
+}
+.sc-product__props .props__title {
+  font-size: 20px;
+}
+.sc-chips .chip label {
+  min-width: 52px;
+  min-height: 36px;
+}
+.sc-add {
+  min-width: 220px;
+  min-height: 38px;
+  font-size: 15px;
+}
+
+/* camera + viewer */
+.sc-contact {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  height: 100%;
+  padding: 8px;
+  background: #fff;
+}
+.sc-cam.contact__frame {
+  font-size: 10px;
+}
+.sc-viewer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.sc-viewer__stage {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  background: #3a3a3a;
+}
+.sc-viewer__stage img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.sc-setwp {
+  border-color: #9aa9bf !important;
+  background: #fff !important;
+  font-weight: bold;
+}
+
+/* wardrobe */
+.sc-wardrobe {
+  position: relative;
+  height: 100%;
+  padding: 14px;
+  background: #fff;
+}
+.sc-folders {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sc-folders li {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  font-size: 13px;
+}
+.sc-folders small {
+  color: var(--muted);
+}
+.sc-wthumbs {
+  position: absolute;
+  inset: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sc-wthumbs li {
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+  font-family: var(--mono-font);
+  font-size: 9px;
+  color: var(--ink-2);
+  overflow: hidden;
+}
+.sc-wthumbs img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border: 1px solid #c8c6bf;
+}
+
+/* chaos helpers */
+.sc-bag {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  font-size: 12px;
+}
+.sc-bag img {
+  width: 90px;
+  height: 112px;
+  object-fit: cover;
+}
+.sc-bag div {
+  display: grid;
+  align-content: start;
+  gap: 3px;
+}
+.sc-fill {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sc-tile {
+  height: 100%;
+  background-size: 72px auto;
+  background-repeat: repeat;
+}
+
+.sc-exe {
+  position: absolute;
+  left: 220px;
+  top: 390px;
+  width: 100px;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* dialogs / balloon / transfer placed on the stage */
+.showcase .sc-dialog {
+  position: absolute;
+  left: 30px;
+  top: 360px;
+  width: 480px;
+  z-index: 20;
+}
+.showcase .sc-dialog .dialog__big {
+  font-size: 20px;
+  line-height: 1.25;
+}
+.showcase .sc-dialog .btn {
+  min-width: 110px;
+  min-height: 34px;
+  font-size: 14px;
+}
+.showcase .sc-balloon {
+  position: absolute;
+  right: 8px;
+  bottom: 10px;
+  z-index: 20;
+  font-size: 14px;
+}
+.showcase .sc-xfer {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: none;
+  z-index: 25;
+  width: 420px;
+}
+.showcase .sc-xfer .transfer__body {
+  font-size: 14px;
+}
+.showcase .sc-taskbar {
+  position: absolute;
+  z-index: 10;
+}
+.showcase .sc-taskbar .task {
+  width: 104px;
+  font-size: 11px;
+}
+.showcase .sc-taskbar .tray__notice {
+  font-size: 10px;
+}
+.sc-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 50;
+  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.4));
+}
+.sc-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: #fff;
+  pointer-events: none;
+}
+
+/* end card */
+.sc-end {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 40px;
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.08) 0 1px, transparent 1px 3px),
+    radial-gradient(circle at 50% 42%, #1c5ea8, #06478e 45%, #041f44);
+  color: #fff;
+  text-align: center;
+}
+.sc-end__logo {
+  width: 400px;
+  height: auto;
+}
+.sc-end__line {
+  color: #ff6060;
+  font-family: var(--system-font);
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 1.15;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+.sc-end__small {
+  margin-top: 18px;
+  font-family: var(--mono-font);
+  font-size: 15px;
+  letter-spacing: 0.14em;
+}
+.sc-end__name {
+  font-family: var(--system-font);
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+}
+.sc-end__disc {
+  margin-top: 26px;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  font-family: var(--mono-font);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+
+/* boot */
+.sc-boot {
+  position: absolute;
+  inset: 0;
+  z-index: 70;
+  background: #000;
+  color: #d8e6f5;
+  font-family: var(--mono-font);
+  font-size: 14px;
+}
+.sc-dot {
+  position: absolute;
+  left: 263px;
+  top: 473px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 24px 8px rgba(190, 220, 255, 0.9);
+}
+.sc-boot__screen {
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  top: 250px;
+}
+.sc-boot__screen .boot__logo {
+  width: 360px;
+}
+.showcase .sc-crt {
+  position: absolute;
+  z-index: 80;
+}
+.sc-power {
+  position: absolute;
+  inset: 0;
+  z-index: 90;
+  background: #000;
+}
+.sc-power__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 479px;
+  height: 3px;
+  background: #fff;
+  box-shadow: 0 0 14px 4px rgba(190, 220, 255, 0.9);
+}
+
+/* preview controls (not part of the film) */
+.sc-controls {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #1b2b44;
+  color: #fff;
+  font-size: 12px;
+}
+.sc-controls input {
+  flex: 1;
+}
+.sc-controls button {
+  min-height: 32px;
+  padding: 0 12px;
+}
+.sc-controls__note {
+  opacity: 0.75;
+}
