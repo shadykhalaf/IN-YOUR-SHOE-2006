@@ -12,6 +12,7 @@
  */
 import { clientKey, createRateLimiter, json, readJson, sameOrigin } from './http.js';
 import { activeFreeShipping, buildLiveCatalogue, createCart, shopifyConfig, type Fetcher, type LiveCatalogue, type ShopifyEnv } from './shopify.js';
+import { buildLiveCataloguePublic } from './shopify-public.js';
 
 const CATALOGUE_TTL = 10 * 60_000;
 const PROMO_TTL = 5 * 60_000;
@@ -46,7 +47,8 @@ async function liveCatalogue(env: ShopifyEnv, deps: Deps): Promise<LiveCatalogue
   const now = (deps.now ?? Date.now)();
   if (catalogue && now - catalogue.at < CATALOGUE_TTL) return catalogue.data;
   // One build at a time per instance (no thundering herd on Shopify).
-  building ??= buildLiveCatalogue(cfg.storefront!, deps.fetcher)
+  // Public mode reads the store's public JSON (no token); token mode uses the Storefront API.
+  building ??= (cfg.publicMode ? buildLiveCataloguePublic(cfg.domain!, deps.fetcher) : buildLiveCatalogue(cfg.storefront!, deps.fetcher))
     .then((data) => {
       catalogue = { at: (deps.now ?? Date.now)(), data };
       return data;
@@ -79,7 +81,7 @@ export async function handleCommerce(req: Request, env: ShopifyEnv, deps: Deps =
   const who = clientKey(req);
 
   if (op === 'status' && req.method === 'GET') {
-    return json(200, { ok: true, live: cfg.live, storefront: Boolean(cfg.storefront), admin: Boolean(cfg.admin), apiVersion: cfg.version, problems: cfg.problems });
+    return json(200, { ok: true, live: cfg.live, mode: cfg.publicMode ? 'public' : cfg.live ? 'token' : 'off', storefront: Boolean(cfg.storefront), admin: Boolean(cfg.admin), apiVersion: cfg.version, problems: cfg.problems });
   }
 
   if (op === 'catalogue' && req.method === 'GET') {
@@ -105,6 +107,8 @@ export async function handleCommerce(req: Request, env: ShopifyEnv, deps: Deps =
 
   if (op === 'cart' && req.method === 'POST') {
     if (!sameOrigin(req)) return json(403, { ok: false, error: 'Forbidden.' });
+    // Token-less public mode has no server cart: the client checks out via a cart permalink.
+    if (cfg.publicMode) return json(501, { ok: false, reason: 'public-mode', error: 'Server cart needs a Storefront API token; this build checks out via cart permalink.' });
     if (!cfg.live) return notConfigured(cfg.problems);
     if (!cartLimiter.take(who)) return json(429, { ok: false, error: 'Too many requests. Try again in a minute.' });
     const body = await readJson(req, 8_000);

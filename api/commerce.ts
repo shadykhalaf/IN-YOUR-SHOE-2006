@@ -10,6 +10,7 @@ declare const process: { env: Record<string, string | undefined> };
 const handler = (request: Request) =>
   handleCommerce(request, {
     COMMERCE_LIVE: process.env.COMMERCE_LIVE,
+    COMMERCE_PUBLIC: process.env.COMMERCE_PUBLIC,
     SHOPIFY_STORE_DOMAIN: process.env.SHOPIFY_STORE_DOMAIN,
     SHOPIFY_STOREFRONT_PRIVATE_TOKEN: process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN,
     SHOPIFY_STOREFRONT_PUBLIC_TOKEN: process.env.SHOPIFY_STOREFRONT_PUBLIC_TOKEN,

@@ -23,6 +23,8 @@ export const DEFAULT_API_VERSION = '2026-07';
 
 export interface ShopifyEnv {
   COMMERCE_LIVE?: string;
+  /** Token-less public mode: read the store's public storefront JSON, no API key. */
+  COMMERCE_PUBLIC?: string;
   SHOPIFY_STORE_DOMAIN?: string;
   SHOPIFY_STOREFRONT_PRIVATE_TOKEN?: string;
   SHOPIFY_STOREFRONT_PUBLIC_TOKEN?: string;
@@ -36,6 +38,8 @@ export interface Endpoint {
 }
 export interface ShopifyConfig {
   live: boolean;
+  /** True when live mode is the token-less public-JSON reader (no Storefront token). */
+  publicMode: boolean;
   storefront: Endpoint | null;
   admin: Endpoint | null;
   domain: string | null;
@@ -48,18 +52,15 @@ const DOMAIN = /^(?=.{4,253}$)[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-
 const VERSION = /^20\d\d-(01|04|07|10)$/;
 
 export function shopifyConfig(env: ShopifyEnv): ShopifyConfig {
-  const problems: string[] = [];
   const domain = env.SHOPIFY_STORE_DOMAIN?.trim().toLowerCase() || null;
   const version = env.SHOPIFY_API_VERSION?.trim() || DEFAULT_API_VERSION;
   const on = ['1', 'true', 'on', 'yes'].includes((env.COMMERCE_LIVE ?? '').trim().toLowerCase());
-  if (!on) problems.push('COMMERCE_LIVE is not enabled');
-  if (!domain) problems.push('SHOPIFY_STORE_DOMAIN is not set');
-  else if (!DOMAIN.test(domain)) problems.push('SHOPIFY_STORE_DOMAIN is not a valid host name');
-  if (!VERSION.test(version)) problems.push('SHOPIFY_API_VERSION must look like 2026-07');
+  const pubOn = ['1', 'true', 'on', 'yes'].includes((env.COMMERCE_PUBLIC ?? '').trim().toLowerCase());
+  const domainValid = Boolean(domain && DOMAIN.test(domain));
+  const versionValid = VERSION.test(version);
   const priv = env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN?.trim();
   const pub = env.SHOPIFY_STOREFRONT_PUBLIC_TOKEN?.trim();
-  if (!priv && !pub) problems.push('no Storefront API token');
-  const okHost = Boolean(domain && DOMAIN.test(domain) && VERSION.test(version));
+  const okHost = domainValid && versionValid;
   const storefront: Endpoint | null =
     okHost && (priv || pub)
       ? {
@@ -69,7 +70,27 @@ export function shopifyConfig(env: ShopifyEnv): ShopifyConfig {
       : null;
   const adminToken = env.SHOPIFY_ADMIN_TOKEN?.trim();
   const admin: Endpoint | null = okHost && adminToken ? { url: `https://${domain}/admin/api/${version}/graphql.json`, headers: { 'X-Shopify-Access-Token': adminToken } } : null;
-  return { live: on && Boolean(storefront), storefront, admin, domain, version, problems };
+
+  // Token mode (a Storefront token + COMMERCE_LIVE) takes precedence. Otherwise,
+  // COMMERCE_PUBLIC with a valid domain gives the token-less public-JSON reader.
+  const tokenLive = on && Boolean(storefront);
+  const publicMode = !tokenLive && pubOn && domainValid;
+  const live = tokenLive || publicMode;
+
+  const problems: string[] = [];
+  if (!live) {
+    if (pubOn) {
+      if (!domain) problems.push('SHOPIFY_STORE_DOMAIN is not set');
+      else if (!domainValid) problems.push('SHOPIFY_STORE_DOMAIN is not a valid host name');
+    } else {
+      if (!on) problems.push('COMMERCE_LIVE is not enabled');
+      if (!domain) problems.push('SHOPIFY_STORE_DOMAIN is not set');
+      else if (!domainValid) problems.push('SHOPIFY_STORE_DOMAIN is not a valid host name');
+      if (!versionValid) problems.push('SHOPIFY_API_VERSION must look like 2026-07');
+      if (!priv && !pub) problems.push('no Storefront API token');
+    }
+  }
+  return { live, publicMode, storefront, admin, domain, version, problems };
 }
 
 export type Fetcher = (url: string, init: RequestInit) => Promise<Response>;
