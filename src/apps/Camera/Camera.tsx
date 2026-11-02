@@ -71,7 +71,7 @@ export default function Camera({ win }: { win: Win }) {
                     <span className="contact__photo">
                       <img src={ph.src} alt="" loading="lazy" decoding="async" />
                       <span className="contact__stamp" aria-hidden="true">
-                        TM▸2006
+                        TM▸2000s
                       </span>
                     </span>
                     <span className="contact__name">{ph.filename}</span>
@@ -84,7 +84,7 @@ export default function Camera({ win }: { win: Win }) {
               ))}
             </ul>
             <p className="explorer__note">
-              “TM▸2006” is the fictional time-machine overlay, not a capture date - these are current IYS photos.
+              “TM▸2000s” is the fictional time-machine overlay, not a capture date - these are current IYS photos.
             </p>
           </div>
         </div>

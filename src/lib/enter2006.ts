@@ -92,7 +92,8 @@ export function applyEnter2006(search: string = typeof window !== 'undefined' ? 
   applied = true;
   try {
     const params = new URLSearchParams(search);
-    if (params.get('enter') !== '2006') return false;
+    const flag = params.get('enter');
+    if (flag !== '2000s' && flag !== '2006') return false; // 2006 = links made before the rename
     const items = parseEnterBag(params.get('bag'));
     if (items && items.length) useCart.setState({ items });
     cleanUrl();

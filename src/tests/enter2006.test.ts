@@ -74,3 +74,14 @@ describe('applyEnter2006', () => {
     expect(useCart.getState().items[0]!.handle).toBe('old');
   });
 });
+
+describe('the 2000s rename', () => {
+  it('accepts ?enter=2000s from the store, and still the old ?enter=2006', () => {
+    resetEnter2006();
+    expect(applyEnter2006(`?enter=2000s&bag=${enc([line()])}`)).toBe(true);
+    resetEnter2006();
+    expect(applyEnter2006(`?enter=2006&bag=${enc([line()])}`)).toBe(true);
+    resetEnter2006();
+    expect(applyEnter2006(`?enter=1999&bag=${enc([line()])}`)).toBe(false);
+  });
+});

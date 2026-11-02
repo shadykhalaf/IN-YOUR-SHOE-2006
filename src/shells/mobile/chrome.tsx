@@ -191,7 +191,7 @@ export function StatusBar() {
         {now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
       </span>
       <span className="m-status__right">
-        <span className="m-status__target">2006</span>
+        <span className="m-status__target">2000s</span>
         <Battery />
       </span>
     </div>

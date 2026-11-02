@@ -4,7 +4,7 @@
  * OFFICIAL - existing In Your Shoe language, re-verified on the public
  *            Egyptian storefront on 2026-09-29, with where it appears.
  *            Promotions are volatile: re-verify before each publish.
- * CONCEPT  - campaign lines for IN YOUR SHOE 2006 (built with Omar Akram, 2026).
+ * CONCEPT  - campaign lines for IN YOUR SHOE 2000s (built with Omar Akram, 2026).
  *            Never present these as IYS copy.
  */
 
@@ -38,10 +38,10 @@ export const officialSources = {
 
 /** ── CONCEPT COPY - NOT OFFICIAL BRAND LANGUAGE ─────────────────────── */
 export const concept = {
-  name: 'IYS INTERNET 2006',
+  name: 'IYS INTERNET 2000s',
   os: 'IYS OS',
-  targetYear: '2006',
-  thesis: 'What if today’s In Your Shoe travelled back to the internet of 2006?',
+  targetYear: '2000s',
+  thesis: 'What if today’s In Your Shoe travelled back to the internet of the 2000s?',
   boot: {
     machine: 'IYS PERSONAL COMPUTER',
     lines: [
@@ -50,7 +50,7 @@ export const concept = {
       ['INTERNET', 'CONNECTED'],
       ['COOL DECISIONS', 'READY :)'],
     ] as [string, string][],
-    target: 'TIME TARGET: 2006',
+    target: 'TIME TARGET: 2000s',
     connecting: 'CONNECTING 2 IYS INTERNET... brb :)',
     skip: 'SKIP',
   },
@@ -69,7 +69,7 @@ export const concept = {
     errorTitle: 'CHECKOUT COULDN’T START :(',
     realErrorTitle: 'REAL IYS COULDN’T OPEN :(',
     /** The global switch: the site u r on, and the real store. */
-    here: 'IYS 2006',
+    here: 'IYS 2000s',
     real: 'REAL IYS',
     realHint: 'switch to the real In Your Shoe store',
     errorMessage: 'ONE OF UR ITEMS NEEDS A REFRESH. open it, pick ur size again and re-add it - ur bag is still here xo',
@@ -156,8 +156,8 @@ export const concept = {
   readme: [
     'you made a cool decision.',
     '',
-    'this is IN YOUR SHOE, running on a computer from 2006:',
-    'the real store, the whole catalogue, dressed up like it’s 2006.',
+    'this is IN YOUR SHOE, running on a computer from the 2000s:',
+    'the real store, the whole catalogue, dressed up like it’s the 2000s.',
     '',
     'Every product, price and photo inside is real and public,',
     'copied from inyourshoe.com at the snapshot time shown in',
@@ -190,7 +190,7 @@ export const concept = {
     howTo: { title: 'How 2 use IYS Messenger :)', lines: ['1. pick a buddy', '2. type ur msg', '3. hit send', 'ttyl :)'] },
     about: {
       title: 'About IYS Messenger',
-      lines: ['IYS MESSENGER is part of IN YOUR SHOE 2006.', 'Buddies are real IYS collections. Chats are scripted copy: no real people, no bots.'],
+      lines: ['IYS MESSENGER is part of IN YOUR SHOE 2000s.', 'Buddies are real IYS collections. Chats are scripted copy: no real people, no bots.'],
     },
   },
   /**
@@ -280,7 +280,7 @@ export const concept = {
   escape: {
     title: 'IYS.EXE',
     heading: 'COMPUTER SAYING NO? :(',
-    body: 'WANNA SHOP THE EASY WAY? this 2006 computer can be a lot lol. the real IYS site is one tap away.',
+    body: 'WANNA SHOP THE EASY WAY? this 2000s computer can be a lot lol. the real IYS site is one tap away.',
     bag: (n: number) => `ur bag (${n} ${n === 1 ? 'item' : 'items'}) comes with u.`,
     open: 'TAKE ME TO REAL IYS ↗',
     stay: 'NAH I’M GOOD',
@@ -302,8 +302,8 @@ export const concept = {
     askMobile: 'CONTACT IYS ↗',
   },
   disclaimer: [
-    'IN YOUR SHOE - 2006.',
-    'Our store, in a 2006 computer.',
+    'IN YOUR SHOE - 2000s.',
+    'Our store, in a 2000s computer.',
     'Built with Omar Akram, 2026.',
     'Products, prices, stock and checkout are handled by In Your Shoe (inyourshoe.com).',
   ],

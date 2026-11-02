@@ -69,7 +69,7 @@ function Cam({ src, n }: { src: string; n: number }) {
     <div className="contact__frame sc-cam" data-sc="cam">
       <span className="contact__photo">
         <img src={src} alt="" />
-        <span className="contact__stamp">TM▸2006</span>
+        <span className="contact__stamp">TM▸2000s</span>
       </span>
       <span className="contact__name">IMG_{String(n + 17).padStart(4, '0')}.JPG</span>
     </div>
@@ -103,7 +103,7 @@ export default function Showcase() {
   }, [record]);
 
   useEffect(() => {
-    document.title = 'IN YOUR SHOE - 2006 · showcase';
+    document.title = 'IN YOUR SHOE - 2000s · showcase';
     const tl = buildTimeline(stage.current!);
     const api = {
       play: () => {
@@ -160,7 +160,7 @@ export default function Showcase() {
   return (
     <div className={`sc-root${record ? ' sc-root--record' : ''}`}>
       <div className="sc-frame" style={record ? undefined : { transform: `scale(${scale})` }}>
-        <div className="sc-stage showcase" ref={stage} role="img" aria-label="IN YOUR SHOE 2006 showcase film">
+        <div className="sc-stage showcase" ref={stage} role="img" aria-label="IN YOUR SHOE 2000s showcase film">
           {/* ── Desktop ─────────────────────────────────────────── */}
           <div className="sc-desk">
             <div className="sc-wall" data-sc="wall1" style={{ backgroundImage: `url("${SC.wallpaper}")` }} />
@@ -185,7 +185,7 @@ export default function Showcase() {
               <br />
               {formatCount(SC.total)} real IYS products
               <br />
-              in a 2006 computer
+              in a 2000s computer
             </div>
 
             <SWin id="portal" title="IN YOUR SHOE | The Coolest Apparel In Town! - IYS INTERNET" icon="internet" chrome="http://www.inyourshoe.com/" style={{ left: 12, top: 30, width: 516, height: 640 }} status={`${formatCount(SC.total)} products found.`}>
@@ -472,7 +472,7 @@ export default function Showcase() {
             <p className="sc-end__small">2000s INTERNET CONCEPT</p>
             <p className="sc-end__name">OMAR AKRAM · 2026</p>
             <p className="sc-end__disc">
-              IN YOUR SHOE - 2006
+              IN YOUR SHOE - 2000s
               <br />
               BUILT WITH OMAR AKRAM
             </p>
@@ -483,7 +483,7 @@ export default function Showcase() {
             <div className="sc-dot" data-sc="dot" />
             <div className="sc-boot__screen" data-sc="bootscreen">
               <p className="boot__machine">{concept.boot.machine}</p>
-              <p className="boot__sub">IYS OS · target 2006</p>
+              <p className="boot__sub">IYS OS · target 2000s</p>
               <ul className="boot__lines">
                 {concept.boot.lines.map(([k, v]) => (
                   <li key={k} data-sc="bootline">
@@ -521,7 +521,7 @@ export default function Showcase() {
           <span>
             {t.toFixed(2)} / {DURATION.toFixed(1)}s
           </span>
-          <span className="sc-controls__note">IN YOUR SHOE - 2006 · built with Omar Akram</span>
+          <span className="sc-controls__note">IN YOUR SHOE - 2000s · built with Omar Akram</span>
         </div>
       )}
     </div>

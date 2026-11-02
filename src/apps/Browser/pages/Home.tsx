@@ -195,7 +195,7 @@ export default function Home() {
                 <img src={fw.src} alt="In Your Shoe FW27 campaign: two models in brown hoodies beside old computers" width={fw.width} height={fw.height} />
               </button>
               <figcaption>
-                <b>FW27</b> - the current IYS campaign (2026), loaded into a 2006 browser.
+                <b>FW27</b> - the current IYS campaign (2026), loaded into a 2000s browser.
               </figcaption>
             </figure>
           )}
@@ -349,8 +349,8 @@ export default function Home() {
           </section>
           <section className="box">
             <h2 className="box__title">{concept.counterLabel}</h2>
-            <p className="counter" aria-label="Fictional counter: 002006">
-              {'002006'.split('').map((d, i) => (
+            <p className="counter" aria-label="Fictional counter: 002000">
+              {'002000'.split('').map((d, i) => (
                 <span key={i}>{d}</span>
               ))}
             </p>

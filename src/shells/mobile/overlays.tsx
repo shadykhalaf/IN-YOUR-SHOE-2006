@@ -113,7 +113,7 @@ export function MCamera() {
           </li>
         ))}
       </ul>
-      <p className="m-meta">Current official IYS photos. “TM▸2006” overlays are fictional.</p>
+      <p className="m-meta">Current official IYS photos. “TM▸2000s” overlays are fictional.</p>
     </div>
   );
 }

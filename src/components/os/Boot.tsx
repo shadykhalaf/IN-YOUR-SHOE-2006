@@ -68,7 +68,7 @@ export function Boot({ onDone }: { onDone: () => void }) {
       <div className="boot__dot" aria-hidden="true" />
       <div className="boot__screen">
         <p className="boot__machine">{concept.boot.machine}</p>
-        <p className="boot__sub">IYS OS · build 2026 · target 2006</p>
+        <p className="boot__sub">IYS OS · build 2026 · target 2000s</p>
         <ul className="boot__lines">
           {concept.boot.lines.slice(0, lines).map(([k, v]) => (
             <li key={k}>
