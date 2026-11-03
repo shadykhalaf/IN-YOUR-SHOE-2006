@@ -582,7 +582,7 @@
 .top8__img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 .top8__name {
   font-weight: bold;
@@ -797,7 +797,7 @@
 .pcard__img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* the whole product: no heads or hems cut off */
 }
 .pcard__alt {
   position: absolute;
@@ -2863,7 +2863,7 @@ span.explorer__twisty {
 .reco__img .img-offline {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* the whole product: no heads or hems cut off */
 }
 .reco__name {
   display: -webkit-box;
@@ -2896,7 +2896,7 @@ span.explorer__twisty {
   padding: 6px 6px 8px;
 }
 .bag .reco__img {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5; /* the store's portrait product shape (was square, cropping the photo) */
 }
 .bag .reco__head .box__title small {
   display: none;
