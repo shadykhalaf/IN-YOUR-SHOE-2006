@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { Icon } from '../../components/os/Icon';
 import { VariantPicker } from '../../components/product/VariantPicker';
+import { FitCheck } from '../../components/product/FitCheck';
 import { hasSizes, SizeChartView, SizeGuideButton } from '../../components/product/SizeGuide';
 import { useHasSizeChart } from '../../lib/sizeCharts';
 import { MoreLikeThis } from '../../components/shop/ProductCarousel';
@@ -386,6 +387,7 @@ export function MProduct() {
           <>
             <StockNote available={variant ? variant.available : p.available} />
             <VariantPicker p={p} selected={s.selected} onSelect={s.select} />
+            <FitCheck handle={p.handle} />
             {hasSizes(p) && hasSizeChart === true && (
               <>
                 <SizeGuideButton onOpen={() => setGuide((g) => !g)} expanded={guide} controls="m-sizeguide" />

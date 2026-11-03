@@ -5,6 +5,7 @@ import { Gallery } from '../../../components/product/Gallery';
 import { ProductInfo } from '../../../components/product/ProductInfo';
 import { QuantityPicker } from '../../../components/product/QuantityPicker';
 import { VariantPicker } from '../../../components/product/VariantPicker';
+import { FitCheck } from '../../../components/product/FitCheck';
 import { hasSizes, SizeGuideButton } from '../../../components/product/SizeGuide';
 import { useHasSizeChart } from '../../../lib/sizeCharts';
 import { FavoriteButton } from '../../../components/shop/FavoriteButton';
@@ -105,6 +106,7 @@ export default function Product() {
           </div>
           <StockNote available={available} />
           <VariantPicker p={p} selected={s.selected} onSelect={s.select} />
+          <FitCheck handle={p.handle} />
           {/* SIZE GUIDE shares the compact Qty row: the purchase controls never move down for it. */}
           <div className="props__qtyrow">
             <QuantityPicker value={s.qty} onChange={s.setQty} />
