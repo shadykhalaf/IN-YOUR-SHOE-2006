@@ -1199,3 +1199,14 @@ body:has(.m-splash) {
 .reco--mobile .reco__item {
   font-size: 12px;
 }
+
+/* ── The real store's homepage on IYS MOBILE: the same boxes, one column ── */
+.store-home--m { display: grid; gap: 10px; padding: 10px 8px 0; }
+.store-home--m > * + * { margin-top: 0; }
+.store-home--m .box { margin: 0; }
+.store-home--m .store-hero .hero__img img { max-height: none; }
+.store-home--m .store-announce { flex-wrap: wrap; gap: 4px 10px; }
+.store-home--m .store-feature__row { grid-template-columns: 1fr; }
+.store-home--m .store-tiles__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.store-home--m .strip { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 42%; overflow-x: auto; scroll-snap-type: x mandatory; }
+.store-home--m .strip > li { scroll-snap-align: start; }

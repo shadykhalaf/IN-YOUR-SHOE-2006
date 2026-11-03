@@ -10,7 +10,7 @@ import { EssentialLinks } from '../../components/shop/EssentialLinks';
 import { BagIdeas, BagOffers, HandoffStatus, PromoCode, ShippingProgress, useHandoffPending } from '../../components/shop/BagExtras';
 import { ESSENTIALS } from '../../data/essentials';
 import { concept } from '../../data/copy';
-import { MENU } from '../../data/taxonomy';
+import { useMenu } from '../../lib/storeHome';
 import { setWallpaperImage } from '../../lib/actions';
 import { formatCount, formatEGP } from '../../lib/catalogue/format';
 import { useCatalogue } from '../../lib/catalogue/load';
@@ -176,6 +176,7 @@ export function MChat({ close }: { close: () => void }) {
 }
 
 export function MMenu({ close, openOverlay }: { close: () => void; openOverlay: (o: 'camera' | 'chat' | 'games') => void }) {
+  const menu = useMenu(); // the store's own menu once loaded
   const cat = useCatalogue();
   const navigate = useNavigate();
   const prefs = usePreferences();
@@ -219,7 +220,7 @@ export function MMenu({ close, openOverlay }: { close: () => void; openOverlay: 
             <small>{concept.escape.menuSub}</small>
           </button>
         </li>
-        {MENU.filter((m) => !m.collection || (cat?.collections.get(m.collection)?.count ?? 0) > 0).map((m) => (
+        {menu.filter((m) => !m.collection || (cat?.collections.get(m.collection)?.count ?? 0) > 0).map((m) => (
           <li key={m.label}>
             <button type="button" onClick={() => { close(); navigate(m.to ?? collectionPath(m.collection)); }}>
               <Icon name={m.collection?.includes('pjoys') ? 'pjoys' : 'folder'} size={24} />

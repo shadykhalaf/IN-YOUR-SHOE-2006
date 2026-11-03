@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { StoreSections } from '../../components/shop/StoreSections';
+import { useStoreHome } from '../../lib/storeHome';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { Icon } from '../../components/os/Icon';
 import { VariantPicker } from '../../components/product/VariantPicker';
@@ -81,11 +83,14 @@ export function MHome() {
   const custom = wp.kind === 'image' ? wp.src : null;
   const bgStyle = custom ? { backgroundImage: `url("${custom}")`, backgroundSize: mode === 'tile' ? '120px auto' : 'cover', backgroundRepeat: mode === 'tile' ? 'repeat' : 'no-repeat' } : undefined;
   const n = (h: string) => cat?.collections.get(h)?.count ?? 0;
+  // The real store's homepage (published theme): when it's here, its sections lead, in its order.
+  const home = useStoreHome();
   const drop = cat ? collectionProducts(cat, 'newest').slice(0, 8) : [];
   const shelves = cat && FEATURES.homeShelves ? buildShelves(cat, HOME_SHELVES, { exclude: drop.map((p) => p.handle), per: 8 }) : [];
   return (
     <div className={`m-home${custom ? ' m-home--custom' : ''}`} style={bgStyle}>
       {minimized && <h1 className="sr-only">IYS MOBILE</h1>}
+      {home && cat && <StoreSections home={home} cat={cat} mobile />}
       <section className={`m-hero${minimized ? ' is-min' : ''}`} aria-label="welcome.htm">
         <div className="m-hero__bar">
           <span aria-hidden="true">✧ welcome.htm</span>
@@ -127,6 +132,7 @@ export function MHome() {
         </div>
       </section>
       {/* JUST DROPPED sits right under the hero, so its first cards peek into the first screen. */}
+      {!home && (<>
       <section className="m-panel m-panel--drop" aria-labelledby="m-drop-title">
         <h2 className="m-panel__title" id="m-drop-title">
           {concept.y2k.justDropped}
@@ -161,6 +167,7 @@ export function MHome() {
           </Link>
         </section>
       ))}
+      </>)}
       <section className="m-panel m-news" aria-labelledby="m-news-title">
         <h2 className="m-panel__title" id="m-news-title">
           {concept.y2k.newsletterTitle}

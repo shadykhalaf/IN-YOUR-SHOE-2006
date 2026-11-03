@@ -1,4 +1,6 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useMenu } from '../../lib/storeHome';
+import { MENU as MENU_FALLBACK } from '../../data/taxonomy';
 import type { MenuDef } from '../../components/os/MenuBar';
 import { Navigate, Route, Routes, useLocation, useNavigate, useNavigationType, useParams } from 'react-router';
 import { Icon } from '../../components/os/Icon';
@@ -57,6 +59,12 @@ export default function Browser({ win }: { win: Win }) {
   const status = useBrowserStatus();
   const bag = useCart((s) => itemCount(s.items));
   const cat = useCatalogue();
+  const menu = useMenu();
+  // Links bar: the store's own menu once loaded (then SHOP ALL and STORES), else the site's own.
+  const links: { label: string; to: string; collection?: string }[] =
+    menu === MENU_FALLBACK
+      ? LINKS
+      : [...menu.filter((m) => m.to !== '/shop').map((m) => ({ label: m.label, to: m.to ?? collectionPath(m.collection), collection: m.collection ?? undefined })), { label: 'SHOP ALL', to: '/shop' }, { label: 'STORES', to: '/stores' }];
   const { canBack, canForward } = useHistoryNav();
   const address = fakeAddress(location.pathname, location.search);
   const [typed, setTyped] = useState(address);
@@ -253,7 +261,7 @@ export default function Browser({ win }: { win: Win }) {
         </form>
         <nav className="linksbar" aria-label="Links">
           <span className="linksbar__label">Links</span>
-          {LINKS.filter((l) => !l.collection || (collectionCount(cat, l.collection) ?? 1) > 0).map((l) => (
+          {links.filter((l) => !l.collection || (collectionCount(cat, l.collection) ?? 1) > 0).map((l) => (
             <button key={l.label} type="button" className="linksbar__link" aria-current={location.pathname === l.to ? 'page' : undefined} onClick={() => go(l.to)}>
               <Icon name={l.collection === 'pjoys' ? 'pjoys' : l.to === '/stores' ? 'stores' : 'folder'} size={16} />
               {l.label}

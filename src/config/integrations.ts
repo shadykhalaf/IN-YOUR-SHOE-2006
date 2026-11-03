@@ -35,13 +35,17 @@ export const ODOO_EXCHANGE_REFUND_FORM_URL: string | null = env(import.meta.env.
 export const IYS_STOREFRONT_ORIGIN = 'https://inyourshoe.com';
 
 /**
- * 6. FIT (true to size) — each product's Fit from the real store (product
- * metafield custom.fit: Runs Small / True To Size / Runs Large), served live by
- * the store's Supabase function (action "fits"). The key is Supabase's public
- * anon key, the same one the store theme uses. null endpoint = no fit shown.
+ * 6. THE REAL STORE, LIVE — the store's Supabase function (read from Shopify):
+ *    action "fits"  each product's Fit (true to size, product metafield custom.fit)
+ *    action "home"  the PUBLISHED theme's homepage sections + main menu, mirrored here
+ * The key is Supabase's public anon key, the same one the store theme uses.
+ * null endpoint = neither is shown (the site keeps its own homepage and menu).
  */
 export const FIT_ENDPOINT: string | null =
   env(import.meta.env.VITE_FIT_ENDPOINT) ?? 'https://larkvlkettqrzgkoegvo.supabase.co/functions/v1/k2-ref';
 export const FIT_KEY: string =
   env(import.meta.env.VITE_FIT_KEY) ??
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxhcmt2bGtldHRxcnpna29lZ3ZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5Mjk3NDAsImV4cCI6MjEwODUwNTc0MH0.zCTAYW7C4AlP6MoMs1CKVBZ2LL9J58g771bwpOtHzwU';
+
+export const STORE_FN_ENDPOINT = FIT_ENDPOINT;
+export const STORE_FN_KEY = FIT_KEY;

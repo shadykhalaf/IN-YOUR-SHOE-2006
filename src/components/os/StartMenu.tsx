@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { brand } from '../../data/assets';
 import { concept } from '../../data/copy';
-import { MENU } from '../../data/taxonomy';
+import { useMenu } from '../../lib/storeHome';
 import { collectionCount } from '../../lib/catalogue/hydrate';
 import { formatCount } from '../../lib/catalogue/format';
 import { useCatalogue } from '../../lib/catalogue/load';
@@ -15,6 +15,7 @@ export function StartMenu() {
   const anchor = useOS((s) => s.startAnchor);
   const setStart = useOS((s) => s.setStart);
   const cat = useCatalogue();
+  const menu = useMenu(); // the store's own menu once loaded
   const browse = useBrowse();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -57,7 +58,7 @@ export function StartMenu() {
     }
   };
 
-  const shopItems = MENU.filter((m) => m.collection === null || (collectionCount(cat, m.collection) ?? 0) > 0);
+  const shopItems = menu.filter((m) => m.collection === null || (collectionCount(cat, m.collection) ?? 0) > 0);
   // Shopping first (SEARCH, MY BAG, FAVORITES, STORES, MY WARDROBE), then the rest of IYS OS.
   const system: { label: string; icon: IconName; sub: string; act: () => void }[] = [
     { label: 'SEARCH', icon: 'search', sub: 'Find anything', act: () => go('/search') },

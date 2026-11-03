@@ -7,7 +7,9 @@ import { RemoteImage } from '../../../components/shop/RemoteImage';
 import { EssentialLinks } from '../../../components/shop/EssentialLinks';
 import { assets, brand, campaign, curation, localImage, pick } from '../../../data/assets';
 import { ANNOUNCEMENT_VERIFIED_ON, concept, official, OFFICIAL_VERIFIED_ON } from '../../../data/copy';
-import { BUDDIES, MENU } from '../../../data/taxonomy';
+import { BUDDIES } from '../../../data/taxonomy';
+import { StoreSections } from '../../../components/shop/StoreSections';
+import { useMenu, useStoreHome } from '../../../lib/storeHome';
 import storesData from '../../../data/stores.generated.json';
 import { collectionProducts } from '../../../lib/catalogue/hydrate';
 import { formatCount } from '../../../lib/catalogue/format';
@@ -106,7 +108,10 @@ function useFoldPeek(ready: boolean) {
 export default function Home() {
   const cat = useCatalogue();
   const navigate = useNavigate();
-  const fold = useFoldPeek(Boolean(cat));
+  // The real store's homepage (published theme): when it's here, its sections lead, in its order.
+  const home = useStoreHome();
+  const menu = useMenu();
+  const fold = useFoldPeek(Boolean(cat) && !home);
   usePage('IN YOUR SHOE | The Coolest Apparel In Town!', cat ? `${formatCount(cat.products.length)} products found.` : 'Opening page...');
   if (!cat) return <PageLoading label="Connecting to www.inyourshoe.com..." />;
 
@@ -151,7 +156,7 @@ export default function Home() {
           <section className="box">
             <h2 className="box__title">SHOP BY CATEGORY</h2>
             <ul className="box__list">
-              {MENU.map((m) => {
+              {menu.map((m) => {
                 const n = m.collection ? cat.collections.get(m.collection)?.count : cat.products.length;
                 if (!n) return null;
                 return (
@@ -176,6 +181,8 @@ export default function Home() {
         </aside>
 
         <div className="portal__main">
+          {home && <StoreSections home={home} cat={cat} />}
+          {!home && (<>
           <section className="portal__cta" aria-labelledby="portal-cta-title">
             <p className="portal__cta-kicker" id="portal-cta-title">
               {concept.y2k.heroKicker}
@@ -221,6 +228,7 @@ export default function Home() {
               <Link to="/collections/newest">omg see all {formatCount(cat.collections.get('newest')?.count ?? 0)} new drops :) ›</Link>
             </p>
           </section>
+          </>)}
 
           <section className="box">
             <h2 className="box__title box__title--coral">
@@ -247,8 +255,8 @@ export default function Home() {
           </section>
 
 
-          {shelf(0)}
-          {shelf(1)}
+          {!home && shelf(0)}
+          {!home && shelf(1)}
 
           <section className="box box--pjoys">
             <h2 className="box__title">
@@ -274,8 +282,8 @@ export default function Home() {
             </p>
           </section>
 
-          {shelf(2)}
-          {shelf(3)}
+          {!home && shelf(2)}
+          {!home && shelf(3)}
 
           <section className="box box--cairo">
             <h2 className="box__title">
@@ -299,9 +307,9 @@ export default function Home() {
             </p>
           </section>
 
-          {shelf(4)}
+          {!home && shelf(4)}
 
-          {zed && (
+          {!home && zed && (
             <figure className="hero hero--small">
               <button type="button" className="hero__img" onClick={() => navigate('/collections/inyourshoexzed')} aria-label="Open IYS × ZED collection">
                 <img src={zed.src} alt="IYS × ZED campaign: green lockers with stickers" width={zed.width} height={zed.height} loading="lazy" />
