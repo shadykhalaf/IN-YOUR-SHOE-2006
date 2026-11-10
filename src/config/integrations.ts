@@ -1,5 +1,5 @@
 /**
- * External integrations — one explicit place, four separate concerns.
+ * External integrations — one explicit place, one numbered entry per concern.
  * No secrets live here: everything below is a public URL/path. Server-side
  * secrets (the support-email provider key) live only in Vercel environment
  * variables read by api/support-email.ts.
@@ -13,29 +13,18 @@ const env = (v: string | undefined) => (v && v.trim() ? v.trim() : null);
 export const SUPPORT_EMAIL_ENDPOINT = '/api/support-email';
 export const SUPPORT_EMAIL_TO = 'orders@inyourshoe.com';
 
-/**
- * 2. IYS NEWSLETTER — future signup provider. null = not connected yet.
- * Contract: POST JSON { email } → 2xx with JSON { ok: true } on a confirmed signup.
- */
-export const NEWSLETTER_ENDPOINT: string | null = env(import.meta.env.VITE_NEWSLETTER_ENDPOINT);
-/** Revealed only after the newsletter endpoint confirms a real signup. */
-export const NEWSLETTER_DISCOUNT_CODE = 'IYS10';
-
-/** 3. HELP › IYS Help & Support — Odoo form. null = placeholder state. */
+/** 2. HELP › IYS Help & Support — Odoo form. null = placeholder state. */
 export const ODOO_HELP_FORM_URL: string | null = env(import.meta.env.VITE_ODOO_HELP_FORM_URL);
 
-/** 4. XCHANGE.EXE — Exchanges / Refunds Odoo form. null = placeholder state. */
-export const ODOO_EXCHANGE_REFUND_FORM_URL: string | null = env(import.meta.env.VITE_ODOO_EXCHANGE_REFUND_FORM_URL);
-
 /**
- * 5. CHECKOUT — the official In Your Shoe Egyptian storefront (unprefixed, EGP).
+ * 3. CHECKOUT — the official In Your Shoe Egyptian storefront (unprefixed, EGP).
  * MY BAG hands its exact variants + quantities to this store's real Shopify
  * checkout through a public cart permalink (src/lib/checkout.ts). No keys.
  */
 export const IYS_STOREFRONT_ORIGIN = 'https://inyourshoe.com';
 
 /**
- * 6. THE REAL STORE, LIVE — the store's Supabase function (read from Shopify):
+ * 4. THE REAL STORE, LIVE — the store's Supabase function (read from Shopify):
  *    action "fits"  each product's Fit (true to size, product metafield custom.fit)
  *    action "home"  the PUBLISHED theme's homepage sections + main menu, mirrored here
  * The key is Supabase's public anon key, the same one the store theme uses.

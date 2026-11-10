@@ -1,3 +1,4 @@
+import { FEATURES } from '../config/features';
 import { create } from 'zustand';
 
 export type AppId =
@@ -11,9 +12,7 @@ export type AppId =
   | 'mail'
   | 'readme'
   | 'recycle'
-  | 'newsletter'
   | 'help'
-  | 'exchange'
   | 'essentials'
   | 'games'
   | 'game'
@@ -71,9 +70,7 @@ export function defaultRect(app: AppId, desk: { w: number; h: number }, stack: n
     mail: [500, 500],
     readme: [420, 320],
     recycle: [460, 360],
-    newsletter: [440, 380],
     help: [Math.min(720, desk.w * 0.6), Math.min(560, desk.h * 0.8)],
-    exchange: [Math.min(720, desk.w * 0.6), Math.min(560, desk.h * 0.8)],
     essentials: [380, Math.min(470, desk.h * 0.8)],
     games: [Math.min(700, desk.w * 0.6), Math.min(520, desk.h * 0.8)],
     game: [Math.min(640, desk.w * 0.6), Math.min(700, desk.h * 0.94)],
@@ -153,9 +150,7 @@ export const TITLES: Record<AppId, string> = {
   mail: 'IYS MAIL',
   readme: 'README.TXT - Notepad',
   recycle: 'RECYCLE BIN',
-  newsletter: 'IYS NEWSLETTER',
   help: 'IYS HELP & SUPPORT',
-  exchange: 'XCHANGE.EXE :) - EXCHANGES / REFUNDS FORM',
   essentials: 'IYS ESSENTIALS',
   games: 'IYS GAMES',
   game: 'IYS GAME',
@@ -182,6 +177,8 @@ export const useOS = create<OSState>()((set, get) => ({
       windows: s.windows.map((win) => ({ ...win, rect: clampRect(win.rect, { w, h }) })),
     })),
   open: (app, opts = {}) => {
+    // IYS MAIL is hidden for now (src/config/features.ts): it never opens, whoever asks.
+    if (app === 'mail' && !FEATURES.iysMail) return '';
     const id = opts.id ?? app;
     const s = get();
     const existing = s.windows.find((w) => w.id === id);

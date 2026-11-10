@@ -67,7 +67,7 @@ test.describe('IYS Retro V2 fixes', () => {
     await expect(browserWin(page).locator('.top8')).toBeVisible();
     expect(await scan()).toEqual([]);
     await minimizeBrowser(page);
-    for (const name of ['Open Control Panel', 'Open IYS Messenger', 'Open IYS Mail', 'Open IYS Newsletter', /Open XCHANGE/, 'Open IYS Camera photos', 'Open README.TXT']) {
+    for (const name of ['Open Control Panel', 'Open IYS Messenger', 'Open IYS Camera photos', 'Open README.TXT']) {
       await page.getByRole('button', { name }).click();
       await page.waitForTimeout(250);
       expect(await scan(), String(name)).toEqual([]);

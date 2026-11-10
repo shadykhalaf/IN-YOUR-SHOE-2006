@@ -7,6 +7,8 @@ export const index = JSON.parse(readFileSync(new URL('../../src/data/catalogue-i
 export const stores = JSON.parse(readFileSync(new URL('../../src/data/stores.generated.json', import.meta.url), 'utf8'));
 export const curation = JSON.parse(readFileSync(new URL('../../src/data/curation.json', import.meta.url), 'utf8'));
 export const fmt = (n: number) => new Intl.NumberFormat('en-US').format(n);
+/** IYS MAIL is hidden unless the build sets VITE_FEATURE_IYS_MAIL (src/config/features.ts); its own tests run only then. */
+export const iysMailOn = ((v: string) => v !== '' && !['0', 'false', 'off', 'no'].includes(v))((process.env.VITE_FEATURE_IYS_MAIL ?? '').trim().toLowerCase());
 
 /** Remote CDN images are blocked: tests never depend on IYS being reachable. */
 export const test = base.extend<{ page: Page }>({

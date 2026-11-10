@@ -5,7 +5,7 @@
  *   SHOPIFY_STORE_DOMAIN                  e.g. in-your-shoe.myshopify.com (or the storefront domain)
  *   SHOPIFY_STOREFRONT_PRIVATE_TOKEN      Storefront API private token (preferred), or
  *   SHOPIFY_STOREFRONT_PUBLIC_TOKEN       Storefront API public token
- *   SHOPIFY_ADMIN_TOKEN                   optional: Admin API token (read_discounts) for promotions + rewards
+ *   SHOPIFY_ADMIN_TOKEN                   optional: Admin API token (read_discounts) for reward codes
  *   SHOPIFY_API_VERSION                   optional, default below
  *
  * Products are mapped into the SAME normalised record the snapshot sync
@@ -380,50 +380,7 @@ export async function createCart(cfg: ShopifyConfig, lines: CartLineIn[], discou
   };
 }
 
-/* ── Promotions + discount codes (Admin API, read_discounts) ─────────── */
-
-const FREE_SHIPPING = `query FreeShipping {
-  discountNodes(first: 50, query: "status:active") {
-    nodes { discount { __typename
-      ... on DiscountAutomaticFreeShipping { title status startsAt endsAt
-        minimumRequirement { __typename ... on DiscountMinimumSubtotal { greaterThanOrEqualToSubtotal { amount currencyCode } } }
-        destinationSelection { __typename ... on DiscountCountries { countries includeRestOfWorld } ... on DiscountCountryAll { allCountries } } }
-    } }
-  }
-}`;
-
-export interface LiveFreeShipping {
-  minSubtotalEGP: number;
-  inclusive: true;
-  title: string;
-  startsAt: string | null;
-  endsAt: string | null;
-}
-
-/** The store's ACTIVE automatic free-shipping discount for Egypt with an EGP minimum subtotal, or null. */
-export async function activeFreeShipping(cfg: ShopifyConfig, fetcher: Fetcher = fetch, now = new Date()): Promise<LiveFreeShipping | null> {
-  if (!cfg.admin) throw new Error('admin not configured');
-  type D = {
-    __typename: string;
-    title?: string;
-    status?: string;
-    startsAt?: string | null;
-    endsAt?: string | null;
-    minimumRequirement?: { __typename: string; greaterThanOrEqualToSubtotal?: Money } | null;
-    destinationSelection?: { __typename: string; countries?: string[]; includeRestOfWorld?: boolean; allCountries?: boolean } | null;
-  };
-  const data = await graphql<{ discountNodes: { nodes: { discount: D }[] } }>(cfg.admin, FREE_SHIPPING, {}, fetcher);
-  const t = now.getTime();
-  const found = data.discountNodes.nodes
-    .map((n) => n.discount)
-    .filter((d) => d.__typename === 'DiscountAutomaticFreeShipping' && d.status === 'ACTIVE')
-    .filter((d) => (!d.startsAt || Date.parse(d.startsAt) <= t) && (!d.endsAt || Date.parse(d.endsAt) > t))
-    .filter((d) => d.minimumRequirement?.__typename === 'DiscountMinimumSubtotal' && d.minimumRequirement.greaterThanOrEqualToSubtotal?.currencyCode === 'EGP')
-    .filter((d) => d.destinationSelection?.allCountries || d.destinationSelection?.includeRestOfWorld || d.destinationSelection?.countries?.includes('EG'))
-    .sort((a, b) => Number(a.minimumRequirement!.greaterThanOrEqualToSubtotal!.amount) - Number(b.minimumRequirement!.greaterThanOrEqualToSubtotal!.amount))[0];
-  if (!found) return null;
-  return { minSubtotalEGP: Number(found.minimumRequirement!.greaterThanOrEqualToSubtotal!.amount), inclusive: true, title: found.title ?? 'Free shipping', startsAt: found.startsAt ?? null, endsAt: found.endsAt ?? null };
-}
+/* ── Discount codes (Admin API, read_discounts) ─────────── */
 
 const CODE_STATUS = `query Code($code: String!) {
   codeDiscountNodeByCode(code: $code) { codeDiscount { __typename

@@ -155,7 +155,7 @@ test.describe('apps', () => {
     await expect(w.getByRole('button', { name: new RegExp(`PJOYS.*${pjoys} items`) }).first()).toBeVisible();
   });
 
-  test('control panel: tabs work by keyboard; snapshot facts are generated', async ({ page }) => {
+  test('control panel: tabs work by keyboard; catalogue facts are generated', async ({ page }) => {
     await desktop(page);
     await page.getByRole('button', { name: 'Open Control Panel' }).click();
     const cp = page.getByRole('dialog', { name: 'CONTROL PANEL' });

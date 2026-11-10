@@ -22,7 +22,7 @@ describe('IYS ESSENTIALS - one source of truth', () => {
     expect(() => essential('nope')).toThrow();
   });
   it('policy URLs are not duplicated elsewhere in the source (single source of truth)', () => {
-    const files = ['src/apps/Browser/pages/Home.tsx', 'src/apps/Browser/pages/Product.tsx', 'src/apps/Bag/Bag.tsx', 'src/apps/Small/Exchange.tsx', 'src/shells/mobile/overlays.tsx', 'src/shells/mobile/screens.tsx', 'src/components/os/StartMenu.tsx', 'src/apps/Browser/Browser.tsx'];
+    const files = ['src/apps/Browser/pages/Home.tsx', 'src/apps/Browser/pages/Product.tsx', 'src/apps/Bag/Bag.tsx', 'src/shells/mobile/overlays.tsx', 'src/shells/mobile/screens.tsx', 'src/components/os/StartMenu.tsx', 'src/apps/Browser/Browser.tsx'];
     for (const f of files) {
       const s = readFileSync(resolve(root, f), 'utf8');
       expect(s, f).not.toMatch(/inyourshoe\.com\/(pages\/(exchange-refund|shipping|terms|privacy)|policies\/)/);

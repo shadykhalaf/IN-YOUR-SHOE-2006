@@ -39,7 +39,7 @@ test.describe('IYS ESSENTIALS everywhere (desktop)', () => {
     await expect(page.getByRole('dialog', { name: 'IYS ESSENTIALS' })).toBeVisible();
   });
 
-  test('homepage footer, product page, bag, XCHANGE and Help all expose the essentials', async ({ page }) => {
+  test('homepage footer, product page and bag all expose the essentials', async ({ page }) => {
     await desktop(page, '/');
     const foot = browserWin(page).locator('.portal__foot');
     await expectOfficial(foot, /^Exchange & Refund/, OFFICIAL.exchange);
@@ -65,14 +65,6 @@ test.describe('IYS ESSENTIALS everywhere (desktop)', () => {
     await expectOfficial(bag, /^Shipping/, OFFICIAL.shipping);
     await expectOfficial(bag, /^Terms & Conditions/, OFFICIAL.tc);
     await bag.getByRole('button', { name: /^Close/ }).click();
-    // XCHANGE: form first, then policy, then IYS MAIL
-    await minimizeBrowser(page);
-    await page.getByRole('button', { name: /Open XCHANGE\.EXE/ }).click();
-    const x = page.getByRole('dialog', { name: /XCHANGE\.EXE/ });
-    await expect(x.getByTestId('odoo-placeholder')).toBeVisible();
-    await expectOfficial(x, /READ EXCHANGE & REFUND POLICY/, OFFICIAL.exchange);
-    await x.getByRole('button', { name: 'CONTACT IYS MAIL' }).click();
-    await expect(page.getByRole('dialog', { name: 'IYS MAIL' })).toBeVisible();
   });
 
   test('Help window offers VIEW ESSENTIALS without becoming the policy page', async ({ page }) => {

@@ -1,14 +1,14 @@
 import { useEffect, useId, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { FEATURES } from '../../config/features';
-import { FREE_SHIPPING, OFFERS } from '../../config/promotions';
+import { OFFERS, SINGLE_WEEK_SAVINGS } from '../../config/promotions';
 import { concept } from '../../data/copy';
-import { formatEGP } from '../../lib/catalogue/format';
+import { formatCount, formatEGP } from '../../lib/catalogue/format';
 import { useCatalogue } from '../../lib/catalogue/load';
 import type { Product } from '../../lib/catalogue/types';
 import { useHandoff } from '../../lib/checkout';
-import { commerceMode, liveFreeShipping, verifyDiscount } from '../../lib/commerce';
-import { activeOffers, cleanCode, shippingProgress, today } from '../../lib/incentives';
+import { commerceMode, verifyDiscount } from '../../lib/commerce';
+import { activeOffers, cleanCode, savingsProgress, today } from '../../lib/incentives';
 import { bagIdeas } from '../../lib/recommend';
 import { productPath } from '../../lib/useBrowse';
 import { subtotal, useCart } from '../../state/cart';
@@ -18,41 +18,56 @@ import { ProductCarousel } from './ProductCarousel';
 import { Price } from './Price';
 import { RemoteImage } from './RemoteImage';
 
-/** The verified static rule, replaced by the store's live Shopify discount when live mode finds one. */
-function useFreeShippingRule() {
-  const [live, setLive] = useState<typeof FREE_SHIPPING>(null);
-  useEffect(() => {
-    let alive = true;
-    liveFreeShipping(today()).then((r) => alive && setLive(r));
-    return () => {
-      alive = false;
-    };
-  }, []);
-  return live ?? FREE_SHIPPING;
+/**
+ * Single Week savings: the merchant's spend-more-save-more steps
+ * (src/config/promotions.ts), laid out like the cart on inyourshoe.com and
+ * drawn with the site's own coral loading bar. Hidden on an empty bag, and
+ * gone at the offer's exact end (even with the bag open). IYS applies them
+ * at checkout.
+ */
+export function SavingsProgress() {
+  const items = useCart((s) => s.items);
+  const offer = SINGLE_WEEK_SAVINGS;
+  const now = Date.now();
+  const bounds = offer ? [offer.startsAt, offer.endsAt].map((s) => (s ? Date.parse(s) : NaN)).filter((t) => t > now) : [];
+  useRerenderAt(bounds.length ? Math.min(...bounds) : NaN);
+  if (!FEATURES.bagIncentives || !offer) return null;
+  const sp = savingsProgress(subtotal(items), offer, now);
+  if (sp.kind === 'hidden') return null;
+  const t = concept.bag.savings;
+  return (
+    <section className={`bagx-save${sp.kind === 'max' ? ' is-max' : ''}`} aria-label={offer.title}>
+      <p className="bagx-save__title">{offer.title}</p>
+      <p className="bagx-save__line" role="status" aria-live="polite">
+        {sp.kind === 'max' ? t.max(formatEGP(sp.saved)) : t.addMore(formatEGP(sp.remaining), formatEGP(sp.next.saveEGP))}
+      </p>
+      <ol className="bagx-save__steps">
+        {sp.steps.map((st) => (
+          <li key={st.minEGP} className={st.reached ? 'is-reached' : undefined}>
+            <div className="progress bagx-save__bar" aria-hidden="true" style={{ ['--p' as string]: `${st.pct}%` }}>
+              <div className="progress__bar" />
+            </div>
+            <span className="bagx-save__min">{formatCount(st.minEGP)}</span>
+            <span className="bagx-save__step">{t.step(formatCount(st.saveEGP))}</span>
+            {st.reached && <span className="sr-only"> (reached)</span>}
+          </li>
+        ))}
+      </ol>
+      {sp.saved > 0 && <p className="bagx-save__saved">{t.saved(formatEGP(sp.saved))}</p>}
+      <p className="bagx-note">{t.note(offer.verifiedOn)}</p>
+    </section>
+  );
 }
 
-/**
- * Free-shipping progress: only from the merchant's verified rule
- * (src/config/promotions.ts), hidden when there's no rule or it needs
- * re-verifying. Always qualified: IYS confirms shipping at checkout.
- */
-export function ShippingProgress() {
-  const items = useCart((s) => s.items);
-  const rule = useFreeShippingRule();
-  if (!FEATURES.bagIncentives) return null;
-  const sp = shippingProgress(subtotal(items), rule, today());
-  if (sp.kind === 'hidden') return null;
-  const unlocked = sp.kind === 'unlocked';
-  const pct = unlocked ? 100 : sp.pct;
-  return (
-    <div className={`bagx-ship${unlocked ? ' is-unlocked' : ''}`} role="status" aria-live="polite">
-      <p className="bagx-ship__line">{unlocked ? concept.bag.shipUnlocked : sp.remaining > 0 ? concept.bag.shipLeft(formatEGP(sp.remaining)) : concept.bag.shipJust}</p>
-      <div className="progress bagx-ship__bar" aria-hidden="true" style={{ ['--p' as string]: `${pct}%` }}>
-        <div className="progress__bar" />
-      </div>
-      <p className="bagx-note">{concept.bag.shipNote(formatEGP(sp.threshold), rule!.verifiedOn, rule!.inclusive === true)}</p>
-    </div>
-  );
+/** Re-renders once at `at` (ms since 1970), so an offer that starts or ends while the bag is open changes on time. */
+function useRerenderAt(at: number) {
+  const [, bump] = useState(0);
+  useEffect(() => {
+    const wait = at - Date.now();
+    if (!(wait > 0) || wait > 2_147_483_647) return;
+    const id = window.setTimeout(() => bump((n) => n + 1), wait + 50);
+    return () => window.clearTimeout(id);
+  }, [at]);
 }
 
 /** Merchant offers that are live today (config only; empty = nothing shown). */

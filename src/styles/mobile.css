@@ -653,19 +653,6 @@ body:has(.m-splash) {
   color: var(--link);
   font-weight: bold;
 }
-.m-news p {
-  font-size: 14px;
-}
-.m-news__cta {
-  width: 100%;
-  min-height: 48px;
-  margin: 10px 0 6px;
-  font-size: 17px;
-}
-.m-news__note {
-  color: var(--muted);
-  font-size: 12px !important;
-}
 .m-home__foot {
   padding: 6px 10px;
   border-radius: 8px;
@@ -1172,6 +1159,26 @@ body:has(.m-splash) {
 }
 .m-shell .bagx-note {
   font-size: 11px;
+}
+.m-shell .bagx-save {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+}
+.m-shell .bagx-save__title {
+  font-size: 11px;
+}
+.m-shell .bagx-save__line,
+.m-shell .bagx-save__saved {
+  font-size: 15px;
+}
+.m-shell .bagx-save__bar {
+  height: 14px;
+}
+.m-shell .bagx-save__min {
+  font-size: 12px;
+}
+.m-shell .bagx-save__step {
+  font-size: 10px;
 }
 .m-shell .bagx-ideas {
   margin: 12px 0;

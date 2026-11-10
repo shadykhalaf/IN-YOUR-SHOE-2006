@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { SINGLE_WEEK_SAVINGS } from '../../src/config/promotions';
 import { axe, expect, index, test } from './fixtures';
 
 /**
@@ -103,7 +104,9 @@ test('JOURNEY B (360px): bar SEARCH → product → FAVS → size guide → MY B
   await page.locator('.m-add').click();
   await page.getByRole('button', { name: /My Bag, 1 items/ }).click();
   await expect(page.locator('.bag__row')).toHaveCount(1);
-  if ((withChart.p ?? 0) <= 3999) await expect(page.locator('.bagx-ship')).toContainText(/FREE SHIPPING\*/);
+  // There is no free shipping: the bag never offers or mentions it.
+  await expect(page.locator('.bagx-ship')).toHaveCount(0);
+  await expect(page.locator('body')).not.toContainText(/free shipping/i);
   await page.getByRole('button', { name: 'CHECKOUT xx' }).click();
   await expect(page).toHaveURL(`https://inyourshoe.com/cart/${chartSize[2]}:1`);
 });
@@ -148,7 +151,7 @@ test('no sideways page scroll on any screen at 320–430px (the document AND the
       await page.goto(path);
       await expect(page.locator('.m-shell')).toBeVisible();
       await page.waitForTimeout(300);
-      // bring the lower sections (shelves, newsletter, footer) into the layout too
+      // bring the lower sections (shelves, footer) into the layout too
       await page.evaluate(() => {
         const m = document.querySelector('#m-main')!;
         m.scrollTop = m.scrollHeight;
@@ -263,8 +266,8 @@ test('escape route never fires from game taps on IYS MOBILE', async ({ page }) =
   await session(page);
   await page.goto('/');
   await page.getByRole('navigation', { name: 'Soft keys' }).getByRole('button', { name: 'MENU', exact: true }).click();
-  await page.getByRole('button', { name: 'IYS GAMES · 6 GAMES' }).click(); // MENU's entry (the bar's GAMES key is "IYS GAMES, 6 games")
-  await page.getByRole('button', { name: 'PLAY CATCHY SNAKE' }).click();
+  await page.getByRole('button', { name: 'IYS GAMES · 4 GAMES' }).click(); // MENU's entry (the bar's GAMES key is "IYS GAMES, 4 games")
+  await page.getByRole('button', { name: 'PLAY CATCHY CHOMP' }).click();
   await page.locator('.game__cta').click();
   const pad = (await page.locator('.pad').first().boundingBox())!;
   for (let i = 0; i < 8; i++) {
@@ -300,4 +303,25 @@ test('mobile product page: MORE LIKE THIS scrolls by itself; the page never scro
   await reco.locator('.reco__card').first().click();
   await expect(page).toHaveURL(/\/product\//);
   await expect(page.locator('.m-h1--product')).not.toHaveText(withChart.t);
+});
+
+test('IYS MOBILE bag: Single Week savings on top, like the inyourshoe.com cart, on the site’s loading bar', async ({ page }) => {
+  // Inside the dates the steps were checked for, whatever day the suite runs.
+  await page.clock.setSystemTime(new Date(`${SINGLE_WEEK_SAVINGS!.verifiedOn}T12:00:00`));
+  await session(page);
+  await page.goto('/product/female-navy-washed-barrel-fit-jeans');
+  await expect(page.locator('.m-h1--product')).toHaveText('Female Navy Washed Barrel Fit Jeans');
+  await page.locator('.chip label', { hasText: /^36$/ }).click();
+  await page.locator('.m-add').click();
+  await page.goto('/product/cactus-cairo-fluffy-blanket');
+  await expect(page.locator('.m-h1--product')).toHaveText('Cactus Cairo Fluffy Blanket');
+  await page.locator('.m-add').click();
+  await page.getByRole('button', { name: /My Bag, 2 items/ }).click();
+  const save = page.getByRole('region', { name: 'YOUR SINGLE WEEK SAVINGS' });
+  await expect(save.locator('.bagx-save__line')).toHaveText('Add 1,796 EGP more to save 2,222 EGP in total*');
+  await expect(save.locator('.bagx-save__step')).toHaveText(['SAVE 2,222', 'SAVE 3,333', 'SAVE 4,444']);
+  await expect(save.locator('.bagx-save__saved')).toHaveText('1,111 EGP SAVED SO FAR');
+  expect((await save.boundingBox())!.y).toBeLessThan((await page.locator('.bag__row').first().boundingBox())!.y);
+  // Fits the phone: no sideways scroll.
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });

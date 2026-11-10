@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { GAMES } from '../games/registry';
+import { GAMES, gameMeta, VISIBLE_GAMES } from '../games/registry';
 import { readBest, scoreKey, submitScore } from '../games/shared/scores';
 import type { SyncStorage } from '../state/storage';
 
@@ -62,7 +62,7 @@ describe('MY HIGH SCORES storage', () => {
 });
 
 describe('IYS GAMES registry', () => {
-  it('six games, unique ids, a title, a one-line blurb and at least one local best each', () => {
+  it('six games in the code, unique ids, a title, a one-line blurb and at least one local best each', () => {
     expect(GAMES.map((g) => g.id)).toEqual(['purbale', 'tower', 'chomp', 'stacks', 'snake', 'invaders']);
     for (const g of GAMES) {
       expect(g.title).toMatch(/^[A-Z ]+$/);
@@ -72,5 +72,13 @@ describe('IYS GAMES registry', () => {
       expect(typeof g.load).toBe('function');
     }
     expect(GAMES.find((g) => g.id === 'purbale')!.scores.map((s) => s.id)).toEqual(['purbale-closet', 'purbale-pairs', 'purbale-pack']);
+  });
+
+  it('Purbale Catchy and Catchy Snake are hidden (on request, 2026-11-10): kept in the code, never listed or opened', () => {
+    expect(GAMES.filter((g) => g.hidden).map((g) => g.id)).toEqual(['purbale', 'snake']);
+    expect(VISIBLE_GAMES.map((g) => g.id)).toEqual(['tower', 'chomp', 'stacks', 'invaders']);
+    expect(gameMeta('snake')).toBeUndefined();
+    expect(gameMeta('purbale')).toBeUndefined();
+    for (const g of VISIBLE_GAMES) expect(gameMeta(g.id)).toBe(g);
   });
 });

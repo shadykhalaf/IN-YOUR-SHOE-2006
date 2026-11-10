@@ -139,7 +139,6 @@ export default function Home() {
       </header>
       <div className="portal__announce" title={`Announcement bar on inyourshoe.com, ${ANNOUNCEMENT_VERIFIED_ON}. Offers change - check the real site.`}>
         <span>{official.sameDay}</span>
-        <span>{official.freeShipping}</span>
         <span className="portal__announce-note">as announced on inyourshoe.com · {ANNOUNCEMENT_VERIFIED_ON}</span>
       </div>
       <div className="marquee">
@@ -346,16 +345,6 @@ export default function Home() {
             </p>
           </section>
           <section className="box">
-            <h2 className="box__title">IYS NEWSLETTER</h2>
-            <p className="box__text">
-              <b>{concept.y2k.newsletterTitle}</b>
-            </p>
-            <p className="box__text">{official.coolList}</p>
-            <button type="button" className="btn btn--go btn--small" onClick={() => useOS.getState().open('newsletter')}>
-              <Icon name="newsletter" size={16} /> {concept.y2k.newsletterCta}
-            </button>
-          </section>
-          <section className="box">
             <h2 className="box__title">{concept.counterLabel}</h2>
             <p className="counter" aria-label="Fictional counter: 002000">
               {'002000'.split('').map((d, i) => (
@@ -376,10 +365,6 @@ export default function Home() {
       <footer className="portal__foot">
         <p>
           <b>{concept.disclaimer[0]}</b> {concept.disclaimer[1]} {concept.disclaimer[2]}
-        </p>
-        <p>{concept.disclaimer[3]}</p>
-        <p className="muted">
-          Catalogue snapshot: {formatCount(cat.products.length)} public products, EGP, {cat.generatedAt.slice(0, 10)}. Best viewed in IYS INTERNET at 1024×768 or higher.
         </p>
         <EssentialLinks className="muted" label="IYS ESSENTIALS:" ids={['exchange-refund', 'shipping', 'terms-conditions', 'terms-of-service', 'privacy']} more />
         <p className="catchy">{concept.catchy.footer}</p>

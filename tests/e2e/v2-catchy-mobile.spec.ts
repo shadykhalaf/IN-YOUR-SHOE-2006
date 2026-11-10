@@ -55,7 +55,7 @@ for (const width of [320, 390, 430]) {
     await expect(page).toHaveURL(/\/search$/);
     await expect(page.locator(CATCHY)).toHaveCount(0);
     await page.getByRole('navigation', { name: 'IYS MOBILE bar' }).getByRole('button', { name: /IYS GAMES/ }).click();
-    await expect(page.getByRole('button', { name: 'PLAY CATCHY SNAKE' })).toBeVisible(); // his games are still here
+    await expect(page.getByRole('button', { name: 'PLAY CATCHY CHOMP' })).toBeVisible(); // his games are still here
     await expect(page.locator(CATCHY)).toHaveCount(0);
     await page.getByRole('button', { name: 'Go to IYS Retro home' }).click();
     await expect(page.locator('.m-hero')).toBeVisible();

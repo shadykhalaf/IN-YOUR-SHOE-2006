@@ -1,4 +1,4 @@
-import { desktop, expect, fmt, index, test } from './fixtures';
+import { desktop, expect, fmt, index, iysMailOn, test } from './fixtures';
 import type { Page } from '@playwright/test';
 
 const browserWin = (page: Page) => page.locator('[data-window="internet"]');
@@ -142,7 +142,24 @@ test.describe('IYS Retro V2 desktop upgrades', () => {
     }
   });
 
+  test('P3a: IYS MAIL is hidden for now: no icon, no MENU item; HELP points to IYS’s own contact page', async ({ page }) => {
+    test.skip(iysMailOn, 'this build shows IYS MAIL (VITE_FEATURE_IYS_MAIL)');
+    await desktop(page, '/');
+    await expect(page.getByRole('button', { name: 'Open IYS Mail' })).toHaveCount(0);
+    await page.getByRole('button', { name: 'MENU', exact: true }).click();
+    await expect(page.locator('#iys-menu').getByRole('menuitem', { name: /IYS ESSENTIALS/ })).toBeVisible();
+    await expect(page.locator('#iys-menu').getByRole('menuitem', { name: /IYS MAIL/ })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await browserWin(page).getByRole('menubar').getByRole('menuitem', { name: 'Help' }).click();
+    await page.getByRole('menuitem', { name: 'IYS Help & Support' }).click();
+    const help = page.locator('[data-window="help"]');
+    await expect(help.getByRole('link', { name: 'CONTACT IYS ↗' })).toHaveAttribute('href', 'https://inyourshoe.com/pages/contact-us');
+    await expect(help.getByRole('button', { name: 'CONTACT IYS MAIL' })).toHaveCount(0);
+    await expect(page.locator('[data-window="mail"]')).toHaveCount(0);
+  });
+
   test('P3: IYS MAIL sends a real support request; success only after the server says so', async ({ page }) => {
+    test.skip(!iysMailOn, 'IYS MAIL is hidden for now (FEATURES.iysMail)');
     const posted: unknown[] = [];
     let mode: 'fail' | 'ok' = 'fail';
     await page.route('**/api/support-email', async (route) => {
@@ -176,30 +193,19 @@ test.describe('IYS Retro V2 desktop upgrades', () => {
     for (const body of posted) expect(body).toMatchObject({ email: 'mona@example.com', name: 'Mona', order: '1234', topic: 'Delivery', subject: 'Where is my order?', message: 'It has not arrived yet.', website: '' });
   });
 
-  test('P3B: IYS NEWSLETTER is its own app and never fakes a signup', async ({ page }) => {
+  test('P3B: IYS NEWSLETTER and XCHANGE.EXE are gone (removed on request): no icon, no menu item, no home box', async ({ page }) => {
     await desktop(page, '/');
+    await expect(browserWin(page).locator('.box__title', { hasText: 'IYS NEWSLETTER' })).toHaveCount(0);
     await minimizeBrowser(page);
-    await page.getByRole('button', { name: 'Open IYS Newsletter' }).click();
-    const nl = page.getByRole('dialog', { name: 'IYS NEWSLETTER' });
-    await expect(nl).toBeVisible();
-    await expect(page.getByRole('dialog', { name: 'IYS MAIL' })).toHaveCount(0);
-    await expect(nl).toContainText('JOIN THE COOL LIST :)');
-    await expect(nl).toContainText('COMING ONLINE SOON');
-    // the email field is always editable, even with no provider connected
-    const field = nl.getByLabel('Email:');
-    await expect(field).toBeEnabled();
-    await field.click();
-    await page.keyboard.type('test@example.com');
-    await expect(field).toHaveValue('test@example.com');
-    await page.keyboard.press('Backspace');
-    await expect(field).toHaveValue('test@example.co');
-    await page.keyboard.type('m');
-    await nl.getByRole('button', { name: 'JOIN XO' }).click();
-    await expect(nl.getByRole('alert')).toContainText('COOL LIST CONNECTION IS STILL COMING ONLINE :)');
-    await expect(nl.getByRole('alert')).toContainText('ur email wasn’t sent yet');
-    await expect(field).toHaveValue('test@example.com');
-    await expect(nl).not.toContainText('IYS10');
-    await expect(nl.getByTestId('newsletter-success')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Open IYS Newsletter' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Open XCHANGE/ })).toHaveCount(0);
+    for (const list of ['Desktop', 'Desktop files']) await expect(page.getByRole('list', { name: list, exact: true })).not.toContainText(/NEWSLETTER|XCHANGE/);
+    await page.getByRole('button', { name: 'MENU', exact: true }).click();
+    const menu = page.getByRole('menu', { name: 'IYS menu' });
+    await expect(menu).toBeVisible();
+    await expect(menu).not.toContainText(/NEWSLETTER|XCHANGE/);
+    // the official Exchange & Refund POLICY stays in IYS ESSENTIALS
+    await expect(menu.getByRole('menuitem', { name: /IYS ESSENTIALS/ })).toBeVisible();
   });
 
   test('P4: IYS INTERNET menus open, act and follow the keyboard', async ({ page }) => {
@@ -264,15 +270,6 @@ test.describe('IYS Retro V2 desktop upgrades', () => {
     await expect(browserWin(page)).toHaveCount(0);
   });
 
-  test('P5: XCHANGE.EXE opens the Exchanges / Refunds placeholder', async ({ page }) => {
-    await desktop(page, '/');
-    await minimizeBrowser(page);
-    await page.getByRole('button', { name: /Open XCHANGE\.EXE/ }).click();
-    const x = page.getByRole('dialog', { name: 'XCHANGE.EXE :) - EXCHANGES / REFUNDS FORM' });
-    await expect(x).toContainText('EXCHANGES / REFUNDS FORM');
-    await expect(x.getByTestId('odoo-placeholder')).toContainText('form connection coming online soon :)');
-    await expect(x.locator('form, iframe')).toHaveCount(0);
-  });
 
   test('P6: desktop icons drag, stay put after reload, still open on click, and reset', async ({ page }) => {
     await desktop(page, '/');

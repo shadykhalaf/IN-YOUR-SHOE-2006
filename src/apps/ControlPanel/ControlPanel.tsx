@@ -182,7 +182,7 @@ export default function ControlPanel({ win }: { win: Win }) {
           )}
           {tab === 'System' && (
             <table className="props__table">
-              <caption className="sr-only">Catalogue snapshot</caption>
+              <caption className="sr-only">Catalogue</caption>
               <tbody>
                 <tr>
                   <th scope="row">Storefront</th>
@@ -191,7 +191,7 @@ export default function ControlPanel({ win }: { win: Win }) {
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row">Snapshot</th>
+                  <th scope="row">Catalogue updated</th>
                   <td>{new Date(meta.generatedAt).toUTCString()}</td>
                 </tr>
                 <tr>

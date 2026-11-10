@@ -6,7 +6,6 @@ import { createRateLimiter } from '../../api/_lib/http';
 import { WALLPAPERS } from '../data/assets';
 import { DEFAULT_WALLPAPER } from '../state/preferences';
 import { concept, official } from '../data/copy';
-import { subscribe } from '../lib/newsletter';
 
 const root = resolve(__dirname, '../..');
 const good = { email: 'Customer@Example.com', name: 'Mona', order: '#1234', topic: 'Delivery', subject: 'Where is my order?', message: 'Hi IYS,\nmy order has not arrived yet.', website: '' };
@@ -118,23 +117,6 @@ describe('IYS MAIL support API', () => {
   });
 });
 
-describe('IYS NEWSLETTER adapter', () => {
-  it('reports not-configured and never returns the code without an endpoint', async () => {
-    const f = vi.fn();
-    expect(await subscribe('a@b.co', null, f as unknown as typeof fetch)).toEqual({ status: 'not-configured' });
-    expect(f).not.toHaveBeenCalled();
-  });
-  it('reveals IYS10 only on a confirmed { ok: true } signup', async () => {
-    const ok = vi.fn(async () => new Response(JSON.stringify({ ok: true }), { status: 200 }));
-    expect(await subscribe('a@b.co', '/signup', ok as unknown as typeof fetch)).toEqual({ status: 'subscribed', code: 'IYS10' });
-    const soft = vi.fn(async () => new Response(JSON.stringify({ ok: false }), { status: 200 }));
-    expect((await subscribe('a@b.co', '/signup', soft as unknown as typeof fetch)).status).toBe('error');
-    const fail = vi.fn(async () => new Response('nope', { status: 500 }));
-    expect((await subscribe('a@b.co', '/signup', fail as unknown as typeof fetch)).status).toBe('error');
-    expect((await subscribe('bad', '/signup', ok as unknown as typeof fetch)).status).toBe('invalid');
-  });
-});
-
 describe('wallpapers', () => {
   it('every preset source exists in public/ and ids are unique', () => {
     expect(new Set(WALLPAPERS.map((w) => w.id)).size).toBe(WALLPAPERS.length);
@@ -170,6 +152,5 @@ describe('concept copy', () => {
     expect(concept.catchy.footer).toBe('Catchy was here XD');
     expect(JSON.stringify(official)).not.toContain('Catchy');
     expect(concept.mail.title).toBe('IYS MAIL');
-    expect(concept.newsletter.title).toBe('IYS NEWSLETTER');
   });
 });

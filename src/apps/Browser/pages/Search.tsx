@@ -102,7 +102,7 @@ export default function Search() {
           {pg.total === 0 ? (
             <div className="empty">
               <p>
-                Your search - <b dir="auto">{q}</b> - did not match any products in this snapshot.
+                Your search - <b dir="auto">{q}</b> - did not match any products.
               </p>
               <p>
                 Try different words, or <Link to="/shop">browse the whole shop</Link>.

@@ -15,8 +15,8 @@ behaviour if it fails. No token is ever shipped to the browser.
 | Catalogue | Snapshot (`npm run sync-products`, redeploy) | Storefront API token | `COMMERCE_LIVE=1` (server) + `VITE_COMMERCE_MODE=live` (build) |
 | Checkout | Cart permalink → real IYS checkout | Storefront API token (cart scope) | the above + `VITE_LIVE_CART=1` |
 | Discount code check in MY BAG | Code is passed to Shopify; UI says "IYS checks it at checkout" | Storefront API token | `VITE_COMMERCE_MODE=live` |
-| Free-shipping progress | From the verified announcement in `src/config/promotions.ts` (re-verify by `showUntil`) | optional: Admin API `read_discounts` | `SHOPIFY_ADMIN_TOKEN` |
 | Bag offers | None shown (`OFFERS = []`) | the real offer wording + dates | edit `src/config/promotions.ts` |
+| Single Week savings | Steps read from the inyourshoe.com cart, shown in MY BAG until `endsAt` (15 Nov 2026, 12:12 Egypt time) | any change to the steps or the end | edit `SINGLE_WEEK_SAVINGS` in `src/config/promotions.ts` |
 | Game rewards | Off; games look exactly as before | existing Shopify discount codes + written approval | `GAME_REWARDS`, `REWARDS_SECRET`, `VITE_GAME_REWARDS=1` |
 | IYS MAIL | Honest "not connected yet" + OPEN EMAIL APP fallback | Resend account + verified sender domain | `RESEND_API_KEY`, `SUPPORT_FROM_EMAIL` |
 | Size charts | Official charts synced from inyourshoe.com product pages | nothing (see `docs/SIZE_CHART_COVERAGE.md` for gaps) | `node scripts/sync-size-charts.mjs` |
@@ -31,8 +31,8 @@ behaviour if it fails. No token is ever shipped to the browser.
    - `unauthenticated_read_collection_listings`
    - `unauthenticated_write_checkouts` and `unauthenticated_read_checkouts` (cart)
 3. **Admin API access token** (optional, custom app). Scope: **`read_discounts` only**.
-   It is used to read active free-shipping discounts and confirm that reward
-   codes are ACTIVE. No write scope is requested or needed.
+   It is used to confirm that reward codes are ACTIVE. No write scope is
+   requested or needed.
 4. **Game rewards** (optional): which *existing* Shopify discount codes may be
    given for which game and score, with written approval. Recommended: a
    dedicated campaign code with Shopify-side limits (dates, total uses, once
@@ -81,11 +81,7 @@ Build-time, public (they only say *which* features to try; they hold no secret):
 5. Cart check without buying anything: set `VITE_LIVE_CART=1`, redeploy, add one
    item, press CHECKOUT and stop on Shopify's checkout page. `cartCreate`
    creates a cart, **not an order**. Never complete payment for a test.
-6. If an Admin token is set: `/api/commerce?op=promotions` shows the active
-   free-shipping minimum (or `null`). `null` does **not** mean there is no free
-   shipping: it can also be a shipping-rate rule. Then the verified rule in
-   `src/config/promotions.ts` stays in use.
-7. Only after IYS approves the preview: copy the same variables to Production.
+6. Only after IYS approves the preview: copy the same variables to Production.
 
 ## 5. Rollback
 
@@ -99,8 +95,8 @@ snapshot is always in the build, so a rollback never leaves an empty shop.
 ```json
 [
   {
-    "id": "snake-500",
-    "game": "snake",
+    "id": "stacks-500",
+    "game": "stacks",
     "minScore": 500,
     "requiresWin": false,
     "code": "<AN EXISTING SHOPIFY CODE IYS APPROVED>",
@@ -113,8 +109,9 @@ snapshot is always in the build, so a rollback never leaves an empty shop.
 ]
 ```
 
-- `game` is one of `snake`, `stacks`, `chomp`, `tower`, `invaders`,
-  `purbale-closet`, `purbale-pairs`, `purbale-pack`.
+- `game` is one of the visible games: `stacks`, `chomp`, `tower`, `invaders`.
+  `snake` and the `purbale-closet`, `purbale-pairs` and `purbale-pack` mini games
+  are hidden since 2026-11-10, so a reward for them could never be earned.
 - With an Admin token, a reward is offered **only while Shopify says the code is
   ACTIVE** (checked every 5 minutes). Without one, only until
   `merchantConfirmedUntil`. Neither → the reward is never shown.

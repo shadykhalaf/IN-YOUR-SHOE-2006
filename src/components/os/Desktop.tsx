@@ -1,6 +1,8 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { FEATURES } from '../../config/features';
 import { curation, WALLPAPERS } from '../../data/assets';
 import { concept } from '../../data/copy';
+import { VISIBLE_GAMES } from '../../games/registry';
 import { collectionCount } from '../../lib/catalogue/hydrate';
 import { formatCount } from '../../lib/catalogue/format';
 import { useCatalogue } from '../../lib/catalogue/load';
@@ -74,8 +76,9 @@ export function DesktopIcons() {
   ];
   const right: DIcon[] = [
     { id: 'readme', label: 'README.TXT', icon: 'txt', aria: 'Open README.TXT', act: () => open('readme') },
-    { id: 'mail', label: 'IYS MAIL', icon: 'mail', aria: 'Open IYS Mail', act: () => open('mail') },
-    { id: 'games', label: 'IYS GAMES', icon: 'games', aria: 'Open IYS Games, 6 games', act: () => open('games') },
+    // IYS MAIL is hidden for now (FEATURES.iysMail).
+    ...(FEATURES.iysMail ? [{ id: 'mail', label: 'IYS MAIL', icon: 'mail', aria: 'Open IYS Mail', act: () => open('mail') } satisfies DIcon] : []),
+    { id: 'games', label: 'IYS GAMES', icon: 'games', aria: `Open IYS Games, ${VISIBLE_GAMES.length} games`, act: () => open('games') },
     { id: 'recycle', label: 'RECYCLE BIN', icon: 'recycle', aria: 'Open Recycle Bin', act: () => open('recycle') },
   ];
   // Opens the curated Touch Grass product; if it ever leaves the snapshot, searches instead.
@@ -90,10 +93,6 @@ export function DesktopIcons() {
     },
   });
   if (gameNight) right.push({ id: 'game-night', label: concept.gameNight, icon: 'exe', aria: `Run GAME_NIGHT.EXE (opens ${gameNight.title})`, act: () => browse(productPath(gameNight.handle)) });
-  right.push(
-    { id: 'newsletter', label: 'IYS NEWSLETTER', icon: 'newsletter', aria: 'Open IYS Newsletter', act: () => open('newsletter') },
-    { id: 'exchange', label: concept.exchange.icon, icon: 'exchange', aria: 'Open XCHANGE.EXE, the exchanges and refunds form', act: () => open('exchange') },
-  );
 
   // ── Movable icons: offsets from each icon's default grid slot. ──
   const offsets = useIconPositions((s) => s.offsets);

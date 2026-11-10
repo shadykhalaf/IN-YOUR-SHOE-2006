@@ -56,9 +56,8 @@ All official strings live in `src/data/copy.ts → official`; everything in
 | You’re about to make a Cool Decision! | scrolling marquee + footer |
 | The Coolest Apparel In Town! | homepage `<title>` |
 | Stand out, Express yourself! We put ourselves in your shoe, in style! :) | homepage meta description |
-| Join our cool list and receive a 10% OFF code for your 1st purchase! | footer newsletter block (no code is shown or invented) |
 | Same-day delivery available ⚡ | announcement bar (dated in the UI; volatile) |
-| Free Shipping +2,499 | announcement bar (dated in the UI; volatile) |
+| YOUR SINGLE WEEK SAVINGS · Add … more to save … in total · … SAVED SO FAR | cart, Single Week savings steps (read 2026-11-10; dated in the UI; volatile) |
 | Pjoys are our terminology for pyjama pants that are super joyful, just like you reading this. | Pjoys product descriptions |
 
 ## What is NOT used

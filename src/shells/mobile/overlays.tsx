@@ -7,9 +7,10 @@ import { FilterPanel } from '../../components/shop/FilterPanel';
 import { Price } from '../../components/shop/Price';
 import { RemoteImage } from '../../components/shop/RemoteImage';
 import { EssentialLinks } from '../../components/shop/EssentialLinks';
-import { BagIdeas, BagOffers, HandoffStatus, PromoCode, ShippingProgress, useHandoffPending } from '../../components/shop/BagExtras';
+import { BagIdeas, BagOffers, HandoffStatus, PromoCode, SavingsProgress, useHandoffPending } from '../../components/shop/BagExtras';
 import { ESSENTIALS } from '../../data/essentials';
 import { concept } from '../../data/copy';
+import { VISIBLE_GAMES } from '../../games/registry';
 import { useMenu } from '../../lib/storeHome';
 import { setWallpaperImage } from '../../lib/actions';
 import { formatCount, formatEGP } from '../../lib/catalogue/format';
@@ -38,6 +39,7 @@ export function MBag({ close }: { close: () => void }) {
   return (
     <div className="m-page">
       <h1 className="m-h1">MY BAG ({itemCount(items)})</h1>
+      <SavingsProgress />
       <BagList onOpenProduct={openProduct} />
       {items.length === 0 && (
         <button type="button" className="btn btn--go m-add" onClick={() => { close(); navigate('/collections/newest'); }}>
@@ -46,7 +48,6 @@ export function MBag({ close }: { close: () => void }) {
       )}
       {items.length > 0 && (
         <div className="m-total">
-          <ShippingProgress />
           <BagOffers />
           <div className="bag__total">
             <span>Subtotal</span>
@@ -210,7 +211,7 @@ export function MMenu({ close, openOverlay }: { close: () => void; openOverlay: 
         <li>
           <button type="button" onClick={() => openOverlay('games')}>
             <Icon name="games" size={24} />
-            <span>IYS GAMES · 6 GAMES</span>
+            <span>IYS GAMES · {VISIBLE_GAMES.length} GAMES</span>
           </button>
         </li>
         <li>

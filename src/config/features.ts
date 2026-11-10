@@ -17,7 +17,9 @@ const flag = (name: string, fallback: boolean) => {
 export const FEATURES = {
   /** Desktop: MENU (top left) + MY BAG (top right) in the top strip. */
   topNav: flag('VITE_FEATURE_TOP_NAV', true),
-  /** MY BAG: free-shipping progress + offers (only from verified merchant rules). */
+  /** IYS MAIL (the support mail window): hidden for now. true brings it back: desktop icon, MENU, SIZE GUIDE and HELP. */
+  iysMail: flag('VITE_FEATURE_IYS_MAIL', false),
+  /** MY BAG: Single Week savings + merchant offers (only from verified merchant rules) + GOT A CODE?. */
   bagIncentives: flag('VITE_FEATURE_BAG_INCENTIVES', true),
   /** MY BAG: a few complementary, in-stock, real products ("u might like these"). */
   bagUpsell: flag('VITE_FEATURE_BAG_UPSELL', true),

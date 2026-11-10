@@ -9,7 +9,6 @@
  * never claims something Shopify didn't confirm. See
  * docs/SHOPIFY_GO_LIVE_CHECKLIST.md.
  */
-import type { FreeShippingRule } from '../config/promotions';
 import type { CartItem } from '../state/cart';
 
 export type CommerceMode = 'snapshot' | 'live';
@@ -79,24 +78,3 @@ export async function createLiveCheckout(items: readonly CartItem[], code: strin
   return off.length ? { kind: 'mismatch', variantIds: off.map((i) => i.variantId) } : { kind: 'unavailable' };
 }
 
-let liveShipping: Promise<FreeShippingRule | null> | null = null;
-
-/**
- * LIVE mode only: the store's active automatic free-shipping discount for
- * Egypt (Admin API via /api/commerce), as a rule valid today. null whenever
- * there is nothing to say: snapshot mode, not configured, error, or no such
- * discount. A missing discount is NOT proof there's no free shipping (it can
- * also be a shipping-rate condition), so callers keep the verified static rule.
- */
-export function liveFreeShipping(on: string): Promise<FreeShippingRule | null> {
-  if (commerceMode() !== 'live') return Promise.resolve(null);
-  liveShipping ??= fetch(`${COMMERCE_ENDPOINT}?op=promotions`, { signal: AbortSignal.timeout(6000) })
-    .then((r) => (r.ok ? r.json() : null))
-    .then((b: { ok?: boolean; freeShipping?: { minSubtotalEGP?: number; title?: string } | null } | null) => {
-      const min = b?.ok ? Number(b.freeShipping?.minSubtotalEGP) : NaN;
-      if (!(min > 0)) return null;
-      return { overEGP: min, inclusive: true, source: `Shopify automatic discount: ${String(b?.freeShipping?.title ?? '').slice(0, 80)}`, sourceUrl: '', verifiedOn: on, showUntil: on };
-    })
-    .catch(() => null);
-  return liveShipping;
-}

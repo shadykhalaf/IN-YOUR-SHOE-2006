@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router';
 import { brand, localImage } from '../data/assets';
 import { concept } from '../data/copy';
 import { useCatalogue } from '../lib/catalogue/load';
-import { formatCount } from '../lib/catalogue/format';
 import { play } from '../lib/sound';
 import { Boot } from '../components/os/Boot';
 import { DesktopIcons, Wallpaper } from '../components/os/Desktop';
@@ -38,9 +37,7 @@ const LOADERS: Record<AppId, () => Promise<{ default: ComponentType<AppProps> }>
   mail: () => import('../apps/Small/Mail'),
   readme: () => import('../apps/Small/Readme'),
   recycle: () => import('../apps/Small/RecycleBin'),
-  newsletter: () => import('../apps/Small/Newsletter'),
   help: () => import('../apps/Small/Help'),
-  exchange: () => import('../apps/Small/Exchange'),
   essentials: () => import('../apps/Small/Essentials'),
   games: () => import('../apps/Games/GamesFolder'),
   game: () => import('../apps/Games/GameWindow'),
@@ -83,7 +80,8 @@ export default function DesktopShell() {
   const [booting, setBooting] = useState(() => !session.bootSeen && !deepLink && !new URLSearchParams(location.search).has('noboot'));
   const pjoysUnread = usePjoysUnread();
   const deskRef = useRef<HTMLDivElement>(null);
-  const cat = useCatalogue();
+  // Starts loading the catalogue during the boot screen, as before.
+  useCatalogue();
   const online = useOnline();
   const catchy = useCatchyEnabled();
 
@@ -170,10 +168,6 @@ export default function DesktopShell() {
         <div className="desktop__stamp">
           <img src={brand.markWhite} alt="" width={46} height={46} style={{ marginLeft: 'auto', width: 46, height: 'auto', opacity: 0.95 }} />
           <strong>{concept.name}</strong>
-          <br />
-          {cat ? `${formatCount(cat.products.length)} real products · snapshot ${cat.generatedAt.slice(0, 10)}` : 'Loading catalogue...'}
-          <br />
-          IN YOUR SHOE - 2000s · built with Omar Akram
         </div>
         <div className="win-layer">
           {windows.map((w) => (
@@ -188,7 +182,7 @@ export default function DesktopShell() {
       <Dialogs />
       {!online && (
         <p className="offline" role="alert">
-          INTERNET CONNECTION LOST - product photos load from the official IYS CDN. Prices shown are the saved snapshot.
+          INTERNET CONNECTION LOST - product photos load from the official IYS CDN. Prices shown are the last saved prices.
         </p>
       )}
       <Screensaver disabled={booting} />

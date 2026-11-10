@@ -48,7 +48,7 @@ export default function Favorites() {
       )}
       {gone.length > 0 && (
         <p className="page__note">
-          {gone.length} saved item(s) are no longer in the current catalogue snapshot.{' '}
+          {gone.length} saved item(s) are no longer in the current catalogue.{' '}
           <button type="button" className="link" onClick={() => gone.forEach(remove)}>
             Remove them
           </button>

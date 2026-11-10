@@ -323,32 +323,6 @@ const shapes: Record<string, JSX.Element> = {
       <path d="M17 4.5h10.5V15l-4-4-8 8-3-3 8-8z" fill={B} stroke={O} shapeRendering="auto" strokeLinejoin="round" />
     </g>
   ),
-  /** Folded newsletter flyer with a coral "10%" sticker. */
-  newsletter: (
-    <g>
-      <g shapeRendering="crispEdges">
-        <rect x="3.5" y="5.5" width="20" height="23" fill="#fff" stroke={O} />
-        <rect x="5.5" y="7.5" width="16" height="4" fill={B} />
-        <path d="M5.5 14h16M5.5 16.5h16M5.5 19h11M5.5 21.5h13M5.5 24h9" stroke="#8fa9cc" />
-      </g>
-      <circle cx="23.5" cy="22" r="7" fill={C} stroke={O} />
-      <path d="M20.5 20.5h1M20.5 23.5h1M22.5 19.5v5M24 19.5l3 5M24.3 20.2h.1M26.7 23.8h.1" stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-    </g>
-  ),
-  /** Box with two arrows going round — exchanges & refunds. */
-  exchange: (
-    <g>
-      <g shapeRendering="crispEdges">
-        <rect x="6.5" y="12.5" width="19" height="15" fill="#e9c27a" stroke={O} />
-        <path d="M6.5 12.5l3-4h13l3 4" fill="#f5d89c" stroke={O} />
-        <rect x="14" y="12.5" width="4" height="15" fill="#d9a955" />
-      </g>
-      <path d="M4 10.5a9 9 0 0 1 15-6" fill="none" stroke={B} strokeWidth="2.4" />
-      <path d="M17.5 1.5l3 3.5-4 1.5z" fill={B} />
-      <path d="M28 21a9 9 0 0 1-4.5 7.5" fill="none" stroke={C} strokeWidth="2.4" />
-      <path d="M21 26.5l2.5 3.5 2.3-4z" fill={C} />
-    </g>
-  ),
   /** IYS GAMES: a Y2K joystick with a coral ball and a little sock flag. */
   games: (
     <g>

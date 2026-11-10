@@ -2,11 +2,14 @@ import type { Locator, Page } from '@playwright/test';
 import { axe, desktop, expect, test } from './fixtures';
 
 const GAMES = [
-  ['snake', 'CATCHY SNAKE'],
   ['stacks', 'IYS STACKS'],
   ['chomp', 'CATCHY CHOMP'],
   ['tower', 'IYS TOWER'],
   ['invaders', 'CATCHY INVADERS'],
+] as const;
+/** Hidden on request (2026-11-10): their code stays, but nothing lists, counts or opens them. */
+const HIDDEN = [
+  ['snake', 'CATCHY SNAKE'],
   ['purbale', 'PURBALE CATCHY'],
 ] as const;
 
@@ -55,31 +58,31 @@ async function pauseRestart(page: Page, win: Locator, title: string) {
 }
 
 test.describe('IYS GAMES (desktop)', () => {
-  test('folder: desktop icon + Start menu, six games with PLAY and MY HIGH SCORES, no axe issues', async ({ page }) => {
-    const hub = await openHub(page);
+  test('folder: desktop icon + Start menu, the four visible games with PLAY and MY HIGH SCORES, no axe issues', async ({ page }) => {
+    await desktop(page, '/');
+    await page.locator('[data-window="internet"] .tbtn').first().click();
+    await expect(page.getByRole('button', { name: 'Open IYS Games, 4 games' })).toBeVisible();
+    await page.getByRole('button', { name: 'Open IYS Games, 4 games' }).click();
+    const hub = page.getByRole('dialog', { name: 'IYS GAMES' });
+    await expect(hub).toBeVisible();
     for (const [, title] of GAMES) await expect(hub.getByRole('button', { name: `PLAY ${title}` })).toBeVisible();
-    await expect(hub.locator('[data-game-tile]')).toHaveCount(6);
+    await expect(hub.locator('[data-game-tile]')).toHaveCount(4);
+    await expect(hub).toContainText('4 games · pick one and press PLAY xo');
+    await expect(hub.locator('.statusbar')).toContainText('4 objects');
+    // the hidden games: no tile, no PLAY, no high-score row
+    for (const [id, title] of HIDDEN) {
+      await expect(hub.getByRole('button', { name: `PLAY ${title}` })).toHaveCount(0);
+      await expect(hub.locator(`[data-game-tile="${id}"]`)).toHaveCount(0);
+    }
+    await expect(hub.locator('.gfolder__side')).not.toContainText(/SNAKE|PURBALE/);
     await expect(hub.getByRole('heading', { name: 'MY HIGH SCORES' })).toBeVisible();
     await expect(hub.getByText(/coming soon/i)).toHaveCount(0);
     await axe(page, '[data-window="games"]');
     await hub.getByRole('button', { name: 'Close IYS GAMES' }).click();
     await page.getByRole('button', { name: 'MENU', exact: true }).click() // top-left MENU (the taskbar corner is DESKTOP);
+    await expect(page.getByRole('menu', { name: 'IYS menu' }).getByRole('menuitem', { name: /IYS GAMES/ })).toContainText('4 games starring Catchy');
     await page.getByRole('menu', { name: 'IYS menu' }).getByRole('menuitem', { name: /IYS GAMES/ }).click();
     await expect(page.getByRole('dialog', { name: 'IYS GAMES' })).toBeVisible();
-  });
-
-  test('CATCHY SNAKE: steer into the wall → GAME OVER, score saved locally', async ({ page }) => {
-    await openHub(page);
-    const win = await launch(page, 'snake', 'CATCHY SNAKE');
-    await axe(page, '[data-window="game-snake"]');
-    await play(win);
-    await controls(page, win, 'CATCHY SNAKE');
-    const again = await launch(page, 'snake', 'CATCHY SNAKE');
-    await play(again);
-    await page.keyboard.press('ArrowUp');
-    await expect(phase(again)).toHaveAttribute('data-phase', 'over', { timeout: 8000 });
-    await expect(again.locator('.game__big')).toHaveText('GAME OVER :(');
-    await expect(again.getByRole('button', { name: 'TRY AGAIN XD' })).toBeVisible();
   });
 
   test('IYS STACKS: moves, rotates, hard drops and tops out', async ({ page }) => {
@@ -129,72 +132,6 @@ test.describe('IYS GAMES (desktop)', () => {
     await controls(page, win, 'CATCHY INVADERS');
   });
 
-  test('PURBALE CATCHY: Closet perfect fit, Pjoy Pairs cleared, a packed box', async ({ page }) => {
-    await openHub(page);
-    const win = await launch(page, 'purbale', 'PURBALE CATCHY');
-    await axe(page, '[data-window="game-purbale"]');
-    // CATCHY CLOSET
-    await win.getByRole('button', { name: 'PLAY CATCHY CLOSET' }).click();
-    await play(win);
-    for (const piece of (await win.getByTestId('closet-target').textContent())!.split(' · ')) await win.getByRole('button', { name: piece, exact: true }).click();
-    await win.getByRole('button', { name: 'CHECK THE LOOK' }).click();
-    await expect.poll(() => score(win)).toBeGreaterThan(0);
-    await axe(page, '[data-window="game-purbale"]');
-    await win.getByRole('button', { name: '◀ PURBALE' }).first().click();
-    // PJOY PAIRS (easy): solve it by remembering what was seen
-    await win.getByRole('button', { name: 'PLAY PJOY PAIRS' }).click();
-    await win.getByRole('radio', { name: /EASY/ }).check();
-    await play(win);
-    const cards = win.locator('.pcard');
-    const n = await cards.count();
-    expect(n).toBe(12);
-    const label = async (i: number) => (await cards.nth(i).getAttribute('aria-label'))!.replace(/^Card \d+: /, '').replace(/ \(paired\)$/, '');
-    const isDone = async (i: number) => (await cards.nth(i).getAttribute('class'))!.includes('is-matched');
-    const known = new Map<string, number>();
-    for (let i = 0; i < n; i++) {
-      if ((await isDone(i)) || [...known.values()].includes(i)) continue;
-      await cards.nth(i).click();
-      const a = await label(i);
-      if (known.has(a)) {
-        await cards.nth(known.get(a)!).click();
-        known.delete(a);
-        continue;
-      }
-      let j = i + 1;
-      while (j < n && ((await isDone(j)) || [...known.values()].includes(j))) j++;
-      await cards.nth(j).click();
-      const b = await label(j);
-      if (a !== b) {
-        known.set(a, i);
-        if (known.has(b)) {
-          const k = known.get(b)!;
-          known.delete(b);
-          await cards.nth(k).click();
-          await cards.nth(j).click();
-        } else known.set(b, j);
-      }
-    }
-    await expect(phase(win)).toHaveAttribute('data-phase', 'over');
-    await expect(win.getByText('ALL PAIRED!!').first()).toBeVisible();
-    await win.getByRole('button', { name: '◀ PURBALE' }).first().click();
-    // PACK THE DROP
-    await win.getByRole('button', { name: 'PLAY PACK THE DROP' }).click();
-    await play(win);
-    for (const li of await win.getByTestId('pack-list').locator('li').all()) {
-      const text = (await li.textContent())!.replace(/^\d+ × /, '');
-      const q = Number(await li.getAttribute('data-qty'));
-      for (let k = 0; k < q; k++) await win.getByRole('button', { name: `Add ${text}`, exact: true }).click();
-    }
-    await win.getByRole('button', { name: /PACK IT/ }).click();
-    await expect.poll(() => score(win)).toBeGreaterThan(0);
-    await pauseRestart(page, win, 'PURBALE CATCHY');
-    // mini game → Purbale menu → IYS GAMES
-    await win.getByRole('button', { name: '◀ PURBALE' }).first().click();
-    await win.getByRole('button', { name: '◀ IYS GAMES' }).click();
-    await expect(win).toHaveCount(0);
-    await expect(page.getByRole('dialog', { name: 'IYS GAMES' })).toBeVisible();
-  });
-
   test('games never steal keys from the rest of the OS', async ({ page }) => {
     await openHub(page);
     const win = await launch(page, 'stacks', 'IYS STACKS');
@@ -214,13 +151,6 @@ test.describe('IYS GAMES (desktop)', () => {
 });
 
 test.describe('MY HIGH SCORES (local only)', () => {
-  const dieInSnake = async (page: Page) => {
-    const win = await launch(page, 'snake', 'CATCHY SNAKE');
-    await play(win);
-    await page.keyboard.press('ArrowUp');
-    await expect(phase(win)).toHaveAttribute('data-phase', 'over', { timeout: 8000 });
-    return win;
-  };
   const topOut = async (page: Page) => {
     const win = await launch(page, 'stacks', 'IYS STACKS');
     await play(win);
@@ -242,17 +172,23 @@ test.describe('MY HIGH SCORES (local only)', () => {
     await expect(win.locator('.game__new')).toHaveText('NEW HIGH SCORE!!');
     expect(await page.evaluate(() => localStorage.getItem('iys2006.games.stacks.highScore'))).toBe(String(best));
     await win.getByRole('button', { name: 'Close IYS STACKS' }).click();
-    // a worse run (snake, straight into the wall) can't touch a higher stored best
-    await page.evaluate(() => localStorage.setItem('iys2006.games.snake.highScore', '99999'));
-    const s = await dieInSnake(page);
-    await expect(s.locator('.game__new')).toHaveCount(0);
-    expect(await page.evaluate(() => localStorage.getItem('iys2006.games.snake.highScore'))).toBe('99999');
+    // a worse run can't touch a higher stored best
+    await page.evaluate(() => localStorage.setItem('iys2006.games.chomp.highScore', '99999'));
+    const c = await launch(page, 'chomp', 'CATCHY CHOMP');
+    await play(c);
+    await c.locator('.game__stage').focus();
+    await page.keyboard.press('p');
+    await expect(phase(c)).toHaveAttribute('data-phase', 'paused');
+    await c.getByRole('button', { name: 'Restart' }).first().click();
+    await expect(phase(c)).toHaveAttribute('data-phase', 'playing');
+    await c.getByRole('button', { name: 'Close CATCHY CHOMP' }).click();
+    expect(await page.evaluate(() => localStorage.getItem('iys2006.games.chomp.highScore'))).toBe('99999');
     // reload: still there, shown on the folder
     await page.reload();
     await page.locator('[data-window="internet"] .tbtn').first().click();
     await page.getByRole('button', { name: /^Open IYS Games/ }).click();
     await expect(page.locator('[data-game-tile="stacks"]')).toContainText(`BEST ${best}`);
-    await expect(page.locator('[data-game-tile="snake"]')).toContainText('BEST 99999');
+    await expect(page.locator('[data-game-tile="chomp"]')).toContainText('BEST 99999');
     expect(sent).toEqual([]);
   });
 
@@ -270,7 +206,7 @@ test.describe('MY HIGH SCORES (local only)', () => {
       };
     });
     await openHub(page);
-    const win = await dieInSnake(page);
+    const win = await topOut(page);
     await expect(win.locator('.game__big')).toHaveText('GAME OVER :(');
     await win.getByRole('button', { name: 'TRY AGAIN XD' }).click();
     await expect(phase(win)).toHaveAttribute('data-phase', 'playing');

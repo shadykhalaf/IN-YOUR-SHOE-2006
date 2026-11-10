@@ -79,7 +79,7 @@ export default function Wardrobe({ win }: { win: Win }) {
           <span className="grow">
             {folder ? `${formatCount(items.length)} objects` : `${subfolders.length} folders`} {folder && items.length > 48 ? `(showing ${pg.from}–${pg.to})` : ''}
           </span>
-          <span>Counts from the catalogue snapshot</span>
+          <span>Counts from the IYS catalogue</span>
         </div>
       }
     >

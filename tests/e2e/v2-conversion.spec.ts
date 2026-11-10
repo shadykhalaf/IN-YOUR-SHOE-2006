@@ -1,10 +1,11 @@
 import type { Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
-import { axe, desktop, expect, index, test } from './fixtures';
+import { SINGLE_WEEK_SAVINGS } from '../../src/config/promotions';
+import { axe, desktop, expect, index, iysMailOn, test } from './fixtures';
 
 /**
  * Conversion pass, desktop: MENU + MY BAG up top, JUST DROPPED in view,
- * official size guide, free-shipping progress, the escape route, IYS MAIL,
+ * official size guide, no free shipping anywhere, the escape route, IYS MAIL (hidden for now),
  * snapshot safety and a returning shopper. External calls are stubbed: no
  * real checkout, no real email, no live Shopify.
  */
@@ -51,7 +52,8 @@ test.describe('top strip: MENU (left) and MY BAG (right)', () => {
     await expect(menuBtn).toHaveAttribute('aria-expanded', 'true');
     const menu = page.locator('#iys-menu');
     await expect(menu).toBeVisible();
-    await expect(menu.getByRole('menuitem', { name: /IYS MAIL/ })).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: /IYS ESSENTIALS/ })).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: /IYS MAIL/ })).toHaveCount(iysMailOn ? 1 : 0);
     await page.keyboard.press('Escape');
     await expect(menu).toBeHidden();
     await expect(menuBtn).toBeFocused();
@@ -73,11 +75,12 @@ test.describe('JOURNEY B: desktop customer (top MENU, bottom DESKTOP, top MY BAG
     const db = (await desk.boundingBox())!;
     expect(db.x).toBeLessThan(20);
     expect(db.y).toBeGreaterThan(page.viewportSize()!.height - 50);
-    // open more windows from the top-left MENU, and write half a mail
+    // open more windows from the top-left MENU, and pick a tab in CONTROL PANEL
     await page.getByRole('button', { name: 'MENU', exact: true }).click();
-    await page.locator('#iys-menu').getByRole('menuitem', { name: /IYS MAIL/ }).click();
-    const mail = page.locator('[data-window="mail"]');
-    await mail.getByLabel('Message').fill('half-written draft');
+    await page.locator('#iys-menu').getByRole('menuitem', { name: /CONTROL PANEL/ }).click();
+    const cp = page.locator('[data-window="control"]');
+    await cp.getByRole('tab', { name: 'Sound' }).click();
+    await expect(cp.getByRole('tab', { name: 'Sound' })).toHaveAttribute('aria-selected', 'true');
     await page.locator('.topnav--bag').click();
     const bag = page.getByRole('dialog', { name: 'MY BAG' });
     await expect(bag.locator('.bag__row')).toHaveCount(1);
@@ -94,14 +97,14 @@ test.describe('JOURNEY B: desktop customer (top MENU, bottom DESKTOP, top MY BAG
     await expect(desk).toHaveAttribute('aria-pressed', 'false');
     await expect(page.locator('[data-window]:visible')).toHaveCount(open);
     await expect(bag).toBeVisible(); // the window that was active comes back on top
-    await expect(mail.getByLabel('Message')).toHaveValue('half-written draft');
+    await expect(cp.getByRole('tab', { name: 'Sound' })).toHaveAttribute('aria-selected', 'true');
     await expect(page.locator('[data-window="internet"]').getByRole('heading', { level: 1 })).toHaveText(withChart.t);
 
     // after showing the desktop, a single window can also come back from its taskbar button
     await desk.click();
-    await page.getByRole('navigation', { name: 'Taskbar' }).getByRole('button', { name: /IYS MAIL/ }).click();
-    await expect(mail).toBeVisible();
-    await expect(mail.getByLabel('Message')).toHaveValue('half-written draft');
+    await page.getByRole('navigation', { name: 'Taskbar' }).getByRole('button', { name: /CONTROL PANEL/ }).click();
+    await expect(cp).toBeVisible();
+    await expect(cp.getByRole('tab', { name: 'Sound' })).toHaveAttribute('aria-selected', 'true');
     await expect(desk).toHaveAttribute('aria-pressed', 'false');
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem('iys2006.bag')!).state.items.length)).toBe(1);
   });
@@ -152,25 +155,32 @@ test.describe('JOURNEY A: first-time shopper (desktop)', () => {
     await page.locator('.topnav--bag').click();
     const bag = page.getByRole('dialog', { name: 'MY BAG' });
     await expect(bag.locator('.bag__row')).toHaveCount(1);
-    if ((withChart.p ?? 0) <= 3999) await expect(bag.locator('.bagx-ship')).toContainText(/MORE 4 FREE SHIPPING\*|JUST A LIL MORE/);
-    await expect(bag.locator('.bagx-note').first()).toContainText('IYS confirms shipping at checkout');
+    // There is no free shipping: the bag never offers or mentions it.
+    await expect(bag.locator('.bagx-ship')).toHaveCount(0);
+    await expect(bag).not.toContainText(/free shipping/i);
+    await expect(bag.locator('.bag__note').first()).toContainText('Delivery and offers are calculated on the real site');
     await bag.getByRole('button', { name: /CHECKOUT xx/ }).click();
     await expect(page).toHaveURL(`https://inyourshoe.com/cart/${chartSize[2]}:1`);
     expect(hits).toEqual([`https://inyourshoe.com/cart/${chartSize[2]}:1`]);
     expect(live).toEqual([]);
   });
 
-  test('no official chart → says so, never estimates, and offers to ask IYS (prefilled IYS MAIL)', async ({ page }) => {
+  test('no official chart → says so, never estimates, and offers to ask IYS (IYS’s contact page while IYS MAIL is hidden)', async ({ page }) => {
     test.skip(!noChart, 'every in-stock sized product in this snapshot has an official chart');
     await desktop(page, `/product/${noChart!.h}`);
     await browserWin(page).getByRole('button', { name: 'SIZE GUIDE' }).click();
     const guide = page.locator('[data-window="sizeguide"]');
     await expect(guide).toContainText('hasn’t published a size chart');
     await expect(guide.locator('img')).toHaveCount(0);
-    await guide.getByRole('button', { name: 'ASK IYS ABOUT SIZING' }).click();
-    const mail = page.locator('[data-window="mail"]');
-    await expect(mail.getByLabel('Topic:')).toHaveValue('Product question');
-    await expect(mail.getByLabel('Subject:')).toHaveValue(`Sizing: ${noChart!.t}`.slice(0, 120));
+    if (iysMailOn) {
+      await guide.getByRole('button', { name: 'ASK IYS ABOUT SIZING' }).click();
+      const mail = page.locator('[data-window="mail"]');
+      await expect(mail.getByLabel('Topic:')).toHaveValue('Product question');
+      await expect(mail.getByLabel('Subject:')).toHaveValue(`Sizing: ${noChart!.t}`.slice(0, 120));
+    } else {
+      await expect(guide.getByRole('link', { name: 'CONTACT IYS ↗' })).toHaveAttribute('href', 'https://inyourshoe.com/pages/contact-us');
+      await expect(guide.getByRole('button', { name: 'ASK IYS ABOUT SIZING' })).toHaveCount(0);
+    }
   });
 });
 
@@ -400,6 +410,7 @@ test.describe('JOURNEY G (loading): photos load in the ADD TO BAG language', () 
 });
 
 test.describe('JOURNEY F: IYS MAIL (mocked delivery, nothing is emailed)', () => {
+  test.skip(!iysMailOn, 'IYS MAIL is hidden for now (FEATURES.iysMail); these run again when it is back');
   async function openMail(page: Page) {
     await desktop(page);
     await page.locator('.topnav--menu').click();
@@ -476,8 +487,8 @@ test.describe('JOURNEY G: snapshot / live safety', () => {
     await expect(browserWin(page).getByRole('heading', { level: 1 })).toHaveText(withChart.t);
     await page.locator('[data-window="internet"] .tbtn').first().click();
     await page.getByRole('button', { name: /^Open IYS Games/ }).click();
-    await page.getByRole('button', { name: 'PLAY CATCHY SNAKE' }).click();
-    const game = page.locator('[data-window="game-snake"]');
+    await page.getByRole('button', { name: 'PLAY CATCHY CHOMP' }).click();
+    const game = page.locator('[data-window="game-chomp"]');
     await expect(game.locator('.game__overlay')).toBeVisible();
     await expect(game.locator('.game__reward, .game__reward-hint')).toHaveCount(0);
     expect(live).toEqual([]);
@@ -507,4 +518,49 @@ test.describe('JOURNEY H: returning shopper', () => {
     await expect(page.locator('.topnav--bag')).toHaveAccessibleName('My Bag, 2 items');
     expect(await bagLines(page)).toEqual([[v[2], 2]]);
   });
+});
+
+test('MY BAG: Single Week savings, laid out like the inyourshoe.com cart, on the site’s loading bar', async ({ page }) => {
+  // Inside the dates the steps were checked for, whatever day the suite runs.
+  await page.clock.setSystemTime(new Date(`${SINGLE_WEEK_SAVINGS!.verifiedOn}T12:00:00`));
+  const b = page.getByRole('dialog', { name: /IYS INTERNET/ });
+  await desktop(page, '/product/female-navy-washed-barrel-fit-jeans');
+  await b.locator('.chip label', { hasText: /^36$/ }).click();
+  await b.getByRole('button', { name: 'ADD TO BAG' }).click();
+  await expect(page.locator('.topnav--bag')).toHaveAccessibleName('My Bag, 1 item');
+  await page.goto('/product/cactus-cairo-fluffy-blanket');
+  await expect(b.getByRole('heading', { level: 1 })).toHaveText('Cactus Cairo Fluffy Blanket');
+  await b.getByRole('button', { name: 'ADD TO BAG' }).click();
+  await expect(page.locator('.topnav--bag')).toHaveAccessibleName('My Bag, 2 items');
+  await page.locator('.topnav--bag').click();
+  const bag = page.getByRole('dialog', { name: 'MY BAG' });
+  const save = bag.getByRole('region', { name: 'YOUR SINGLE WEEK SAVINGS' });
+  // The same 2,648 EGP bag as the inyourshoe.com screenshot, the same numbers.
+  await expect(save.locator('.bagx-save__line')).toHaveText('Add 1,796 EGP more to save 2,222 EGP in total*');
+  await expect(save.locator('.bagx-save__min')).toHaveText(['4,444', '6,666', '8,888']);
+  await expect(save.locator('.bagx-save__step')).toHaveText(['SAVE 2,222', 'SAVE 3,333', 'SAVE 4,444']);
+  await expect(save.locator('.bagx-save__saved')).toHaveText('1,111 EGP SAVED SO FAR');
+  await expect(save.locator('.progress').first()).toHaveAttribute('style', /--p: 59%/);
+  await expect(save).toContainText('IYS applies the savings at checkout');
+  // It sits above the bag's first line, as in the real cart.
+  expect((await save.boundingBox())!.y).toBeLessThan((await bag.locator('.bag__row').first().boundingBox())!.y);
+});
+
+test('MY BAG: Single Week savings end at 12:12 Egypt time on 15 Nov exactly, even with the bag open', async ({ page }) => {
+  const end = Date.parse(SINGLE_WEEK_SAVINGS!.endsAt);
+  // 12:09 in Cairo; time then flows as usual.
+  await page.clock.install({ time: end - 3 * 60_000 });
+  const b = page.getByRole('dialog', { name: /IYS INTERNET/ });
+  await desktop(page, '/product/female-navy-washed-barrel-fit-jeans');
+  await b.locator('.chip label', { hasText: /^36$/ }).click();
+  await b.getByRole('button', { name: 'ADD TO BAG' }).click();
+  await expect(page.locator('.topnav--bag')).toHaveAccessibleName('My Bag, 1 item');
+  await page.locator('.topnav--bag').click();
+  const bag = page.getByRole('dialog', { name: 'MY BAG' });
+  const save = bag.getByRole('region', { name: 'YOUR SINGLE WEEK SAVINGS' });
+  await expect(save.locator('.bagx-save__line')).toHaveText('Add 423 EGP more to save 1,111 EGP in total*');
+  // The bag stays open past 12:12: the box goes, the bag stays.
+  await page.clock.fastForward('05:00');
+  await expect(save).toHaveCount(0);
+  await expect(bag.locator('.bag__row')).toHaveCount(1);
 });

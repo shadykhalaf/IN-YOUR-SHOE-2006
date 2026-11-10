@@ -97,7 +97,6 @@ function fakeShopify(opts: { latencyMs: number; fail?: (call: number) => number 
         const lines = variables.input!.lines;
         data = { cartCreate: { cart: { checkoutUrl: 'https://inyourshoe.com/cart/c/fixture', lines: { nodes: lines.map((l) => ({ quantity: l.quantity, merchandise: { id: l.merchandiseId, availableForSale: true } })) }, discountCodes: [], cost: null }, userErrors: [], warnings: [] } };
       } else if (op === 'Code') data = { codeDiscountNodeByCode: { codeDiscount: { __typename: 'DiscountCodeBasic', title: 'x', status: 'ACTIVE', startsAt: null, endsAt: null } } };
-      else if (op === 'FreeShipping') data = { discountNodes: { nodes: [] } };
       else data = {};
       return new Response(JSON.stringify({ data }), { status: 200 });
     } finally {
@@ -147,14 +146,6 @@ describe('/api/commerce under concurrency (fixture Shopify, 1,250 products, 67 c
     const r = await run(200, 200, (i) => handleCommerce(get('op=catalogue&part=index', ip(i)), LIVE, { fetcher: shop.f }));
     results.catalogueThrottled = r;
     expect(r.byStatus).toEqual({ 200: 200 });
-  });
-
-  it('promotions: 300 bags opening at once → one Admin API read', async () => {
-    const shop = fakeShopify({ latencyMs: 30 });
-    const r = await run(300, 300, (i) => handleCommerce(get('op=promotions', ip(i)), LIVE, { fetcher: shop.f }));
-    results.promotionsColdStampede = { ...r, adminCalls: shop.calls };
-    expect(r.byStatus).toEqual({ 200: 300 });
-    expect(shop.calls).toBe(1);
   });
 
   it('cart: 400 shoppers at once each get their own exact Shopify cart; one IP hammering is limited', async () => {

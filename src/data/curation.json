@@ -1,5 +1,5 @@
 {
-  "_note": "Hand-picked REAL product handles from the 2026-09-29 Egyptian catalogue snapshot. Chosen for current season (IYS's own Newest collection leads with FW27 hoodies/zip-ups), range, Pjoys and Cairo. Every handle is validated against the synced catalogue by `npm test` and by fetch-showcase-assets; the UI silently drops any handle that disappears after a sync. Image indexes refer to the product's public image order.",
+  "_note": "Hand-picked REAL product handles from the 2026-09-29 Egyptian catalogue. Chosen for current season (IYS's own Newest collection leads with FW27 hoodies/zip-ups), range, Pjoys and Cairo. Every handle is validated against the synced catalogue by `npm test` and by fetch-showcase-assets; the UI silently drops any handle that disappears after a sync. Image indexes refer to the product's public image order.",
   "top8": [
     "dropout-oversized-hoodie",
     "cereal-killer-fluffy-pjoys",

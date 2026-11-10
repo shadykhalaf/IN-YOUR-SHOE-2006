@@ -36,10 +36,10 @@ mid-2000s. The website *is* the computer; the store runs inside it.
    Product pages show title, price and sizes above the fold; the green centre
    soft key is always the next step (SHOP → PICK SIZE → + MY BAG → CHECKOUT).
 3. **Y2K voice.** Concept microcopy uses 2000s slang sparingly (“omg new drop
-   just landed :)”, “u + this fit = meant 2 b xx”, “subscribe 2 our newsletter
-   xoxo”, “ur bag is empty :(”, “IYS was here XD”). It lives in
+   just landed :)”, “u + this fit = meant 2 b xx”, “wat r u looking 4?”,
+   “ur bag is empty :(”, “IYS was here XD”). It lives in
    `concept.y2k` in `src/data/copy.ts`, kept apart from verified official IYS
-   lines; honesty notes (snapshot prices, no real orders) are kept.
+   lines; honesty notes (dated catalogue prices, no real orders) are kept.
 4. **Desktop keeps its OS**, gains the same CTA pair above the FW27 hero, a
    green ADD TO BAG / CHECKOUT, the Y2K copy and an *IYS Hills* wallpaper preset.
 
@@ -55,12 +55,12 @@ Every capability has its own kill switch in `src/config/features.ts`
 | IYS MOBILE | SHOP ALL · SEARCH · FAVS · STORES moved into one bar under the status bar, with **MSG** at its end: PJOYS arrives as a small unread marker instead of a popup. The old tiles are gone. |
 | Above the fold | JUST DROPPED sits right under the hero and peeks into the first screen (desktop 1024–1920 wide, mobile 320–430). `welcome.htm` can be minimized (remembered for the session). |
 | Merchandise | Extra shelves from IYS's own collections (best sellers, hoodies, tees, bottoms, accessories), in stock only, never duplicated. |
-| MY BAG | Free-shipping progress from the **verified** announcement (`src/config/promotions.ts`, re-verify by `showUntil`), merchant offers (none configured), GOT A CODE? (passed to Shopify; never claimed valid unless live Shopify says so), and up to 3 complementary in-stock ideas. |
+| MY BAG | **YOUR SINGLE WEEK SAVINGS** on top: IYS's spend-more-save-more steps from the inyourshoe.com cart (2,222 / 4,444 / 6,666 / 8,888 EGP save 1,111 / 2,222 / 3,333 / 4,444 EGP; `SINGLE_WEEK_SAVINGS` in `src/config/promotions.ts`, shown until Single Week ends on 15 Nov 2026 at 12:12 Egypt time: `endsAt`), on the site's coral loading bar. Merchant offers (none configured), GOT A CODE? (passed to Shopify; never claimed valid unless live Shopify says so), and up to 3 complementary in-stock ideas. There is no free shipping, so none is offered or shown. |
 | Search | Egyptian Arabic and Franco-Arabic (هودي, بنطلون, شراب, bantalon, bigama...) mapped to IYS categories, colours and fits, with an "IYS understood" line. English search is unchanged. |
 | Size guide | The official chart image from each product page (`npm run sync-size-charts`), 100%/200% zoom; no chart → says so and offers to ask IYS. Coverage: [`docs/SIZE_CHART_COVERAGE.md`](docs/SIZE_CHART_COVERAGE.md). |
 | Escape route | After repeated dead ends (404s, failed checkout, empty searches), once per session and only at a calm moment: an offer to continue on the real IYS site with the exact bag. |
 | Loading | One loader in the ADD TO BAG language (`src/components/shop/Busy.tsx`). |
-| Commerce readiness | Opt-in live Shopify (catalogue, exact cart, code check, free-shipping rule), real-merchant game rewards, hardened IYS MAIL. Off by default; see [`docs/SHOPIFY_GO_LIVE_CHECKLIST.md`](docs/SHOPIFY_GO_LIVE_CHECKLIST.md). |
+| Commerce readiness | Opt-in live Shopify (catalogue, exact cart, code check), real-merchant game rewards, hardened IYS MAIL. Off by default; see [`docs/SHOPIFY_GO_LIVE_CHECKLIST.md`](docs/SHOPIFY_GO_LIVE_CHECKLIST.md). |
 
 ## Design thesis
 
@@ -102,7 +102,7 @@ archive photos.
 | **Stores** | FIND IYS IRL — every published store with address line, hours, phone, directions. |
 | **Control Panel** | Wallpaper (presets, stretch/center/tile), sound, CRT filter, Time Machine (2006 only), System (snapshot facts), About, Reset desktop. |
 | **Easter eggs** | README.TXT, RECYCLE BIN (BORING_OUTFITS, empty), `TOUCH_GRASS.EXE` (“ERROR: TOUCH GRASS NOT FOUND.” → the real product), `GAME_NIGHT.EXE`, a screensaver after 60 s idle. |
-| **IYS GAMES** | A games folder (desktop icon, IYS menu; on mobile a home-screen launcher + MENU entry) with six original, playable games starring Catchy: **PURBALE CATCHY** (Catchy Closet, Pjoy Pairs, Pack the Drop), **IYS TOWER** (auto-bounce climber through 5 worlds), **CATCHY CHOMP** (3 closet mazes, 4 laundry monsters), **IYS STACKS** (falling blocks, “DROP CLEARED!”), **CATCHY SNAKE** (sock trail + Pjoy bonus) and **CATCHY INVADERS** (5 waves + the LINT KING). Original SVG/Canvas art and synthesized blips only; each game is its own lazy chunk; MY HIGH SCORES stay on this device (`iys2006.games.<id>.highScore`). |
+| **IYS GAMES** | A games folder (desktop icon, IYS menu; on mobile a home-screen launcher + MENU entry) with four original, playable games starring Catchy: **IYS TOWER** (auto-bounce climber through 5 worlds), **CATCHY CHOMP** (3 closet mazes, 4 laundry monsters), **IYS STACKS** (falling blocks, “DROP CLEARED!”) and **CATCHY INVADERS** (5 waves + the LINT KING). Two more, **PURBALE CATCHY** (Catchy Closet, Pjoy Pairs, Pack the Drop) and **CATCHY SNAKE** (sock trail + Pjoy bonus), are hidden since 2026-11-10: their code stays, marked `hidden: true` in `src/games/registry.ts`, and nothing lists, counts or opens them. Original SVG/Canvas art and synthesized blips only; each game is its own lazy chunk; MY HIGH SCORES stay on this device (`iys2006.games.<id>.highScore`). |
 | **CATCHY.EXE** | The real IYS mascot as a desktop buddy: one canonical Catchy drawing (`src/features/catchy/art.ts`, shared with IYS GAMES) with live eyes for blinking and looking, plus the little white paws from the Purbale Catchy art. He lives on the desktop (above the wallpaper, below every window, so windows cover him), sits, wanders, naps, wakes, looks at a nearby cursor without chasing it, can be dragged (or moved with the arrow keys), and reacts to ADD TO BAG (Pjoys / socks / anything), MY BAG, IYS GAMES, wallpaper changes and REAL IYS (a ≤ 280 ms goodbye wave, only when he's visibly on screen; CHECKOUT is never delayed). Short hand-written lines with cooldowns, no AI, nothing sent anywhere. On IYS Mobile he naps on a little ledge of the home screen only. Control Panel › Catchy (or MENU › Settings on mobile) turns him off; stored locally as `iys2006.catchy.enabled` and `iys2006.catchy.position`. |
 | **IYS MOBILE** | A separate shell below 700 px on an original sky-and-hills screen: glossy status strip, path titles, a `welcome.htm` hero with **Shop the drop** (primary) + **Explore pjoys xo** (secondary), four shortcuts, a “just dropped” strip, a newsletter panel, list screens, swipe gallery, glossy soft keys (BACK · green context key · BAG), same catalogue/bag/favorites/routes. |
 
@@ -350,12 +350,10 @@ never competes with inyourshoe.com in search. The normal build needs no network 
 
 | Concern | Where | Vercel environment variable | If unset |
 | --- | --- | --- | --- |
-| **IYS MAIL** support email → `orders@inyourshoe.com` | `api/support-email.ts` (server-side, Resend REST API) | `RESEND_API_KEY` (secret), `SUPPORT_FROM_EMAIL` (a Resend-verified sender); `SUPPORT_TO_EMAIL` is honoured only with `SUPPORT_TEST_MODE=1` (subject marked `[TEST]`) | the endpoint answers 503 `not-connected` and IYS MAIL says it is not connected, offering OPEN EMAIL APP (prefilled `mailto:`), never a fake success |
-| **Live Shopify** (catalogue, cart, code check, free-shipping rule) | `api/commerce.ts` → `api/_lib/shopify.ts` | server: `COMMERCE_LIVE=1`, `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_STOREFRONT_PRIVATE_TOKEN`, optional `SHOPIFY_ADMIN_TOKEN` (`read_discounts`); build: `VITE_COMMERCE_MODE=live`, `VITE_LIVE_CART=1` | snapshot catalogue + cart permalink (today's behaviour) |
+| **IYS MAIL** support email → `orders@inyourshoe.com` (**hidden for now**: `FEATURES.iysMail` in `src/config/features.ts`, or `VITE_FEATURE_IYS_MAIL=1`, brings back its desktop icon, MENU item, SIZE GUIDE and HELP buttons; meanwhile those two buttons open IYS's contact page) | `api/support-email.ts` (server-side, Resend REST API) | `RESEND_API_KEY` (secret), `SUPPORT_FROM_EMAIL` (a Resend-verified sender); `SUPPORT_TO_EMAIL` is honoured only with `SUPPORT_TEST_MODE=1` (subject marked `[TEST]`) | the endpoint answers 503 `not-connected` and IYS MAIL says it is not connected, offering OPEN EMAIL APP (prefilled `mailto:`), never a fake success |
+| **Live Shopify** (catalogue, cart, code check) | `api/commerce.ts` → `api/_lib/shopify.ts` | server: `COMMERCE_LIVE=1`, `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_STOREFRONT_PRIVATE_TOKEN`, optional `SHOPIFY_ADMIN_TOKEN` (`read_discounts`); build: `VITE_COMMERCE_MODE=live`, `VITE_LIVE_CART=1` | snapshot catalogue + cart permalink (today's behaviour) |
 | **IYS GAMES rewards** (real merchant codes only) | `api/rewards.ts` → `api/_lib/rewards.ts` | server: `GAME_REWARDS`, `REWARDS_SECRET`; build: `VITE_GAME_REWARDS=1` | no reward UI at all |
-| **IYS NEWSLETTER** signup | `src/lib/newsletter.ts` adapter | `VITE_NEWSLETTER_ENDPOINT` (public URL; POST `{ email }` → `{ ok: true }`) | honest “coming online soon” state; the `IYS10` code is revealed only after a confirmed signup |
 | **HELP › IYS Help & Support** (Odoo) | Help window | `VITE_ODOO_HELP_FORM_URL` | intentional “ODOO FORM PLACEHOLDER” |
-| **XCHANGE.EXE :) Exchanges / Refunds** (Odoo) | Exchange window | `VITE_ODOO_EXCHANGE_REFUND_FORM_URL` | intentional “Odoo form will load here” placeholder |
 
 The secrets (`RESEND_API_KEY`, the Shopify tokens, `REWARDS_SECRET`) are read only by the server functions.
 Step-by-step activation, scopes, validation and rollback: [`docs/SHOPIFY_GO_LIVE_CHECKLIST.md`](docs/SHOPIFY_GO_LIVE_CHECKLIST.md).
@@ -397,9 +395,6 @@ with its official URL) and [`docs/RESEARCH.md`](docs/RESEARCH.md) (brand and
 - The fake address bar accepts `inyourshoe.com` paths and search terms; it never
   navigates away from the concept.
 - Messenger conversations are fixed concept scripts (by design, no AI).
-- The official “Same day delivery” / “Free shipping over 3999 EGP” lines were
-  read on inyourshoe.com on 2026-10-26 (it was +2,499 before); MY BAG stops
-  showing the free-shipping progress after `showUntil` until someone re-verifies.
-- The newsletter's `IYS10` code is only revealed after a confirmed signup, and
-  no signup endpoint is connected; IYS should confirm the code before connecting one.
+- The official “Same day delivery” line was read on inyourshoe.com on
+  2026-10-26. There is no free shipping: the site never offers or mentions it.
 - Rate limits on `/api/*` are per warm serverless instance (see the go-live checklist).

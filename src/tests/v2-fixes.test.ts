@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { assets, WALLPAPERS } from '../data/assets';
@@ -6,25 +6,21 @@ import { concept } from '../data/copy';
 import { BUDDIES } from '../data/taxonomy';
 import { loadDetail } from '../lib/catalogue/shard';
 import { noEmDash } from '../lib/catalogue/format';
-import { subscribe } from '../lib/newsletter';
 import { touchGrassPath } from '../lib/useBrowse';
 import { DEFAULT_WALLPAPER } from '../state/preferences';
+import { TITLES, useOS } from '../state/os';
+import { FEATURES } from '../config/features';
 
 const root = resolve(__dirname, '../..');
 const EM = '—';
 
-describe('Point 1 - newsletter adapter never fakes a signup', () => {
-  it('no endpoint → not-configured, no request, no code', async () => {
-    const f = vi.fn();
-    expect(await subscribe('test@example.com', null, f as unknown as typeof fetch)).toEqual({ status: 'not-configured' });
-    expect(f).not.toHaveBeenCalled();
-  });
-  it('configured endpoint still submits and reveals IYS10 only on { ok: true }', async () => {
-    const f = vi.fn(async (_url: string, init?: RequestInit) => {
-      expect(JSON.parse(String(init?.body))).toEqual({ email: 'test@example.com' });
-      return new Response('{"ok":true}', { status: 200 });
-    });
-    expect(await subscribe(' Test@Example.com ', '/signup', f as unknown as typeof fetch)).toEqual({ status: 'subscribed', code: 'IYS10' });
+describe('Point 1 - the newsletter and XCHANGE.EXE apps are gone (removed on request, 2026-11-10)', () => {
+  it('neither can open: no window type, no copy, no source file', () => {
+    expect(Object.keys(TITLES)).not.toContain('newsletter');
+    expect(Object.keys(TITLES)).not.toContain('exchange');
+    expect('newsletter' in concept).toBe(false);
+    expect('exchange' in concept).toBe(false);
+    for (const f of ['src/apps/Small/Newsletter.tsx', 'src/apps/Small/Exchange.tsx', 'src/lib/newsletter.ts']) expect(existsSync(resolve(root, f)), f).toBe(false);
   });
 });
 
@@ -79,5 +75,19 @@ describe('Point 6 - Messenger copy is 2000s IM, not modern emoji', () => {
     for (const cue of ['brb', 'lol', 'ttyl', 'XD', '<3', ' u ', ' 4 ', 'rn', ';)', ':P']) expect(all, cue).toContain(cue);
     expect(all).not.toMatch(/\p{Extended_Pictographic}/u);
     expect(all).not.toContain(EM);
+  });
+});
+
+describe('IYS MAIL is hidden for now (FEATURES.iysMail)', () => {
+  it('the switch is off, and nothing can open the window, whoever asks', () => {
+    expect(FEATURES.iysMail).toBe(false);
+    const before = useOS.getState().windows.length;
+    expect(useOS.getState().open('mail', { props: { topic: 'Product question' } })).toBe('');
+    expect(useOS.getState().windows.some((w) => w.app === 'mail')).toBe(false);
+    expect(useOS.getState().windows.length).toBe(before);
+  });
+  it('its code stays, so one switch brings it back', () => {
+    for (const f of ['src/apps/Small/Mail.tsx', 'src/lib/supportMail.ts', 'api/support-email.ts']) expect(existsSync(resolve(root, f)), f).toBe(true);
+    expect(TITLES.mail).toBe('IYS MAIL');
   });
 });

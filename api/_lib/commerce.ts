@@ -5,17 +5,15 @@
  *   GET  ?op=catalogue&part=index       live catalogue index, snapshot format
  *   GET  ?op=catalogue&part=shard&n=7   one live detail shard
  *   POST ?op=cart                       Shopify cartCreate for the exact bag (+ codes)
- *   GET  ?op=promotions                 active automatic free shipping (Admin API)
  *
  * Not configured → 503 { ok:false, reason:'not-configured' } and the client
  * stays on the snapshot. Errors never include provider details or secrets.
  */
 import { clientKey, createRateLimiter, json, readJson, sameOrigin } from './http.js';
-import { activeFreeShipping, buildLiveCatalogue, createCart, shopifyConfig, type Fetcher, type LiveCatalogue, type ShopifyEnv } from './shopify.js';
+import { buildLiveCatalogue, createCart, shopifyConfig, type Fetcher, type LiveCatalogue, type ShopifyEnv } from './shopify.js';
 import { buildLiveCataloguePublic } from './shopify-public.js';
 
 const CATALOGUE_TTL = 10 * 60_000;
-const PROMO_TTL = 5 * 60_000;
 const MAX_LINES = 50;
 const MAX_QTY = 10;
 
@@ -26,8 +24,6 @@ interface Deps {
 
 let catalogue: { at: number; data: LiveCatalogue } | null = null;
 let building: Promise<LiveCatalogue> | null = null;
-let promo: { at: number; data: Awaited<ReturnType<typeof activeFreeShipping>> } | null = null;
-let promoLoading: Promise<Awaited<ReturnType<typeof activeFreeShipping>>> | null = null;
 const cartLimiter = createRateLimiter(20, 60_000);
 const readLimiter = createRateLimiter(120, 60_000);
 
@@ -35,8 +31,6 @@ const readLimiter = createRateLimiter(120, 60_000);
 export function resetCommerceCache() {
   catalogue = null;
   building = null;
-  promo = null;
-  promoLoading = null;
 }
 
 const notConfigured = (problems: string[]) => json(503, { ok: false, reason: 'not-configured', problems });
@@ -120,31 +114,6 @@ export async function handleCommerce(req: Request, env: ShopifyEnv, deps: Deps =
     } catch {
       return json(502, { ok: false, reason: 'shopify-unavailable' });
     }
-  }
-
-  if (op === 'promotions' && req.method === 'GET') {
-    if (!cfg.live || !cfg.admin) return notConfigured(cfg.admin ? cfg.problems : [...cfg.problems, 'no Admin API token (read_discounts)']);
-    if (!readLimiter.take(who)) return json(429, { ok: false, error: 'Too many requests.' });
-    const now = (deps.now ?? Date.now)();
-    let data: Awaited<ReturnType<typeof activeFreeShipping>>;
-    try {
-      if (promo && now - promo.at <= PROMO_TTL) data = promo.data;
-      else {
-        // One Admin API read at a time per instance, however many bags open at once.
-        promoLoading ??= activeFreeShipping(cfg, deps.fetcher, new Date(now))
-          .then((d) => {
-            promo = { at: now, data: d };
-            return d;
-          })
-          .finally(() => {
-            promoLoading = null;
-          });
-        data = await promoLoading;
-      }
-    } catch {
-      return json(502, { ok: false, reason: 'shopify-unavailable' });
-    }
-    return json(200, { ok: true, freeShipping: data }, { 'Cache-Control': 'public, max-age=60, s-maxage=300' });
   }
 
   return json(405, { ok: false, error: 'Unknown operation.' }, { Allow: 'GET, POST' });

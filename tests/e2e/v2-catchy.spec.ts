@@ -130,14 +130,14 @@ test.describe('CATCHY desktop buddy', () => {
     await page.getByRole('button', { name: /^Open IYS Games/ }).click();
     await expect(page.getByRole('dialog', { name: 'IYS GAMES' })).toBeVisible();
     await expect(pet(page)).toHaveAttribute('data-catchy-state', 'happy');
-    await page.getByRole('button', { name: 'PLAY CATCHY SNAKE' }).click();
-    const game = page.locator('[data-window="game-snake"]');
+    await page.getByRole('button', { name: 'PLAY CATCHY CHOMP' }).click();
+    const game = page.locator('[data-window="game-chomp"]');
     await game.locator('.game__cta').click();
     await expect(game.locator('section.game')).toHaveAttribute('data-phase', 'playing');
     const z = await page.evaluate(() => [Number(getComputedStyle(document.querySelector('.catchy-layer')!).zIndex), Number(getComputedStyle(document.querySelector('.win-layer')!).zIndex)]);
     expect(z[0]).toBeLessThan(z[1]!);
     const g = (await game.locator('.game__stage').boundingBox())!;
-    expect(await topAt(page, g.x + g.width / 2, g.y + g.height / 2)).toBe('game-snake');
+    expect(await topAt(page, g.x + g.width / 2, g.y + g.height / 2)).toBe('game-chomp');
   });
 
   test('Control Panel → Catchy: hide, survives reload, show again', async ({ page }) => {

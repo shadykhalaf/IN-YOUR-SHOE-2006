@@ -346,7 +346,7 @@ export default function Showcase() {
               </div>
             </SWin>
 
-            <SWin id="wardrobe" title="MY WARDROBE" icon="wardrobe" chrome="C:\IYS\WARDROBE\" style={{ left: 12, top: 90, width: 516, height: 660 }} status="Counts from the catalogue snapshot">
+            <SWin id="wardrobe" title="MY WARDROBE" icon="wardrobe" chrome="C:\IYS\WARDROBE\" style={{ left: 12, top: 90, width: 516, height: 660 }} status="Counts from the IYS catalogue">
               <div className="sc-wardrobe">
                 <ul className="sc-folders">
                   {SC.folders.map((f) => (

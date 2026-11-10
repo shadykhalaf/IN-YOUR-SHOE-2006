@@ -14,17 +14,19 @@ const statusBox = (page: Page) =>
   });
 
 test.describe('IYS GAMES (mobile)', () => {
-  test('GAMES key → folder → Snake with the D-pad; soft keys pause, BACK returns; status bar untouched', async ({ page }) => {
+  test('GAMES key → folder → Stacks by touch; soft keys pause, BACK returns; status bar untouched', async ({ page }) => {
     await boot(page);
     const s0 = await statusBox(page);
     // the launcher is the IYS MOBILE bar's GAMES key now (the old home-screen tile is gone)
-    await page.getByRole('navigation', { name: 'IYS MOBILE bar' }).getByRole('button', { name: 'IYS GAMES, 6 games' }).click();
+    await page.getByRole('navigation', { name: 'IYS MOBILE bar' }).getByRole('button', { name: 'IYS GAMES, 4 games' }).click();
     await expect(page.locator('.m-title')).toHaveText('IYS MOBILE › GAMES');
-    for (const t of ['PURBALE CATCHY', 'IYS TOWER', 'CATCHY CHOMP', 'IYS STACKS', 'CATCHY SNAKE', 'CATCHY INVADERS']) await expect(page.getByRole('button', { name: `PLAY ${t}` })).toBeVisible();
+    for (const t of ['IYS TOWER', 'CATCHY CHOMP', 'IYS STACKS', 'CATCHY INVADERS']) await expect(page.getByRole('button', { name: `PLAY ${t}` })).toBeVisible();
+    // hidden on request: Purbale Catchy and Catchy Snake
+    for (const t of ['PURBALE CATCHY', 'CATCHY SNAKE']) await expect(page.getByRole('button', { name: `PLAY ${t}` })).toHaveCount(0);
     await axe(page, '.m-content');
-    await page.getByRole('button', { name: 'PLAY CATCHY SNAKE' }).click();
+    await page.getByRole('button', { name: 'PLAY IYS STACKS' }).click();
     await expect(page.locator('.game__cta')).toBeVisible();
-    await expect(page.locator('.m-title')).toHaveText('IYS MOBILE › GAMES › CATCHY SNAKE');
+    await expect(page.locator('.m-title')).toHaveText('IYS MOBILE › GAMES › IYS STACKS');
     const center = page.locator('.m-soft__center');
     await expect(center).toHaveText('PLAY');
     await center.click();
@@ -34,8 +36,8 @@ test.describe('IYS GAMES (mobile)', () => {
     await expect(game(page)).toHaveAttribute('data-phase', 'paused');
     await center.click();
     await expect(game(page)).toHaveAttribute('data-phase', 'playing');
-    // the on-screen D-pad steers: straight up into the wall
-    await page.getByRole('button', { name: 'Up', exact: true }).click();
+    // the on-screen DROP key: keep dropping until the stack tops out
+    for (let i = 0; i < 80 && (await game(page).getAttribute('data-phase')) === 'playing'; i++) await page.getByRole('button', { name: 'Hard drop' }).click();
     await expect(game(page)).toHaveAttribute('data-phase', 'over', { timeout: 8000 });
     await expect(center).toHaveText('AGAIN');
     await center.click();
@@ -54,7 +56,7 @@ test.describe('IYS GAMES (mobile)', () => {
   test('MENU entry; every game launches, takes touch input and pauses', async ({ page }) => {
     await boot(page);
     await page.getByRole('button', { name: 'MENU', exact: true }).click();
-    await page.getByRole('button', { name: /IYS GAMES · 6 GAMES/ }).click();
+    await page.getByRole('button', { name: /IYS GAMES · 4 GAMES/ }).click();
     const center = page.locator('.m-soft__center');
     const cases: [string, (p: Page) => Promise<void>][] = [
       ['IYS STACKS', async (p) => p.getByRole('button', { name: 'Hard drop' }).click()],
@@ -82,19 +84,16 @@ test.describe('IYS GAMES (mobile)', () => {
       await page.getByRole('button', { name: '◀ IYS GAMES' }).first().click();
       await expect(page.getByRole('button', { name: `PLAY ${title}` })).toBeVisible();
     }
-    await page.getByRole('button', { name: 'PLAY PURBALE CATCHY' }).click();
-    await page.getByRole('button', { name: 'PLAY PJOY PAIRS' }).click();
-    await page.locator('.game__cta').click();
-    await page.locator('.pcard').first().click();
-    await expect(page.locator('.pcard').first()).toHaveClass(/is-up/);
+    // hidden on request: Purbale Catchy and Catchy Snake are not in the folder
+    for (const t of ['PURBALE CATCHY', 'CATCHY SNAKE']) await expect(page.getByRole('button', { name: `PLAY ${t}` })).toHaveCount(0);
   });
 
   for (const width of [320, 390, 430]) {
     test(`touch controls fit at ${width}px: no sideways scroll, real tap targets, play area visible`, async ({ page }) => {
       await page.setViewportSize({ width, height: 740 });
       await boot(page);
-      await page.getByRole('navigation', { name: 'IYS MOBILE bar' }).getByRole('button', { name: 'IYS GAMES, 6 games' }).click();
-      for (const title of ['CATCHY SNAKE', 'IYS STACKS', 'CATCHY INVADERS', 'IYS TOWER']) {
+      await page.getByRole('navigation', { name: 'IYS MOBILE bar' }).getByRole('button', { name: 'IYS GAMES, 4 games' }).click();
+      for (const title of ['CATCHY CHOMP', 'IYS STACKS', 'CATCHY INVADERS', 'IYS TOWER']) {
         await page.getByRole('button', { name: `PLAY ${title}` }).click();
         await expect(game(page)).toBeVisible();
         const m = await page.evaluate(() => {

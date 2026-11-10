@@ -19,12 +19,8 @@ export const official = {
   coolestApparel: 'The Coolest Apparel In Town!',
   /** meta description of https://inyourshoe.com/ */
   standOut: 'Stand out, Express yourself! We put ourselves in your shoe, in style! :)',
-  /** Footer newsletter block, https://inyourshoe.com/ */
-  coolList: 'Join our cool list and receive a 10% OFF code for your 1st purchase!',
   /** Announcement bar, https://inyourshoe.com/ (re-verified ANNOUNCEMENT_VERIFIED_ON) */
   sameDay: 'SAME DAY DELIVERY',
-  /** Announcement bar, https://inyourshoe.com/ (re-verified ANNOUNCEMENT_VERIFIED_ON; the bag reads the rule from src/config/promotions.ts) */
-  freeShipping: 'FREE SHIPPING OVER 3999 EGP',
   /** Pjoys product descriptions, e.g. https://inyourshoe.com/products/cereal-killer-pjoys */
   pjoys: 'Pjoys are our terminology for pyjama pants that are super joyful, just like you reading this.',
   brand: 'IN YOUR SHOE',
@@ -113,24 +109,6 @@ export const concept = {
     used: 'SAVED IN MY BAG :)',
     note: 'Real IYS code. IYS applies its own terms at checkout.',
   },
-  /** IYS NEWSLETTER - the cool list. The code is revealed only after a real, confirmed signup. */
-  newsletter: {
-    title: 'IYS NEWSLETTER',
-    headline: 'JOIN THE COOL LIST :)',
-    sub: 'GET 10% OFF UR FIRST ORDER',
-    join: 'JOIN XO',
-    joining: 'Joining...',
-    invalid: 'hmm that email looks off :( check it?',
-    error: 'Could not join right now :( ur email is still here - try again?',
-    offlineTitle: 'COOL LIST: COMING ONLINE SOON :)',
-    offlineSubmit: 'COOL LIST CONNECTION IS STILL COMING ONLINE :)',
-    offlineSubmitSub: 'ur email wasn’t sent yet.',
-    offline: 'The signup line isn’t connected yet, so nobody is added and no code is issued from here. Join the real list on inyourshoe.com meanwhile.',
-    successTitle: 'UR ON THE COOL LIST :)',
-    successCode: '10% OFF CODE:',
-    copy: 'Copy code',
-    copied: 'CODE COPIED xo',
-  },
   /** Odoo-hosted forms (URLs configured in src/config/integrations.ts). */
   help: {
     title: 'IYS HELP & SUPPORT',
@@ -138,14 +116,6 @@ export const concept = {
     pending: 'Support form connection: coming online soon',
     placeholder: 'ODOO FORM PLACEHOLDER',
     open: 'OPEN SUPPORT FORM ↗',
-  },
-  exchange: {
-    icon: 'XCHANGE.EXE :) EXCHANGES/REFUNDS',
-    title: 'XCHANGE.EXE :) - EXCHANGES / REFUNDS FORM',
-    heading: 'EXCHANGES / REFUNDS FORM',
-    pending: 'form connection coming online soon :)',
-    placeholder: 'Odoo form will load here',
-    open: 'OPEN FORM ↗',
   },
   /** Easter-egg graffiti signature. Concept copy - never inside official IYS lines. */
   catchy: {
@@ -160,7 +130,7 @@ export const concept = {
     'the real store, the whole catalogue, dressed up like it’s the 2000s.',
     '',
     'Every product, price and photo inside is real and public,',
-    'copied from inyourshoe.com at the snapshot time shown in',
+    'copied from inyourshoe.com on the date shown in',
     'Control Panel. Add to bag here - real checkout on inyourshoe.com.',
     '',
     '- Omar Akram, 2026',
@@ -170,7 +140,7 @@ export const concept = {
     '(Catchy was here <3)',
   ],
   recycle: { title: 'RECYCLE BIN', folder: 'BORING_OUTFITS', empty: 'this folder is empty. nobody here dresses boring xd' },
-  snapshot: 'Prices & availability as of the catalogue snapshot',
+  pricesAsOf: 'Prices & availability as last checked',
   guestbook: 'no entries yet :( (no reviews shown - we don’t invent customers)',
   counterLabel: 'TIME TRAVELLERS:',
   counterNote: 'Fictional counter. Not analytics.',
@@ -206,9 +176,6 @@ export const concept = {
     quick: 'bff shortcuts',
     justDropped: 'just dropped ✧ fresh 4 u',
     seeAllNew: 'see all new stuff',
-    newsletterTitle: 'subscribe 2 our newsletter xoxo',
-    newsletterCta: 'Subscribe xo',
-    newsletterNote: 'opens the real cool list on inyourshoe.com - this concept stores nothing.',
     ping: '1 new msg from PJOYS :)',
     wasHere: 'IYS was here XD',
     add: 'ADD TO BAG',
@@ -226,7 +193,7 @@ export const concept = {
     favEmpty: 'no favs yet :( tap ☆ on sth u love',
     bagEmpty: 'ur bag is empty :( go get sth cute',
     bagCta: 'CHECKOUT xx',
-    bagNote: 'snapshot prices in EGP · final total confirmed at IYS checkout',
+    bagNote: 'prices in EGP · final total confirmed at IYS checkout',
     stores: 'come say hi IRL :)',
     notFoundSub: 'no worries, the fits r still here. ttyl 404',
     menuHint: 'everything else lives here xo',
@@ -240,15 +207,16 @@ export const concept = {
     back2Shop: 'BACK 2 SHOP',
     shopNew: 'SHOP NEW STUFF',
   },
-  /** MY BAG extras: shipping progress, code, ideas, handoff (rules in src/config/promotions.ts). */
+  /** MY BAG extras: Single Week savings, offers, code, ideas, handoff (offers in src/config/promotions.ts). */
   bag: {
-    shipLeft: (amount: string) => `${amount} MORE 4 FREE SHIPPING*`,
-    shipJust: 'JUST A LIL MORE 4 FREE SHIPPING*',
-    shipUnlocked: 'FREE SHIPPING UNLOCKED* xo',
-    shipNote: (threshold: string, checked: string, live = false) =>
-      live
-        ? `*IYS store: free shipping from ${threshold} (checked live with the IYS store today). IYS confirms shipping at checkout.`
-        : `*IYS: free shipping over ${threshold} (inyourshoe.com, checked ${checked}). Uses snapshot prices; IYS confirms shipping at checkout.`,
+    /** Single Week savings box, worded like the cart on inyourshoe.com (steps in src/config/promotions.ts). */
+    savings: {
+      addMore: (amount: string, save: string) => `Add ${amount} more to save ${save} in total*`,
+      max: (save: string) => `You’re saving ${save} in total* xo`,
+      step: (save: string) => `SAVE ${save}`,
+      saved: (amount: string) => `${amount} SAVED SO FAR`,
+      note: (checked: string) => `*Single Week savings as shown in the cart on inyourshoe.com (checked ${checked}). Uses the prices shown here; IYS applies the savings at checkout.`,
+    },
     codeToggle: 'GOT A CODE?',
     codeLabel: 'Discount code',
     codeApply: 'USE CODE',

@@ -273,7 +273,7 @@ export function useSearchCombobox({ value, onChange, onChoose, layout }: { value
         </div>
       ) : (
         <p className="suggest__none">
-          No exact matches for “<bdi>{result?.query}</bdi>” in this snapshot.{' '}
+          No exact matches for “<bdi>{result?.query}</bdi>”.{' '}
           <Link to="/shop" onClick={() => setDismissed(true)}>
             Browse SHOP ALL ›
           </Link>

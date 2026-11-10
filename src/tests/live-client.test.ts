@@ -7,7 +7,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { commerceMode, createLiveCheckout, isShopifyCheckoutUrl, liveCartEnabled, verifyDiscount } from '../lib/commerce';
 import { isUsableIndex } from '../lib/catalogue/load';
 import { startCheckout, useHandoff } from '../lib/checkout';
-import { shippingProgress } from '../lib/incentives';
 import { claimReward, earned, liveRewards, nextReward, resetRewardsCache, rewardsOn, type PublicReward } from '../lib/rewards';
 import { useCart, type CartItem } from '../state/cart';
 import { useOS } from '../state/os';
@@ -88,18 +87,13 @@ describe('live checkout (opt-in): exact Shopify cart, else permalink or an hones
   });
 });
 
-describe('live catalogue + promotions guards', () => {
+describe('live catalogue guards', () => {
   it('uses a live index only if it is complete and in EGP', () => {
     expect(isUsableIndex({ currency: 'EGP', shardCount: 32, products: [{}], collections: [] })).toBe(true);
     expect(isUsableIndex({ currency: 'USD', shardCount: 32, products: [{}], collections: [] })).toBe(false);
     expect(isUsableIndex({ currency: 'EGP', shardCount: 0, products: [{}], collections: [] })).toBe(false);
     expect(isUsableIndex({ currency: 'EGP', shardCount: 32, products: [], collections: [] })).toBe(false);
     expect(isUsableIndex('<!doctype html>')).toBe(false);
-  });
-  it('a live Shopify minimum is inclusive; the announcement rule is strictly over', () => {
-    const base = { overEGP: 3999, source: 's', sourceUrl: '', verifiedOn: '2026-10-26', showUntil: '2026-10-26' };
-    expect(shippingProgress(3999, base, '2026-10-26').kind).toBe('progress');
-    expect(shippingProgress(3999, { ...base, inclusive: true }, '2026-10-26').kind).toBe('unlocked');
   });
 });
 

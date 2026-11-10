@@ -20,7 +20,7 @@ import { RemoteImage } from '../../components/shop/RemoteImage';
 import { EssentialLinks } from '../../components/shop/EssentialLinks';
 import { FreshPicks, useSearchCombobox } from '../../components/shop/SearchAssist';
 import { assets, brand } from '../../data/assets';
-import { concept, official, officialSources } from '../../data/copy';
+import { concept, official } from '../../data/copy';
 import storesData from '../../data/stores.generated.json';
 import { collectionProducts } from '../../lib/catalogue/hydrate';
 import { formatCount } from '../../lib/catalogue/format';
@@ -168,16 +168,6 @@ export function MHome() {
         </section>
       ))}
       </>)}
-      <section className="m-panel m-news" aria-labelledby="m-news-title">
-        <h2 className="m-panel__title" id="m-news-title">
-          {concept.y2k.newsletterTitle}
-        </h2>
-        <p>{official.coolList}</p>
-        <a className="btn btn--go m-news__cta" href={officialSources.home} target="_blank" rel="noopener noreferrer">
-          {concept.y2k.newsletterCta}
-        </a>
-        <p className="m-news__note">{concept.y2k.newsletterNote}</p>
-      </section>
       <p className="m-home__foot">
         <b>{concept.y2k.wasHere}</b>
       </p>
@@ -422,7 +412,7 @@ export function MProduct() {
               </a>
             </div>
             <p className="props__snapshot">
-              {concept.snapshot} ({p.retrievedAt?.slice(0, 10)}). Checkout continues on the official IYS site.
+              {concept.pricesAsOf} ({p.retrievedAt?.slice(0, 10)}). Checkout continues on the official IYS site.
             </p>
             <EssentialLinks className="props__snapshot" label="Before u buy:" ids={['shipping', 'exchange-refund']} />
             <ProductInfo p={p} />

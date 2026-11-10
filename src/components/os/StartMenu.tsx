@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { FEATURES } from '../../config/features';
 import { brand } from '../../data/assets';
 import { concept } from '../../data/copy';
+import { VISIBLE_GAMES } from '../../games/registry';
 import { useMenu } from '../../lib/storeHome';
 import { collectionCount } from '../../lib/catalogue/hydrate';
 import { formatCount } from '../../lib/catalogue/format';
@@ -68,10 +70,9 @@ export function StartMenu() {
     { label: 'MY WARDROBE', icon: 'wardrobe', sub: 'Browse by folder', act: () => app('wardrobe') },
     { label: 'IYS MESSENGER', icon: 'messenger', sub: 'Who’s online', act: () => app('messenger') },
     { label: 'IYS CAMERA', icon: 'camera', sub: 'DCIM photos', act: () => app('camera') },
-    { label: 'IYS GAMES', icon: 'games', sub: '6 games starring Catchy', act: () => app('games') },
-    { label: 'IYS MAIL', icon: 'mail', sub: 'Support · orders@', act: () => app('mail') },
-    { label: 'IYS NEWSLETTER', icon: 'newsletter', sub: 'Cool list · 10% off', act: () => app('newsletter') },
-    { label: 'XCHANGE.EXE :)', icon: 'exchange', sub: 'Exchanges / refunds', act: () => app('exchange') },
+    { label: 'IYS GAMES', icon: 'games', sub: `${VISIBLE_GAMES.length} games starring Catchy`, act: () => app('games') },
+    // IYS MAIL is hidden for now (FEATURES.iysMail).
+    ...(FEATURES.iysMail ? [{ label: 'IYS MAIL', icon: 'mail' as IconName, sub: 'Support · orders@', act: () => app('mail') }] : []),
     { label: 'IYS ESSENTIALS', icon: 'txt', sub: 'Refunds, shipping, terms', act: () => app('essentials') },
     { label: 'CONTROL PANEL', icon: 'control', sub: 'Sound, CRT, wallpaper', act: () => app('control') },
     // The always-there way out: the real store, with this bag (same handoff as the REAL IYS switch).

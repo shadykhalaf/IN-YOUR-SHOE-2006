@@ -4,7 +4,7 @@
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createRateLimiter, readJson, sameOrigin } from '../../api/_lib/http';
-import { activeFreeShipping, buildLiveCatalogue, codeStatus, createCart, graphql, mapLimit, safeCheckoutUrl, shopifyConfig, toStorefrontJson, type Fetcher, type SfProduct } from '../../api/_lib/shopify';
+import { buildLiveCatalogue, codeStatus, createCart, graphql, mapLimit, safeCheckoutUrl, shopifyConfig, toStorefrontJson, type Fetcher, type SfProduct } from '../../api/_lib/shopify';
 import { handleCommerce, resetCommerceCache, validateCartBody } from '../../api/_lib/commerce';
 import { handleRewards, parseRewards, resetRewards, signTicket, verifyTicket } from '../../api/_lib/rewards';
 import { shardOf } from '../lib/catalogue/shard';
@@ -183,21 +183,14 @@ describe('live cart: exact bag or nothing', () => {
   });
 });
 
-describe('promotions + codes (Admin API, read-only)', () => {
+describe('discount codes (Admin API, read-only)', () => {
   const cfg = shopifyConfig(ADMIN);
   const now = new Date('2026-10-26T12:00:00Z');
-  const fs = (over: Record<string, unknown>) => ({ discount: { __typename: 'DiscountAutomaticFreeShipping', title: 'Free shipping', status: 'ACTIVE', startsAt: '2026-10-01T00:00:00Z', endsAt: null, minimumRequirement: { __typename: 'DiscountMinimumSubtotal', greaterThanOrEqualToSubtotal: { amount: '3999.0', currencyCode: 'EGP' } }, destinationSelection: { __typename: 'DiscountCountries', countries: ['EG'], includeRestOfWorld: false }, ...over } });
-  it('reads the active EGP free-shipping minimum for Egypt (inclusive)', async () => {
-    const f = router({ 'query FreeShipping': () => ok({ discountNodes: { nodes: [fs({}), fs({ status: 'EXPIRED', minimumRequirement: { __typename: 'DiscountMinimumSubtotal', greaterThanOrEqualToSubtotal: { amount: '100', currencyCode: 'EGP' } } })] } }) });
-    expect(await activeFreeShipping(cfg, f, now)).toMatchObject({ minSubtotalEGP: 3999, inclusive: true });
-    expect(f.calls[0]!.headers['X-Shopify-Access-Token']).toBe('shpat_admin_fixture');
-  });
-  it('ignores scheduled, other-country and non-EGP discounts', async () => {
-    const f = router({ 'query FreeShipping': () => ok({ discountNodes: { nodes: [fs({ startsAt: '2026-12-01T00:00:00Z' }), fs({ destinationSelection: { __typename: 'DiscountCountries', countries: ['AE'], includeRestOfWorld: false } }), fs({ minimumRequirement: { __typename: 'DiscountMinimumSubtotal', greaterThanOrEqualToSubtotal: { amount: '100', currencyCode: 'USD' } } })] } }) });
-    expect(await activeFreeShipping(cfg, f, now)).toBeNull();
-  });
   it('codeStatus: ACTIVE inside its window only; unknown code → null', async () => {
     const code = (d: unknown) => router({ 'query Code': () => ok({ codeDiscountNodeByCode: d }) });
+    const first = code({ codeDiscount: { __typename: 'DiscountCodeBasic', title: 'x', status: 'ACTIVE', startsAt: null, endsAt: null } });
+    await codeStatus(cfg, 'REALCODE', first, now);
+    expect(first.calls[0]!.headers['X-Shopify-Access-Token']).toBe('shpat_admin_fixture');
     expect(await codeStatus(cfg, 'REALCODE', code({ codeDiscount: { __typename: 'DiscountCodeBasic', title: 'x', status: 'ACTIVE', startsAt: null, endsAt: '2026-11-01T00:00:00Z' } }), now)).toMatchObject({ active: true });
     expect(await codeStatus(cfg, 'REALCODE', code({ codeDiscount: { __typename: 'DiscountCodeBasic', title: 'x', status: 'ACTIVE', startsAt: null, endsAt: '2026-10-01T00:00:00Z' } }), now)).toMatchObject({ active: false });
     expect(await codeStatus(cfg, 'NOPE', code(null), now)).toBeNull();
@@ -243,8 +236,8 @@ describe('/api/commerce handler', () => {
     expect((await handleCommerce(req('op=cart', { method: 'POST', body: '{"lines":[]}', headers: { 'content-type': 'application/json', origin: 'https://retro.example' } }), LIVE)).status).toBe(400);
     expect((await handleCommerce(req('op=cart', { method: 'GET' }), LIVE)).status).toBe(405);
   });
-  it('promotions need the Admin token', async () => {
-    expect((await handleCommerce(req('op=promotions'), LIVE)).status).toBe(503);
+  it('there is no free-shipping (promotions) endpoint', async () => {
+    expect((await handleCommerce(req('op=promotions'), LIVE)).status).toBe(405);
   });
 });
 

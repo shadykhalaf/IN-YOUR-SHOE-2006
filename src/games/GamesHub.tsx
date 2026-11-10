@@ -1,5 +1,5 @@
 import { GameIcon } from './GameIcon';
-import { GAMES, type GameId, type GameMeta } from './registry';
+import { VISIBLE_GAMES, type GameId, type GameMeta } from './registry';
 import { CatchySticker } from './shared/catchy';
 import { useBest } from './shared/scores';
 import './shared/games.css';
@@ -22,7 +22,7 @@ function ScoreRow({ id, label }: { id: GameMeta['scores'][number]['id']; label: 
   );
 }
 
-/** IYS GAMES folder: the six games, each with a PLAY button and its local best. */
+/** IYS GAMES folder: the visible games, each with a PLAY button and its local best. */
 export default function GamesHub({ onPlay, compact = false }: { onPlay: (id: GameId) => void; compact?: boolean }) {
   return (
     <div className={`gfolder${compact ? ' gfolder--compact' : ''}`}>
@@ -30,7 +30,7 @@ export default function GamesHub({ onPlay, compact = false }: { onPlay: (id: Gam
         <section className="gfolder__box" aria-labelledby="gf-scores">
           <h3 id="gf-scores">MY HIGH SCORES</h3>
           <ul>
-            {GAMES.flatMap((g) => g.scores.map((s) => <ScoreRow key={s.id} id={s.id} label={g.scores.length > 1 ? `${g.title.split(' ')[0]} ${s.label}` : g.title} />))}
+            {VISIBLE_GAMES.flatMap((g) => g.scores.map((s) => <ScoreRow key={s.id} id={s.id} label={g.scores.length > 1 ? `${g.title.split(' ')[0]} ${s.label}` : g.title} />))}
           </ul>
         </section>
         <section className="gfolder__box" aria-labelledby="gf-about">
@@ -43,11 +43,11 @@ export default function GamesHub({ onPlay, compact = false }: { onPlay: (id: Gam
           <CatchySticker size={40} />
           <div>
             <h2>IYS GAMES</h2>
-            <p>6 games · pick one and press PLAY xo</p>
+            <p>{VISIBLE_GAMES.length} games · pick one and press PLAY xo</p>
           </div>
         </div>
         <ul className="gfolder__list" aria-label="IYS games">
-          {GAMES.map((g) => (
+          {VISIBLE_GAMES.map((g) => (
             <li key={g.id} className="gtile" data-game-tile={g.id}>
               <GameIcon id={g.id} />
               <h3 className="gtile__title">{g.title}</h3>

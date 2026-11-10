@@ -186,19 +186,20 @@ test.describe('the bar: SHOP ALL · SEARCH · GAMES · STORES · MSG', () => {
     await mark(page);
     await expect(bar(page).locator('.m-bar__key')).toHaveCount(5);
     expect((await bar(page).locator('.m-bar__key').allInnerTexts()).map((l) => l.trim())).toEqual(['SHOP ALL', 'SEARCH', 'GAMES', 'STORES', 'MSG']);
-    const games = bar(page).getByRole('button', { name: 'IYS GAMES, 6 games' });
+    const games = bar(page).getByRole('button', { name: 'IYS GAMES, 4 games' });
     await games.tap();
     await expect(page.locator('.m-title')).toHaveText('IYS MOBILE › GAMES');
     await expect(games).toHaveAttribute('aria-current', 'page');
     await expect(page.locator('.m-games')).toHaveCount(1);
-    for (const t of ['PURBALE CATCHY', 'IYS TOWER', 'CATCHY CHOMP', 'IYS STACKS', 'CATCHY SNAKE', 'CATCHY INVADERS']) await expect(page.getByRole('button', { name: `PLAY ${t}` })).toBeVisible();
-    await page.getByRole('button', { name: 'PLAY CATCHY SNAKE' }).tap();
+    for (const t of ['IYS TOWER', 'CATCHY CHOMP', 'IYS STACKS', 'CATCHY INVADERS']) await expect(page.getByRole('button', { name: `PLAY ${t}` })).toBeVisible();
+    for (const t of ['PURBALE CATCHY', 'CATCHY SNAKE']) await expect(page.getByRole('button', { name: `PLAY ${t}` })).toHaveCount(0);
+    await page.getByRole('button', { name: 'PLAY IYS STACKS' }).tap();
     const center = page.locator('.m-soft__center');
     await expect(center).toHaveText('PLAY');
     await center.tap();
     const game = page.locator('section.game');
     await expect(game).toHaveAttribute('data-phase', 'playing');
-    await page.getByRole('button', { name: 'Up', exact: true }).tap(); // the D-pad steers (straight into the wall)
+    for (let i = 0; i < 80 && (await game.getAttribute('data-phase')) === 'playing'; i++) await page.getByRole('button', { name: 'Hard drop' }).tap(); // drop until it tops out
     await expect(game).toHaveAttribute('data-phase', 'over', { timeout: 8000 });
     await expect(games).toHaveAttribute('aria-current', 'page');
     // GAMES again: back to the same folder, never a second IYS GAMES
@@ -294,9 +295,9 @@ test.describe('the bar: SHOP ALL · SEARCH · GAMES · STORES · MSG', () => {
         await page.getByRole('button', { name: 'IYS MENU' }).tap();
         await page.getByRole('button', { name: /CAMERA/ }).tap();
       }],
-      ['a game', 'GAMES › CATCHY SNAKE', async () => {
+      ['a game', 'GAMES › CATCHY CHOMP', async () => {
         await bar(page).getByRole('button', { name: /IYS GAMES/ }).tap();
-        await page.getByRole('button', { name: 'PLAY CATCHY SNAKE' }).tap();
+        await page.getByRole('button', { name: 'PLAY CATCHY CHOMP' }).tap();
       }],
       ['OPTIONS over SHOP ALL', 'OPTIONS', async () => {
         await bar(page).getByRole('button', { name: /^SHOP ALL/ }).tap();
@@ -503,7 +504,7 @@ for (const w of WIDTHS) {
     await box.blur();
     // GAMES, MENU, MY BAG
     await bar(page).getByRole('button', { name: /IYS GAMES/ }).tap();
-    await expect(page.getByRole('button', { name: 'PLAY CATCHY SNAKE' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'PLAY CATCHY CHOMP' })).toBeVisible();
     await check('GAMES');
     await page.getByRole('button', { name: 'IYS MENU' }).tap();
     await expect(page.getByRole('button', { name: /FAVS · MY FAVORITES/ })).toBeVisible();

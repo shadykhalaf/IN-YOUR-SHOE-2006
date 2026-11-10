@@ -271,7 +271,7 @@ async function main() {
     Object.entries(membership).map(([h, list]) => [h, { title: titles[h] ?? null, count: list.length, order: list }]),
   );
   const meta = {
-    concept: 'IYS INTERNET 2006 — unofficial speculative concept. Snapshot of public data; not live commerce.',
+    concept: 'IYS INTERNET 2006 — unofficial speculative concept. Copy of public data; not live commerce.',
     generatedAt: retrievedAt,
     storefront: ORIGIN,
     market: 'Egypt',

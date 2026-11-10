@@ -15,7 +15,7 @@ import { useOS } from '../state/os';
 import { usePjoysUnread, useSession } from '../state/preferences';
 import { FEATURES } from '../config/features';
 import storesData from '../data/stores.generated.json';
-import { GAMES, gameMeta, type GameId } from '../games/registry';
+import { VISIBLE_GAMES, gameMeta, type GameId } from '../games/registry';
 import { MBar, StatusBar, useCenterKey, type BarKey } from './mobile/chrome';
 import { MGames } from './mobile/games';
 import { MBag, MCamera, MChat, MFilters, MMenu } from './mobile/overlays';
@@ -201,7 +201,7 @@ export default function MobileShell() {
         <MBar
           title={title}
           current={current}
-          counts={{ shop: cat?.products.length, games: GAMES.length, stores: storesData.storeCount }}
+          counts={{ shop: cat?.products.length, games: VISIBLE_GAMES.length, stores: storesData.storeCount }}
           unread={unread}
           onKey={goKey}
           onGames={() => {

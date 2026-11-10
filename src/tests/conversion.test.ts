@@ -1,37 +1,87 @@
 /** Conversion pass: pure logic on the COMMITTED snapshot (no network, no timers). */
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import indexFile from '../data/catalogue-index.json';
-import { FREE_SHIPPING, OFFERS, type FreeShippingRule } from '../config/promotions';
+import { OFFERS, SINGLE_WEEK_SAVINGS } from '../config/promotions';
 import { collectionProducts, hydrate } from '../lib/catalogue/hydrate';
 import type { IndexFile } from '../lib/catalogue/types';
 import { frustration, shouldOffer, THRESHOLD, WINDOW_MS, type Signal } from '../lib/frustration';
 import { isRage, RAGE, type Press } from '../lib/rageClicks';
-import { activeOffers, cleanCode, shippingProgress } from '../lib/incentives';
+import { activeOffers, cleanCode, savingsProgress } from '../lib/incentives';
 import { buildShelves, HOME_SHELVES } from '../lib/merch';
 import { upsell } from '../lib/upsell';
 import { chartState, loadSizeCharts } from '../lib/sizeCharts';
 
 const cat = hydrate(indexFile as unknown as IndexFile);
-const RULE: FreeShippingRule = { overEGP: 3999, source: 'test', sourceUrl: 'https://inyourshoe.com/', verifiedOn: '2026-10-26', showUntil: '2026-11-25' };
 
-describe('free-shipping progress (only from a verified merchant rule)', () => {
-  it('the configured rule is the one read on the live store, with a re-verify date', () => {
-    expect(FREE_SHIPPING).toMatchObject({ overEGP: 3999, verifiedOn: '2026-10-26' });
-    expect(FREE_SHIPPING!.showUntil > FREE_SHIPPING!.verifiedOn).toBe(true);
+describe('no free shipping anywhere', () => {
+  const root = resolve(__dirname, '../..');
+  const strip = (s: string) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/<!--[\s\S]*?-->/g, '').replace(/(^|[^:'"`])\/\/.*$/gm, '$1');
+  const files = (dir: string): string[] =>
+    readdirSync(dir).flatMap((n) => {
+      const p = join(dir, n);
+      if (statSync(p).isDirectory()) return n === 'tests' ? [] : files(p);
+      return /\.(tsx?|css|html|json|svg)$/.test(n) ? [p] : [];
+    });
+  it('no screen, line of copy or setting offers or mentions free shipping', () => {
+    const hits = [...files(resolve(root, 'src')), resolve(root, 'index.html')].filter((f) => /free[\s_-]*ship/i.test(strip(readFileSync(f, 'utf8'))));
+    expect(hits).toEqual([]);
   });
-  it('progress below the threshold', () => {
-    expect(shippingProgress(2799, RULE, '2026-10-26')).toEqual({ kind: 'progress', threshold: 3999, remaining: 1200, pct: 69 });
+});
+
+describe('Single Week savings (the spend-more-save-more steps from the inyourshoe.com cart)', () => {
+  const offer = SINGLE_WEEK_SAVINGS!;
+  const now = Date.parse('2026-11-12T12:00:00+02:00');
+  const cairo = (ms: number) => {
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'Africa/Cairo', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(ms).map((x) => [x.type, x.value]));
+    return `${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}`;
+  };
+  it('the configured steps are the ones read on the live cart, ending 15 Nov 2026 at 12:12 Egypt time', () => {
+    expect(offer).toMatchObject({ title: 'YOUR SINGLE WEEK SAVINGS', verifiedOn: '2026-11-10', endsAt: '2026-11-15T12:12:00+02:00' });
+    expect(offer.tiers.map((t) => [t.minEGP, t.saveEGP])).toEqual([[2222, 1111], [4444, 2222], [6666, 3333], [8888, 4444]]);
+    expect(new Date(offer.endsAt).toISOString()).toBe('2026-11-15T10:12:00.000Z');
+    expect(cairo(Date.parse(offer.endsAt))).toBe('2026-11-15 12:12');
   });
-  it('“over” means over: exactly 3,999 is not unlocked yet', () => {
-    expect(shippingProgress(3999, RULE, '2026-10-26')).toMatchObject({ kind: 'progress', remaining: 0 });
-    expect(shippingProgress(4000, RULE, '2026-10-26')).toEqual({ kind: 'unlocked', threshold: 3999 });
+  it('the screenshot’s 2,648 EGP bag: 1,111 saved so far, 1,796 more to save 2,222 in total', () => {
+    const sp = savingsProgress(2648, offer, now);
+    expect(sp).toMatchObject({ kind: 'progress', saved: 1111, remaining: 1796, next: { minEGP: 4444, saveEGP: 2222 } });
+    if (sp.kind !== 'progress') throw new Error('expected progress');
+    expect(sp.steps.map((s) => [s.minEGP, s.saveEGP, s.pct, s.reached])).toEqual([[4444, 2222, 59, false], [6666, 3333, 0, false], [8888, 4444, 0, false]]);
   });
-  it('no rule, an empty bag, or a stale rule → nothing is claimed', () => {
-    expect(shippingProgress(500, null, '2026-10-26')).toEqual({ kind: 'hidden', reason: 'no-rule' });
-    expect(shippingProgress(0, RULE, '2026-10-26')).toEqual({ kind: 'hidden', reason: 'empty' });
-    expect(shippingProgress(500, RULE, '2026-11-26')).toEqual({ kind: 'hidden', reason: 'stale' });
-    expect(shippingProgress(500, RULE, '2026-10-25')).toEqual({ kind: 'hidden', reason: 'stale' });
-    expect(shippingProgress(500, { ...RULE, overEGP: 0 }, '2026-10-26')).toEqual({ kind: 'hidden', reason: 'no-rule' });
+  it('below the first step, the bar starts at it', () => {
+    const sp = savingsProgress(1000, offer, now);
+    expect(sp).toMatchObject({ kind: 'progress', saved: 0, remaining: 1222, next: { minEGP: 2222, saveEGP: 1111 } });
+    if (sp.kind !== 'progress') throw new Error('expected progress');
+    expect(sp.steps.map((s) => [s.minEGP, s.pct])).toEqual([[2222, 45], [4444, 0], [6666, 0]]);
+  });
+  it('reaching a step’s minimum counts', () => {
+    const sp = savingsProgress(4444, offer, now);
+    expect(sp).toMatchObject({ kind: 'progress', saved: 2222, remaining: 2222, next: { minEGP: 6666, saveEGP: 3333 } });
+    if (sp.kind !== 'progress') throw new Error('expected progress');
+    expect(sp.steps.map((s) => [s.minEGP, s.pct, s.reached])).toEqual([[4444, 100, true], [6666, 0, false], [8888, 0, false]]);
+  });
+  it('past the last step: the most there is to save, every step full', () => {
+    const sp = savingsProgress(9000, offer, now);
+    expect(sp).toMatchObject({ kind: 'max', saved: 4444 });
+    if (sp.kind !== 'max') throw new Error('expected max');
+    expect(sp.steps.map((s) => [s.minEGP, s.pct, s.reached])).toEqual([[4444, 100, true], [6666, 100, true], [8888, 100, true]]);
+  });
+  it('ends at 12:12 Egypt time on 15 Nov exactly, the same moment for every visitor', () => {
+    expect(savingsProgress(2648, offer, Date.parse('2026-11-15T12:11:59+02:00')).kind).toBe('progress');
+    expect(savingsProgress(2648, offer, Date.parse('2026-11-15T12:12:00+02:00'))).toEqual({ kind: 'hidden', reason: 'not-current' });
+    // the same two moments, written in other time zones
+    expect(savingsProgress(2648, offer, Date.parse('2026-11-15T11:11:59+01:00')).kind).toBe('progress');
+    expect(savingsProgress(2648, offer, Date.parse('2026-11-15T10:12:00Z')).kind).toBe('hidden');
+    expect(savingsProgress(2648, offer, Date.parse('2026-11-16T09:00:00+02:00')).kind).toBe('hidden');
+  });
+  it('no offer, an empty bag, before an exact start, or an unreadable end: nothing is shown', () => {
+    expect(savingsProgress(2648, null, now)).toEqual({ kind: 'hidden', reason: 'no-offer' });
+    expect(savingsProgress(0, offer, now)).toEqual({ kind: 'hidden', reason: 'empty' });
+    const later = { ...offer, startsAt: '2026-11-13T00:00:00+02:00' };
+    expect(savingsProgress(2648, later, now).kind).toBe('hidden');
+    expect(savingsProgress(2648, later, Date.parse('2026-11-13T00:00:00+02:00')).kind).toBe('progress');
+    expect(savingsProgress(2648, { ...offer, endsAt: 'not a date' }, now).kind).toBe('hidden');
   });
 });
 
