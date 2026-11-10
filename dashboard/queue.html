@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2300959f'/%3E%3Cpath d='M8 22V10h3v12zm6 0V14h3v8zm6 0v-5h3v5z' fill='%23fff'/%3E%3C/svg%3E">
+<title>Queue &amp; Conversion</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+  /* Layout: filter bar, then the funnel from queue to order, then what each
+     tag combination did, then a day-by-day table. Same palette as the
+     waiting-room dashboard so the two read as one set. */
+  :root {
+    --bg: #eef1f2; --surface: #ffffff; --line: #d4dcde;
+    --ink: #0d1a1d; --muted: #5b6e72;
+    --accent: #00959f; --accent-soft: #d7f1f3;
+    --warm: #b84c2b; --good: #1f7a5c;
+    --display: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: 'Courier Prime', ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0a1315; --surface: #121f22; --line: #22383c;
+      --ink: #e6f1f2; --muted: #8da4a8;
+      --accent: #2bd3e3; --accent-soft: #10343a;
+      --warm: #e0734b; --good: #4cc49a;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0a1315; --surface: #121f22; --line: #22383c;
+    --ink: #e6f1f2; --muted: #8da4a8;
+    --accent: #2bd3e3; --accent-soft: #10343a;
+    --warm: #e0734b; --good: #4cc49a;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--display); line-height: 1.45; margin: 0; }
+  .wrap {
+    max-width: 1100px; margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 28px 56px;
+  }
+
+  header { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: baseline; justify-content: space-between; }
+  h1 { font-size: clamp(1.45rem, 4vw, 2rem); font-weight: 800; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+  .sub { color: var(--muted); font-family: var(--mono); font-size: .8rem; margin: 4px 0 0; }
+  .sub a { color: var(--accent); }
+  .status { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: .78rem; color: var(--muted); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
+  .dot.live { background: var(--good); } .dot.bad { background: var(--warm); }
+
+  button, select, input[type="date"], input[type="password"] {
+    font: 600 .82rem/1.2 var(--display); color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 7px; padding: 9px 12px;
+  }
+  button { cursor: pointer; }
+  button:hover, select:hover { border-color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #04191c; }
+
+  h2 { font-size: .74rem; text-transform: uppercase; letter-spacing: .11em; color: var(--muted); font-weight: 600; margin: 36px 0 12px; }
+
+  /* ---- filters ---- */
+  .filters { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-end; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-top: 20px; }
+  .field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+  .field > span { font-size: .68rem; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); font-weight: 600; }
+  .seg { display: flex; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+  .seg button { border: 0; border-radius: 0; padding: 9px 11px; background: transparent; font-weight: 600; color: var(--muted); }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: #04191c; }
+  .spacer { flex: 1 1 auto; }
+
+  /* ---- funnel ---- */
+  .funnel { display: flex; flex-direction: column; gap: 2px; }
+  .step { display: grid; grid-template-columns: 1fr auto auto; gap: 10px 14px; align-items: center;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; position: relative; overflow: hidden; }
+  .step .bar { position: absolute; inset: 0 auto 0 0; background: var(--accent-soft); width: 0; transition: width .4s ease; }
+  .step > * { position: relative; }
+  .step .label { font-weight: 600; font-size: .92rem; }
+  .step .note { display: block; color: var(--muted); font-size: .76rem; font-weight: 500; }
+  .step .n { font-family: var(--mono); font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .step .pct { font-family: var(--mono); font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3.6em; text-align: right; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+  .card .n { font-family: var(--mono); font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; display: block; }
+  .card .k { color: var(--muted); font-size: .78rem; font-weight: 600; }
+
+  .scroller { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 620px; }
+  th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  th:first-child, td:first-child { text-align: left; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr.on { background: var(--accent-soft); }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .empty { color: var(--muted); font-family: var(--mono); font-size: .82rem; padding: 18px 14px; }
+
+  .notice { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--warm);
+    border-radius: 8px; padding: 14px 16px; margin-top: 28px; color: var(--muted); font-size: .85rem; }
+  .notice strong { color: var(--ink); }
+  .notice + .notice { margin-top: 10px; }
+  .keyrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .keyrow input { flex: 1 1 220px; min-width: 0; font: 400 .85rem/1 var(--mono); background: var(--bg); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Queue &amp; Conversion</h1>
+      <p class="sub" id="since">the 2k-queue list, who got in, and what they bought &middot; <a href="/">waiting room &rarr;</a></p>
+    </div>
+    <div class="status">
+      <span class="dot" id="dot"></span><span id="state">not connected</span>
+      <button id="refresh">Refresh</button>
+    </div>
+  </header>
+
+  <div id="connect" class="notice" hidden>
+    <strong>Enter the dashboard key to see live numbers.</strong>
+    This is the <code>K2_STATS_KEY</code> saved in Supabase. It stays in this browser.
+    <div class="keyrow">
+      <input id="key" type="password" placeholder="dashboard key" autocomplete="off" spellcheck="false">
+      <button class="primary" id="save">Connect</button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <label class="field"><span>Joined from</span><input type="date" id="from"></label>
+    <label class="field"><span>Joined to</span><input type="date" id="to"></label>
+
+    <div class="field"><span>Meta tag</span>
+      <div class="seg" id="seg-meta">
+        <button type="button" data-v="any" aria-pressed="true">Any</button>
+        <button type="button" data-v="yes" aria-pressed="false">Meta</button>
+        <button type="button" data-v="no" aria-pressed="false">Not Meta</button>
+      </div>
+    </div>
+
+    <div class="field"><span>Test tag</span>
+      <div class="seg" id="seg-test">
+        <button type="button" data-v="any" aria-pressed="true">Any</button>
+        <button type="button" data-v="yes" aria-pressed="false">Test</button>
+        <button type="button" data-v="no" aria-pressed="false">Not test</button>
+      </div>
+    </div>
+
+    <div class="field"><span>Got in</span>
+      <div class="seg" id="seg-unlocked">
+        <button type="button" data-v="any" aria-pressed="true">Any</button>
+        <button type="button" data-v="yes" aria-pressed="false">Unlocked</button>
+        <button type="button" data-v="no" aria-pressed="false">Did not</button>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+    <button type="button" id="reset">Reset</button>
+  </div>
+
+  <h2>From queue to order</h2>
+  <div class="funnel" id="funnel"></div>
+
+  <h2>What this group bought</h2>
+  <div class="cards" id="money"></div>
+
+  <h2>Every combination</h2>
+  <div class="scroller">
+    <table>
+      <thead><tr>
+        <th>Group</th><th>Customers</th><th>Got in</th><th>Unlock&nbsp;rate</th>
+        <th>Buyers</th><th>Orders</th><th>Revenue</th><th>Conversion</th>
+      </tr></thead>
+      <tbody id="combos"><tr><td colspan="8" class="empty">Not loaded yet.</td></tr></tbody>
+    </table>
+  </div>
+
+  <h2>Day by day</h2>
+  <div class="scroller">
+    <table>
+      <thead><tr><th>Day</th><th>Joined</th><th>Got in</th><th>Orders</th><th>Revenue</th></tr></thead>
+      <tbody id="days"><tr><td colspan="5" class="empty">Not loaded yet.</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="notice" id="caveat">
+    <strong>Where each number comes from.</strong>
+    The customers, the tags and the orders are read from Shopify, so they are the real records.
+    "Got in" counts customers carrying the <code>2k-unlocked</code> tag, which is added when someone
+    types the right word on a browser that already knows their email because they joined the queue.
+    Anyone who gets in on a secret link, in a different browser, or without having joined is not counted there.
+    Orders are matched by customer and counted inside the date range you chose, so the money always matches the people above it.
+    The combination table follows the dates but ignores the "Got in" filter, so its unlock rate stays comparable across groups.
+  </div>
+  <div class="notice" id="warn" hidden></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var URL_ = "https://larkvlkettqrzgkoegvo.supabase.co/functions/v1/k2-track";
+  var KEY = "iys.k2.statskey";
+  var META = 1, TEST = 2, UNLOCKED = 4;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var fmt = function (n) { return n == null ? "—" : String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ","); };
+  var pct = function (a, b) { return b ? Math.round((a / b) * 1000) / 10 + "%" : "—"; };
+  var data = null, currency = "EGP";
+
+  function money(piastres) {
+    if (piastres == null) return "—";
+    return fmt(piastres / 100) + " " + currency;
+  }
+  function getKey() { try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
+  function setKey(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+
+  /* ---- filters ---- */
+  var filt = { meta: "any", test: "any", unlocked: "any" };
+  function wireSeg(id, name) {
+    var box = $("seg-" + id);
+    box.addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      Array.prototype.forEach.call(box.querySelectorAll("button"), function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      filt[name] = b.dataset.v;
+      draw();
+    });
+  }
+  wireSeg("meta", "meta"); wireSeg("test", "test"); wireSeg("unlocked", "unlocked");
+
+  function bitOk(bits, want, flag) {
+    if (want === "any") return true;
+    var has = (bits & flag) !== 0;
+    return want === "yes" ? has : !has;
+  }
+  function range() {
+    var f = $("from").value ? Date.parse($("from").value + "T00:00:00+02:00") : -Infinity;
+    var t = $("to").value ? Date.parse($("to").value + "T23:59:59+02:00") : Infinity;
+    return [f, t];
+  }
+
+  /* One customer row is [joined at, tag bits, [[ordered at, total], …]]. */
+  function select(rows, want) {
+    var r = range();
+    var out = [];
+    for (var i = 0; i < rows.length; i++) {
+      var c = rows[i];
+      if (c[0] < r[0] || c[0] > r[1]) continue;
+      if (!bitOk(c[1], want.meta, META)) continue;
+      if (!bitOk(c[1], want.test, TEST)) continue;
+      if (!bitOk(c[1], want.unlocked, UNLOCKED)) continue;
+      out.push(c);
+    }
+    return out;
+  }
+
+  /* Orders are only counted inside the chosen window, so the money matches
+     the people above it. */
+  function roll(rows) {
+    var t = { customers: rows.length, unlocked: 0, buyers: 0, orders: 0, revenue: 0 };
+    var r = range();
+    var lo = r[0] === -Infinity ? 0 : r[0];
+    var hi = r[1];
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][1] & UNLOCKED) t.unlocked++;
+      var os = rows[i][2], bought = false;
+      for (var k = 0; k < os.length; k++) {
+        if (os[k][0] < lo || os[k][0] > hi) continue;
+        t.orders++; t.revenue += os[k][1]; bought = true;
+      }
+      if (bought) t.buyers++;
+    }
+    return t;
+  }
+
+  function status(kind, text) {
+    $("dot").className = "dot" + (kind ? " " + kind : "");
+    $("state").textContent = text;
+  }
+
+  function drawFunnel(t, all) {
+    var base = Math.max(1, t.customers);
+    var steps = [
+      { label: "In the queue", note: "tagged 2k-queue, matching the filters", n: t.customers, of: all },
+      { label: "Got in with the password", note: "tagged 2k-unlocked", n: t.unlocked, of: base },
+      { label: "Placed an order", note: "at least one order in the window", n: t.buyers, of: base }
+    ];
+    $("funnel").innerHTML = steps.map(function (s) {
+      var p = s.of ? Math.round((s.n / s.of) * 100) : 0;
+      return '<div class="step"><div class="bar" style="width:' + Math.min(100, p) + '%"></div>' +
+        '<div><span class="label">' + s.label + '</span><span class="note">' + s.note + '</span></div>' +
+        '<div class="n">' + fmt(s.n) + '</div>' +
+        '<div class="pct">' + (s.of ? p + "%" : "") + '</div></div>';
+    }).join("");
+  }
+
+  function drawMoney(t) {
+    var aov = t.orders ? t.revenue / t.orders : null;
+    var per = t.customers ? t.revenue / t.customers : null;
+    $("money").innerHTML =
+      '<div class="card"><span class="n">' + fmt(t.orders) + '</span><span class="k">Orders</span></div>' +
+      '<div class="card"><span class="n">' + money(t.revenue) + '</span><span class="k">Revenue</span></div>' +
+      '<div class="card"><span class="n">' + money(aov) + '</span><span class="k">Average order</span></div>' +
+      '<div class="card"><span class="n">' + money(per) + '</span><span class="k">Per customer in the queue</span></div>' +
+      '<div class="card"><span class="n">' + pct(t.buyers, t.customers) + '</span><span class="k">Bought something</span></div>';
+  }
+
+  var COMBOS = [
+    { label: "Everyone in the queue", meta: "any", test: "any" },
+    { label: "Meta, not test", meta: "yes", test: "no" },
+    { label: "Meta and test", meta: "yes", test: "yes" },
+    { label: "All Meta", meta: "yes", test: "any" },
+    { label: "Not Meta (signed up on site)", meta: "no", test: "any" },
+    { label: "Test campaign", meta: "any", test: "yes" },
+    { label: "Everything but test", meta: "any", test: "no" }
+  ];
+
+  function drawCombos(rows) {
+    $("combos").innerHTML = COMBOS.map(function (c) {
+      /* Always every customer in the group, whatever the "Got in" filter is
+         set to, so the unlock rate column means something. */
+      var t = roll(select(rows, { meta: c.meta, test: c.test, unlocked: "any" }));
+      var on = c.meta === filt.meta && c.test === filt.test;
+      return '<tr class="' + (on ? "on" : "") + '"><td>' + c.label + "</td>" +
+        '<td class="num">' + fmt(t.customers) + "</td>" +
+        '<td class="num">' + fmt(t.unlocked) + "</td>" +
+        '<td class="num">' + pct(t.unlocked, t.customers) + "</td>" +
+        '<td class="num">' + fmt(t.buyers) + "</td>" +
+        '<td class="num">' + fmt(t.orders) + "</td>" +
+        '<td class="num">' + money(t.revenue) + "</td>" +
+        '<td class="num">' + pct(t.buyers, t.customers) + "</td></tr>";
+    }).join("");
+  }
+
+  function dayKey(ms) {
+    return new Date(ms).toLocaleDateString("en-CA", { timeZone: "Africa/Cairo" });
+  }
+  function drawDays(rows) {
+    var days = {};
+    var r = range();
+    var lo = r[0] === -Infinity ? 0 : r[0], hi = r[1];
+    function slot(k) { return days[k] || (days[k] = { joined: 0, unlocked: 0, orders: 0, revenue: 0 }); }
+    rows.forEach(function (c) {
+      var s = slot(dayKey(c[0]));
+      s.joined++;
+      if (c[1] & UNLOCKED) s.unlocked++;
+      c[2].forEach(function (o) {
+        if (o[0] < lo || o[0] > hi) return;
+        var t = slot(dayKey(o[0]));
+        t.orders++; t.revenue += o[1];
+      });
+    });
+    var keys = Object.keys(days).sort().reverse();
+    if (!keys.length) { $("days").innerHTML = '<tr><td colspan="5" class="empty">Nothing in this range.</td></tr>'; return; }
+    $("days").innerHTML = keys.map(function (k) {
+      var d = days[k];
+      return "<tr><td>" + k + "</td>" +
+        '<td class="num">' + fmt(d.joined) + "</td>" +
+        '<td class="num">' + fmt(d.unlocked) + "</td>" +
+        '<td class="num">' + fmt(d.orders) + "</td>" +
+        '<td class="num">' + money(d.revenue) + "</td></tr>";
+    }).join("");
+  }
+
+  function draw() {
+    if (!data) return;
+    var all = select(data.customers, { meta: "any", test: "any", unlocked: "any" }).length;
+    var rows = select(data.customers, filt);
+    var t = roll(rows);
+    drawFunnel(t, all);
+    drawMoney(t);
+    drawCombos(data.customers);
+    drawDays(rows);
+  }
+
+  var busy = false;
+  function load() {
+    var key = getKey();
+    if (!key) { $("connect").hidden = false; status("", "not connected"); return; }
+    if (busy) return;
+    busy = true;
+    status("", "loading…");
+
+    fetch(URL_, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ action: "cohort", key: key })
+    }).then(function (r) {
+      return r.json().then(function (j) { return { ok: r.ok, j: j }; });
+    }).then(function (res) {
+      busy = false;
+      if (!res.ok || !res.j || !res.j.ok) {
+        var why = (res.j && res.j.error) || "could not load";
+        status("bad", why === "forbidden" ? "wrong key" : why);
+        if (why === "forbidden") $("connect").hidden = false;
+        return;
+      }
+      $("connect").hidden = true;
+      data = res.j;
+      currency = data.currency || "EGP";
+      if (!$("from").value && data.campaign_start) $("from").value = data.campaign_start.slice(0, 10);
+
+      var notes = [];
+      if (data.orders_error) notes.push("<strong>Orders could not be read.</strong> " + data.orders_error +
+        " The customer and unlock numbers above are still correct; the order and revenue columns will stay empty until the Shopify app is given permission to read orders.");
+      if (data.truncated) notes.push("<strong>The list was cut short.</strong> There are more records than one read can fetch, so the totals are a floor, not the full count.");
+      if (notes.length) { $("warn").innerHTML = notes.join("<br><br>"); $("warn").hidden = false; }
+      else $("warn").hidden = true;
+
+      $("since").innerHTML = "campaign from " + (data.campaign_start || "").slice(0, 10) +
+        " &middot; " + fmt(data.customers.length) + " in the queue &middot; <a href=\"/\">waiting room &rarr;</a>";
+      status("live", "updated " + new Date(data.at).toLocaleTimeString("en-GB", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit" }));
+      draw();
+    }).catch(function () {
+      busy = false;
+      status("bad", "network error");
+    });
+  }
+
+  $("save").addEventListener("click", function () {
+    var v = $("key").value.trim();
+    if (!v) return;
+    setKey(v); $("key").value = ""; load();
+  });
+  $("key").addEventListener("keydown", function (e) { if (e.key === "Enter") $("save").click(); });
+  $("refresh").addEventListener("click", load);
+  $("from").addEventListener("change", draw);
+  $("to").addEventListener("change", draw);
+  $("reset").addEventListener("click", function () {
+    $("to").value = "";
+    if (data && data.campaign_start) $("from").value = data.campaign_start.slice(0, 10);
+    filt = { meta: "any", test: "any", unlocked: "any" };
+    ["meta", "test", "unlocked"].forEach(function (n) {
+      Array.prototype.forEach.call($("seg-" + n).querySelectorAll("button"), function (b) {
+        b.setAttribute("aria-pressed", String(b.dataset.v === "any"));
+      });
+    });
+    draw();
+  });
+
+  drawFunnel({ customers: 0, unlocked: 0, buyers: 0 }, 0);
+  drawMoney({ customers: 0, orders: 0, revenue: 0, buyers: 0 });
+  load();
+  setInterval(function () { if (!document.hidden) load(); }, 180000);
+})();
+</script>
+</body>
+</html>
