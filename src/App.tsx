@@ -12,6 +12,7 @@ const DesktopShell = lazy(() => import('./shells/DesktopShell'));
 const MobileShell = lazy(() => import('./shells/MobileShell'));
 const Showcase = lazy(() => import('./showcase/Showcase'));
 const Analytics = lazy(() => import('./lib/analytics'));
+const Insights = lazy(() => import('./lib/Insights'));
 // dev-only Catchy fidelity check (dead code in production builds)
 const CatchyCompare = import.meta.env.DEV ? lazy(() => import('./features/catchy/dev/CatchyCompare')) : null;
 
@@ -48,6 +49,7 @@ export function App() {
       {import.meta.env.PROD && !/^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) && (
         <Suspense fallback={null}>
           <Analytics />
+          <Insights />
         </Suspense>
       )}
     </>

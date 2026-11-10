@@ -114,7 +114,7 @@
   <header>
     <div>
       <h1>Queue &amp; Conversion</h1>
-      <p class="sub" id="since">the 2k-queue list, who got in, and what they bought &middot; <a href="/">waiting room &rarr;</a></p>
+      <p class="sub" id="since">the 2k-queue list, who got in, and what they bought &middot; <a href="/">waiting room</a> &middot; <a href="/site">2000s site</a></p>
     </div>
     <div class="status">
       <span class="dot" id="dot"></span><span id="state">not connected</span>
@@ -415,7 +415,7 @@
       else $("warn").hidden = true;
 
       $("since").innerHTML = "campaign from " + (data.campaign_start || "").slice(0, 10) +
-        " &middot; " + fmt(data.customers.length) + " in the queue &middot; <a href=\"/\">waiting room &rarr;</a>";
+        " &middot; " + fmt(data.customers.length) + " in the queue &middot; <a href=\"/\">waiting room</a> &middot; <a href=\"/site\">2000s site</a>";
       status("live", "updated " + new Date(data.at).toLocaleTimeString("en-GB", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit" }));
       draw();
     }).catch(function () {

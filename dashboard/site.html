@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2300959f'/%3E%3Cpath d='M8 22V10h3v12zm6 0V14h3v8zm6 0v-5h3v5z' fill='%23fff'/%3E%3C/svg%3E">
+<title>2000s Site Insights</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+  /* Layout: the path from landing to checkout, then where people went, then
+     which products they looked at and took. Same palette as the other two. */
+  :root {
+    --bg: #eef1f2; --surface: #ffffff; --line: #d4dcde;
+    --ink: #0d1a1d; --muted: #5b6e72;
+    --accent: #00959f; --accent-soft: #d7f1f3;
+    --warm: #b84c2b; --good: #1f7a5c;
+    --display: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: 'Courier Prime', ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0a1315; --surface: #121f22; --line: #22383c;
+      --ink: #e6f1f2; --muted: #8da4a8;
+      --accent: #2bd3e3; --accent-soft: #10343a;
+      --warm: #e0734b; --good: #4cc49a;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0a1315; --surface: #121f22; --line: #22383c;
+    --ink: #e6f1f2; --muted: #8da4a8;
+    --accent: #2bd3e3; --accent-soft: #10343a;
+    --warm: #e0734b; --good: #4cc49a;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--display); line-height: 1.45; margin: 0; }
+  .wrap {
+    max-width: 1060px; margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 28px 56px;
+  }
+  header { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: baseline; justify-content: space-between; }
+  h1 { font-size: clamp(1.45rem, 4vw, 2rem); font-weight: 800; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+  .sub { color: var(--muted); font-family: var(--mono); font-size: .8rem; margin: 4px 0 0; }
+  .sub a { color: var(--accent); }
+  .status { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: .78rem; color: var(--muted); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
+  .dot.live { background: var(--good); } .dot.bad { background: var(--warm); }
+
+  button, input[type="password"] {
+    font: 600 .82rem/1.2 var(--display); color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 7px; padding: 9px 12px;
+  }
+  button { cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #04191c; }
+
+  h2 { font-size: .74rem; text-transform: uppercase; letter-spacing: .11em; color: var(--muted); font-weight: 600; margin: 36px 0 12px; }
+
+  .funnel { display: flex; flex-direction: column; gap: 2px; }
+  .step { display: grid; grid-template-columns: 1fr auto auto; gap: 10px 14px; align-items: center;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; position: relative; overflow: hidden; }
+  .step .bar { position: absolute; inset: 0 auto 0 0; background: var(--accent-soft); width: 0; transition: width .4s ease; }
+  .step > * { position: relative; }
+  .step .label { font-weight: 600; font-size: .92rem; }
+  .step .note { display: block; color: var(--muted); font-size: .76rem; font-weight: 500; }
+  .step .n { font-family: var(--mono); font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .step .pct { font-family: var(--mono); font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3.6em; text-align: right; }
+  .step.side { border-style: dashed; }
+
+  .scroller { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 520px; }
+  th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  th:first-child, td:first-child { text-align: left; white-space: normal; }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .prod { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .prod img { width: 34px; height: 44px; object-fit: cover; border-radius: 4px; background: var(--accent-soft); flex: none; }
+  .prod a { color: inherit; text-decoration: none; font-weight: 600; }
+  .prod a:hover { text-decoration: underline; }
+  .rate { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+  .rate .track { width: 56px; height: 6px; border-radius: 3px; background: var(--accent-soft); overflow: hidden; flex: none; }
+  .rate .fill { height: 100%; background: var(--accent); width: 0; }
+  .empty { color: var(--muted); font-family: var(--mono); font-size: .82rem; padding: 18px 14px; }
+
+  .notice { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--warm);
+    border-radius: 8px; padding: 14px 16px; margin-top: 28px; color: var(--muted); font-size: .85rem; }
+  .notice strong { color: var(--ink); }
+  .keyrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .keyrow input { flex: 1 1 220px; min-width: 0; font: 400 .85rem/1 var(--mono); background: var(--bg); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>2000s Site Insights</h1>
+      <p class="sub" id="since">what people do on 2000s.inyourshoe.com &middot; <a href="/">waiting room</a> &middot; <a href="/queue">queue</a></p>
+    </div>
+    <div class="status">
+      <span class="dot" id="dot"></span><span id="state">not connected</span>
+      <button id="refresh">Refresh</button>
+    </div>
+  </header>
+
+  <div id="connect" class="notice" hidden>
+    <strong>Enter the dashboard key to see live numbers.</strong>
+    This is the <code>K2_STATS_KEY</code> saved in Supabase. It stays in this browser.
+    <div class="keyrow">
+      <input id="key" type="password" placeholder="dashboard key" autocomplete="off" spellcheck="false">
+      <button class="primary" id="save">Connect</button>
+    </div>
+  </div>
+
+  <h2>From landing to checkout</h2>
+  <div class="funnel" id="funnel"></div>
+
+  <h2>Where people went</h2>
+  <div class="scroller">
+    <table>
+      <thead><tr><th>Section</th><th>Visits</th><th>Share</th></tr></thead>
+      <tbody id="routes"><tr><td colspan="3" class="empty">Nothing recorded yet.</td></tr></tbody>
+    </table>
+  </div>
+
+  <h2>Products</h2>
+  <div class="scroller">
+    <table>
+      <thead><tr><th>Product</th><th>Viewed</th><th>Saved</th><th>Bagged</th><th>View&nbsp;to&nbsp;bag</th></tr></thead>
+      <tbody id="products"><tr><td colspan="5" class="empty">Nothing recorded yet.</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="notice">
+    <strong>Counted per visit, not per tap.</strong>
+    Someone who opens five product pages counts once on each of those products and once as a visit.
+    Nothing identifying is recorded: no email, no name, no customer id, no IP.
+    "Checkout" means they were sent to Shopify to pay, not that the order went through &mdash; the queue dashboard has the real orders.
+    Tracking began the moment this was installed, so anything before that is not here.
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var URL_ = "https://larkvlkettqrzgkoegvo.supabase.co/functions/v1/k2-track";
+  var KEY = "iys.k2.statskey";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var fmt = function (n) { return n == null ? "—" : String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); };
+  function getKey() { try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
+  function setKey(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+
+  var STEPS = [
+    { k: "visits",            label: "Landed on the site",   note: "every visit, counted once" },
+    { k: "from_time_machine", label: "Came from the portal", note: "arrived with the bag carried over", side: true },
+    { k: "viewed_a_product",  label: "Opened a product",     note: "at least one product page" },
+    { k: "favourited",        label: "Saved a favourite",    note: "tapped the heart" },
+    { k: "added_to_bag",      label: "Put something in the bag", note: "added at least one line" },
+    { k: "checkout",          label: "Went to pay",          note: "handed over to Shopify checkout" },
+    { k: "to_real_store",     label: "Left for the real store", note: "took the exit to inyourshoe.com", side: true }
+  ];
+
+  function status(kind, text) {
+    $("dot").className = "dot" + (kind ? " " + kind : "");
+    $("state").textContent = text;
+  }
+
+  function drawFunnel(f) {
+    var base = Math.max(1, f && f.visits ? f.visits : 1);
+    $("funnel").innerHTML = STEPS.map(function (s) {
+      var n = f ? (f[s.k] || 0) : null;
+      var p = f && f.visits ? Math.round((n / base) * 100) : null;
+      return '<div class="step' + (s.side ? " side" : "") + '">' +
+        '<div class="bar" style="width:' + (p == null ? 0 : Math.min(100, p)) + '%"></div>' +
+        '<div><span class="label">' + s.label + '</span><span class="note">' + s.note + '</span></div>' +
+        '<div class="n">' + fmt(n) + '</div>' +
+        '<div class="pct">' + (p == null ? "" : p + "%") + '</div></div>';
+    }).join("");
+  }
+
+  function drawRoutes(rows, visits) {
+    if (!rows || !rows.length) { $("routes").innerHTML = '<tr><td colspan="3" class="empty">Nothing recorded yet.</td></tr>'; return; }
+    $("routes").innerHTML = rows.map(function (r) {
+      var p = visits ? Math.round((r.sessions / visits) * 100) : 0;
+      return "<tr><td>" + esc(r.name) + "</td>" +
+        '<td class="num">' + fmt(r.sessions) + "</td>" +
+        '<td><div class="rate"><div class="track"><div class="fill" style="width:' + Math.min(100, p) + '%"></div></div>' +
+        '<span class="num">' + p + "%</span></div></td></tr>";
+    }).join("");
+  }
+
+  function drawProducts(rows) {
+    if (!rows || !rows.length) { $("products").innerHTML = '<tr><td colspan="5" class="empty">Nothing recorded yet.</td></tr>'; return; }
+    $("products").innerHTML = rows.map(function (p) {
+      var rate = p.views ? Math.round((p.adds / p.views) * 100) : 0;
+      var name = esc(p.title || p.handle);
+      var label = p.url ? '<a href="' + esc(p.url) + '" target="_blank" rel="noopener">' + name + "</a>" : name;
+      return "<tr><td><div class=\"prod\">" +
+        (p.image ? '<img src="' + esc(p.image) + '" alt="">' : '<img alt="">') +
+        "<span>" + label + "</span></div></td>" +
+        '<td class="num">' + fmt(p.views) + "</td>" +
+        '<td class="num">' + fmt(p.favs) + "</td>" +
+        '<td class="num">' + fmt(p.adds) + "</td>" +
+        '<td><div class="rate"><div class="track"><div class="fill" style="width:' + Math.min(100, rate) + '%"></div></div>' +
+        '<span class="num">' + rate + "%</span></div></td></tr>";
+    }).join("");
+  }
+
+  var busy = false;
+  function load() {
+    var key = getKey();
+    if (!key) { $("connect").hidden = false; status("", "not connected"); return; }
+    if (busy) return;
+    busy = true;
+    status("", "loading…");
+
+    fetch(URL_, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ action: "site2000", key: key })
+    }).then(function (r) {
+      return r.json().then(function (j) { return { ok: r.ok, j: j }; });
+    }).then(function (res) {
+      busy = false;
+      if (!res.ok || !res.j || !res.j.ok) {
+        var why = (res.j && res.j.error) || "could not load";
+        status("bad", why === "forbidden" ? "wrong key" : why);
+        if (why === "forbidden") $("connect").hidden = false;
+        return;
+      }
+      $("connect").hidden = true;
+      var d = res.j;
+      drawFunnel(d.funnel);
+      drawRoutes(d.routes, d.funnel.visits);
+      drawProducts(d.products);
+      $("since").innerHTML = (d.tracking_since
+        ? "tracking since " + new Date(d.tracking_since).toLocaleString("en-GB", { timeZone: "Africa/Cairo", dateStyle: "medium", timeStyle: "short" })
+        : "no events recorded yet") +
+        ' &middot; <a href="/">waiting room</a> &middot; <a href="/queue">queue</a>';
+      status("live", "updated " + new Date(d.at).toLocaleTimeString("en-GB", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit" }));
+    }).catch(function () {
+      busy = false;
+      status("bad", "network error");
+    });
+  }
+
+  $("save").addEventListener("click", function () {
+    var v = $("key").value.trim();
+    if (!v) return;
+    setKey(v); $("key").value = ""; load();
+  });
+  $("key").addEventListener("keydown", function (e) { if (e.key === "Enter") $("save").click(); });
+  $("refresh").addEventListener("click", load);
+
+  drawFunnel(null);
+  load();
+  setInterval(function () { if (!document.hidden) load(); }, 60000);
+})();
+</script>
+</body>
+</html>
