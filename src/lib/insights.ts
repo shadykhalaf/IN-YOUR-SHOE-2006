@@ -1,8 +1,9 @@
 /**
  * IYS 2000s — what people do on the site, counted without naming anyone.
  *
- * Each visit makes up a random id so visits can be counted; no email, no name,
- * no customer id, no IP and no fingerprinting. Everything is sent to the same
+ * Each visit makes up a random id so visits can be counted, and the browser
+ * keeps a second random id so returning visitors can be told from new ones.
+ * No email, no name, no customer id, no IP and no fingerprinting. Everything is sent to the same
  * collector the Singles Day waiting room uses, under site "2000s", so both can
  * be read side by side.
  *
@@ -17,10 +18,12 @@ import { useHandoff } from './handoff';
 const URL_ = 'https://larkvlkettqrzgkoegvo.supabase.co/functions/v1/k2-track';
 const SITE = '2000s';
 const SID = 'iys2006.sid';
+const UID = 'iys2006.uid';
 
 type Event = { name: string; handle?: string };
 
 let sess = '';
+let uid = '';
 let queue: Event[] = [];
 let timer: number | null = null;
 const sent = new Set<string>();
@@ -35,10 +38,24 @@ function sessionId(): string {
   return sess;
 }
 
+/**
+ * The browser, kept so a visitor who comes back tomorrow can be told apart
+ * from a new one. A random number, like the visit id: not a person.
+ */
+function browserId(): string {
+  if (uid) return uid;
+  try { uid = window.localStorage.getItem(UID) ?? ''; } catch { /* private mode */ }
+  if (!uid) {
+    uid = (Date.now().toString(36) + Math.random().toString(36).slice(2, 12)).replace(/[^a-z0-9]/g, '');
+    try { window.localStorage.setItem(UID, uid); } catch { /* private mode */ }
+  }
+  return uid;
+}
+
 function flush(beacon = false) {
   if (timer !== null) { window.clearTimeout(timer); timer = null; }
   if (!queue.length) return;
-  const body = JSON.stringify({ site: SITE, sess: sessionId(), events: queue.splice(0, 60) });
+  const body = JSON.stringify({ site: SITE, sess: sessionId(), uid: browserId(), events: queue.splice(0, 60) });
   try {
     if (beacon && navigator.sendBeacon) {
       navigator.sendBeacon(URL_, new Blob([body], { type: 'application/json' }));

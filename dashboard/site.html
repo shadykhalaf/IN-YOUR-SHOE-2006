@@ -73,6 +73,15 @@
   .step .pct { font-family: var(--mono); font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3.6em; text-align: right; }
   .step.side { border-style: dashed; }
 
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+  .card h3 { margin: 0 0 8px; font-size: .78rem; font-weight: 700; letter-spacing: .02em; }
+  .card .row { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .card .row + .row { margin-top: 4px; }
+  .card .k { color: var(--muted); font-size: .76rem; font-weight: 600; }
+  .card .n { font-family: var(--mono); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .card .n.big { font-size: 1.5rem; }
+
   .scroller { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
   table { border-collapse: collapse; width: 100%; min-width: 520px; }
   th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
@@ -119,6 +128,15 @@
     </div>
   </div>
 
+  <h2>The three places, side by side</h2>
+  <div class="cards" id="compare"></div>
+  <div class="scroller" style="margin-top:10px;">
+    <table>
+      <thead><tr id="daily-head"><th>Day</th></tr></thead>
+      <tbody id="daily"><tr><td class="empty">Nothing recorded yet.</td></tr></tbody>
+    </table>
+  </div>
+
   <h2>From landing to checkout</h2>
   <div class="funnel" id="funnel"></div>
 
@@ -142,6 +160,8 @@
     <strong>Counted per visit, not per tap.</strong>
     Someone who opens five product pages counts once on each of those products and once as a visit.
     Nothing identifying is recorded: no email, no name, no customer id, no IP.
+    "People" counts browsers, not named individuals: each browser keeps a random number so a second visit tomorrow is not counted as a new person. The same person on a phone and a laptop is two.
+    Visits recorded before this was added have no browser number, so "people" only counts from the moment it went in.
     "Checkout" means they were sent to Shopify to pay, not that the order went through &mdash; the queue dashboard has the real orders.
     Tracking began the moment this was installed, so anything before that is not here.
   </div>
@@ -219,6 +239,61 @@
     }).join("");
   }
 
+  /* The three places this database counts, in the order they matter here. */
+  var PLACES = [
+    { key: "store", label: "inyourshoe.com", note: "every other page of the real store" },
+    { key: "2000s", label: "2000s site", note: "2000s.inyourshoe.com" },
+    { key: "k2", label: "Waiting room", note: "the Singles Day lock screen" }
+  ];
+
+  function drawCompare(sites) {
+    var by = {};
+    (sites || []).forEach(function (s) { by[s.site] = s; });
+    $("compare").innerHTML = PLACES.map(function (pl) {
+      var s = by[pl.key] || { sessions: 0, users: 0, first_at: null };
+      var per = s.users ? Math.round((s.sessions / s.users) * 100) / 100 : null;
+      return '<div class="card"><h3>' + pl.label + "</h3>" +
+        '<div class="row"><span class="k">Visits</span><span class="n big">' + fmt(s.sessions) + "</span></div>" +
+        '<div class="row"><span class="k">People</span><span class="n">' + (s.users ? fmt(s.users) : "—") + "</span></div>" +
+        '<div class="row"><span class="k">Visits per person</span><span class="n">' + (per == null ? "—" : per.toFixed(2)) + "</span></div>" +
+        '<div class="row"><span class="k">' + pl.note + "</span></div></div>";
+    }).join("");
+  }
+
+  function drawDaily(rows) {
+    var head = $("daily-head"), body = $("daily");
+    if (!rows || !rows.length) {
+      head.innerHTML = "<th>Day</th>";
+      body.innerHTML = '<tr><td class="empty">Nothing recorded yet.</td></tr>';
+      return;
+    }
+    var days = {};
+    rows.forEach(function (r) {
+      (days[r.day] || (days[r.day] = {}))[r.site] = r;
+    });
+    head.innerHTML = "<th>Day</th>" + PLACES.map(function (p) { return "<th>" + p.label + "</th>"; }).join("");
+    body.innerHTML = Object.keys(days).sort().reverse().map(function (d) {
+      return "<tr><td>" + esc(d) + "</td>" + PLACES.map(function (p) {
+        var r = days[d][p.key];
+        return '<td class="num">' + (r ? fmt(r.sessions) : "—") + "</td>";
+      }).join("") + "</tr>";
+    }).join("");
+  }
+
+  function loadCompare() {
+    var key = getKey();
+    if (!key) return;
+    fetch(URL_, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ action: "compare", key: key })
+    }).then(function (r) { return r.json(); }).then(function (j) {
+      if (!j || !j.ok) return;
+      drawCompare(j.sites);
+      drawDaily(j.daily);
+    }).catch(function () { /* the rest of the page still works */ });
+  }
+
   var busy = false;
   function load() {
     var key = getKey();
@@ -246,6 +321,7 @@
       drawFunnel(d.funnel);
       drawRoutes(d.routes, d.funnel.visits);
       drawProducts(d.products);
+      loadCompare();
       $("since").innerHTML = (d.tracking_since
         ? "tracking since " + new Date(d.tracking_since).toLocaleString("en-GB", { timeZone: "Africa/Cairo", dateStyle: "medium", timeStyle: "short" })
         : "no events recorded yet") +
@@ -266,6 +342,7 @@
   $("refresh").addEventListener("click", load);
 
   drawFunnel(null);
+  drawCompare([]);
   load();
   setInterval(function () { if (!document.hidden) load(); }, 60000);
 })();
