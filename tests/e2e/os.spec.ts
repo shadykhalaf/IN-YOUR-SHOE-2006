@@ -155,19 +155,34 @@ test.describe('apps', () => {
     await expect(w.getByRole('button', { name: new RegExp(`PJOYS.*${pjoys} items`) }).first()).toBeVisible();
   });
 
-  test('wardrobe: Amr Throwback is the third tile in CREWNECKS and opens in the image viewer', async ({ page }) => {
+  test('wardrobe: Amr Throwback sits in row 3, column 3 of CREWNECKS at any window size and opens in the image viewer', async ({ page }) => {
     await desktop(page);
     await page.getByRole('button', { name: /Open My Wardrobe/ }).click();
     const w = page.getByRole('dialog', { name: 'MY WARDROBE' });
     await w.getByRole('button', { name: /^CREWNECKS/ }).first().click();
     const tiles = w.getByRole('list', { name: 'CREWNECKS items' }).getByRole('listitem');
-    const amr = tiles.nth(2);
-    await expect(amr).toContainText('Amr_Throwback.jpg');
-    await expect(amr.getByRole('button', { name: 'Amr Throwback' })).toBeVisible();
-    // first row, third column
-    const [first, third] = [await tiles.nth(0).boundingBox(), await amr.boundingBox()];
-    expect(Math.abs(first!.y - third!.y)).toBeLessThan(2);
-    expect(third!.x).toBeGreaterThan(first!.x);
+    const amr = tiles.filter({ hasText: 'Amr_Throwback.jpg' });
+    await expect(amr.getByRole('button', { name: 'Amr Throwback' })).toBeAttached();
+    // row and column as laid out on screen, plus its place in the list (keyboard order)
+    const cell = () =>
+      tiles.evaluateAll((els) => {
+        const boxes = els.map((e) => e.getBoundingClientRect());
+        const rows = [...new Set(boxes.map((b) => Math.round(b.top)))].sort((a, b) => a - b);
+        const cols = [...new Set(boxes.map((b) => Math.round(b.left)))].sort((a, b) => a - b);
+        const i = els.findIndex((e) => e.textContent?.includes('Amr_Throwback.jpg'));
+        return { row: rows.indexOf(Math.round(boxes[i]!.top)) + 1, column: cols.indexOf(Math.round(boxes[i]!.left)) + 1, columns: cols.length, index: i };
+      });
+    await expect.poll(cell).toMatchObject({ row: 3, column: 3 });
+    const normal = await cell();
+    expect(normal.columns).toBeGreaterThanOrEqual(3);
+    expect(normal.index).toBe(2 * normal.columns + 2);
+    // maximized: more columns, same cell
+    await w.getByRole('button', { name: 'Maximize MY WARDROBE' }).click();
+    await expect.poll(async () => (await cell()).columns).toBeGreaterThan(normal.columns);
+    await expect.poll(cell).toMatchObject({ row: 3, column: 3 });
+    const max = await cell();
+    expect(max.index).toBe(2 * max.columns + 2);
+    await amr.scrollIntoViewIfNeeded();
     await expect.poll(() => amr.locator('img').evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
     // the folder total stays the catalogue's
     const idx = await import('./fixtures').then((m) => m.index);

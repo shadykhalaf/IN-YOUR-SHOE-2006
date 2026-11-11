@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { Icon } from '../../components/os/Icon';
 import { Window } from '../../components/os/Window';
 import { Pagination } from '../../components/shop/Pagination';
@@ -27,6 +27,27 @@ const findPath = (list: Folder[], id: string, trail: Folder[] = []): Folder[] | 
 const openPhoto = (ph: WardrobePhoto) =>
   openViewer([{ src: ph.src, full: ph.src, title: ph.title, filename: decorativeFilename(ph.title), alt: ph.alt, width: ph.width, height: ph.height }]);
 
+/**
+ * How many columns the thumbnail grid has right now. It is CSS auto-fill, so this changes
+ * with the window width. Pinned photos use it to land in their row and column. The last
+ * count is kept while the grid is hidden (Details view), so both views list the same order.
+ */
+function useGridColumns(grid: HTMLElement | null, fallback: number) {
+  const [columns, setColumns] = useState(fallback);
+  useLayoutEffect(() => {
+    if (!grid) return;
+    const read = () => {
+      const n = getComputedStyle(grid).gridTemplateColumns.split(/\s+/).filter((t) => t.endsWith('px')).length;
+      if (n) setColumns(n);
+    };
+    read();
+    const ro = new ResizeObserver(read);
+    ro.observe(grid);
+    return () => ro.disconnect();
+  }, [grid]);
+  return columns;
+}
+
 export default function Wardrobe({ win }: { win: Win }) {
   const cat = useCatalogue();
   const browse = useBrowse();
@@ -40,7 +61,9 @@ export default function Wardrobe({ win }: { win: Win }) {
   const subfolders = folder ? visible(folder.children ?? []) : visible(WARDROBE);
   const items = useMemo(() => (cat && folder ? collectionProducts(cat, folder.collection) : []), [cat, folder]);
   const pg = paginate(items, page, 48);
-  const entries = folder ? withPhotos(pg.items, folder.collection, pg.page) : [];
+  const [grid, setGrid] = useState<HTMLUListElement | null>(null);
+  const columns = useGridColumns(grid, 4);
+  const entries = folder ? withPhotos(pg.items, folder.collection, pg.page, columns) : [];
   const go = (id: string | null) => {
     setCurrent(id);
     setPage(1);
@@ -135,7 +158,7 @@ export default function Wardrobe({ win }: { win: Win }) {
                   </ul>
                 )}
                 {folder && view === 'thumbs' && (
-                  <ul className="files" aria-label={`${folder.label} items`}>
+                  <ul className="files" ref={setGrid} aria-label={`${folder.label} items`}>
                     {entries.map((e) =>
                       e.kind === 'photo' ? (
                         <li key={e.photo.id}>
