@@ -155,6 +155,32 @@ test.describe('apps', () => {
     await expect(w.getByRole('button', { name: new RegExp(`PJOYS.*${pjoys} items`) }).first()).toBeVisible();
   });
 
+  test('wardrobe: Amr Throwback is the third tile in CREWNECKS and opens in the image viewer', async ({ page }) => {
+    await desktop(page);
+    await page.getByRole('button', { name: /Open My Wardrobe/ }).click();
+    const w = page.getByRole('dialog', { name: 'MY WARDROBE' });
+    await w.getByRole('button', { name: /^CREWNECKS/ }).first().click();
+    const tiles = w.getByRole('list', { name: 'CREWNECKS items' }).getByRole('listitem');
+    const amr = tiles.nth(2);
+    await expect(amr).toContainText('Amr_Throwback.jpg');
+    await expect(amr.getByRole('button', { name: 'Amr Throwback' })).toBeVisible();
+    // first row, third column
+    const [first, third] = [await tiles.nth(0).boundingBox(), await amr.boundingBox()];
+    expect(Math.abs(first!.y - third!.y)).toBeLessThan(2);
+    expect(third!.x).toBeGreaterThan(first!.x);
+    await expect.poll(() => amr.locator('img').evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
+    // the folder total stays the catalogue's
+    const idx = await import('./fixtures').then((m) => m.index);
+    const crew = idx.collections.find((c: { h: string }) => c.h === 'crewnecks').n;
+    await expect(tiles).toHaveCount(crew + 1);
+    await expect(w.locator('.statusbar')).toContainText(`${crew} objects`);
+    await amr.getByRole('button').click();
+    const viewer = page.getByRole('dialog', { name: 'Amr Throwback - image viewer' });
+    await expect(viewer).toContainText('Amr_Throwback.jpg - IYS IMAGE VIEWER');
+    await expect(viewer).toContainText('960 × 1280');
+    await expect.poll(() => viewer.locator('.viewer__stage img').evaluate((i: HTMLImageElement) => i.naturalWidth)).toBe(960);
+  });
+
   test('control panel: tabs work by keyboard; catalogue facts are generated', async ({ page }) => {
     await desktop(page);
     await page.getByRole('button', { name: 'Open Control Panel' }).click();

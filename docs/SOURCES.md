@@ -81,6 +81,12 @@ Panel wallpaper preset) is artwork supplied by the project owner for this
 concept and is committed byte-for-byte unchanged (no crop, recolour or
 re-encode).
 
+**Amr Throwback** (`public/iys/wardrobe/amr-throwback.webp`, 960×1280, plus a
+240×320 thumbnail) is a personal photo supplied by the project owner, not IYS
+imagery. It is the third tile in MY WARDROBE › CREWNECKS, opens in IYS IMAGE
+VIEWER, and is listed in `src/data/wardrobePhotos.ts`. It was resized and
+re-encoded from the supplied JPEG, with no metadata kept.
+
 ## Local assets
 
 <!-- assets:start -->
