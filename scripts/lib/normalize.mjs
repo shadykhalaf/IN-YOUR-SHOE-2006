@@ -393,3 +393,43 @@ export function validateCatalogue(products, { discoveredHandles = [], expectedMi
   if (previousCount && products.length < previousCount * 0.8) errors.push(`catalogue shrank from ${previousCount} to ${products.length} (>20%) — refusing to overwrite`);
   return { report, errors };
 }
+
+/**
+ * Products the 2000s site must never show.
+ *
+ * The site builds itself from the storefront's public /products.json, which
+ * lists everything published to the Online Store. That includes things the
+ * real site never surfaces because they sit in no collection: test products,
+ * internal placeholders, things published by mistake. On inyourshoe.com they
+ * are invisible; here they would sit in SHOP ALL and in any automatic
+ * collection they happen to qualify for.
+ *
+ * Three ways a product is kept out, in the order they are worth trusting:
+ *   1. the tag "hide-2000s" (or "no-2000s"), which is the merchant's own lever
+ *      and needs no code change;
+ *   2. an obvious test name, matched on whole words so a real product called
+ *      "Contest Tee" is safe;
+ *   3. no collection at all, which on this store means it was never
+ *      merchandised. Products in even one collection are always kept.
+ */
+export const HIDE_TAGS = ['hide-2000s', 'no-2000s'];
+
+const TEST_NAME = /(^|[^a-z])(test|testing|odoo|dummy|sample|placeholder|draft|donotuse|do-not-use|delete|deleteme|tmp|temp|xxx)([^a-z]|$)/i;
+
+export function isHiddenProduct(p, { requireCollection = true } = {}) {
+  if (!p) return true;
+
+  const tags = Array.isArray(p.tags) ? p.tags : String(p.tags ?? '').split(',');
+  for (const raw of tags) {
+    const t = String(raw).trim().toLowerCase().replace(/\s+/g, '-');
+    if (HIDE_TAGS.includes(t)) return true;
+  }
+
+  const title = String(p.title ?? '');
+  const handle = String(p.handle ?? '').replace(/-/g, ' ');
+  if (TEST_NAME.test(title) || TEST_NAME.test(handle)) return true;
+
+  if (requireCollection && Array.isArray(p.collections) && p.collections.length === 0) return true;
+
+  return false;
+}

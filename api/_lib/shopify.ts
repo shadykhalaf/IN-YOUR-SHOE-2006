@@ -18,6 +18,8 @@
 import { normalizeStorefrontProduct } from '../../scripts/lib/normalize.mjs';
 // @ts-expect-error: plain ESM module shared with the Node sync scripts
 import { buildOutputs } from '../../scripts/lib/outputs.mjs';
+// @ts-expect-error: plain ESM module shared with the Node sync scripts
+import { isHiddenProduct } from '../../scripts/lib/normalize.mjs';
 
 export const DEFAULT_API_VERSION = '2026-07';
 
@@ -267,6 +269,27 @@ export interface LiveCatalogue {
  * on anything that would mislead: no products, duplicate handles, or a
  * non-EGP price (wrong market). The caller then keeps serving the snapshot.
  */
+/**
+ * Drop the products the 2000s site must never show, then drop them from every
+ * collection's order so counts and listings agree. Shared by all three
+ * catalogue paths (snapshot, Storefront API, public JSON).
+ */
+function dropHidden(
+  products: { handle: string }[],
+  collectionMeta: Record<string, { title: string; count: number; order: string[] }>,
+) {
+  const keep = products.filter((p) => !isHiddenProduct(p));
+  const hidden = products.length - keep.length;
+  if (hidden) {
+    const alive = new Set(keep.map((p) => p.handle));
+    for (const c of Object.values(collectionMeta)) {
+      c.order = c.order.filter((h) => alive.has(h));
+      c.count = c.order.length;
+    }
+  }
+  return { products: keep, hidden };
+}
+
 export async function buildLiveCatalogue(ep: Endpoint, fetcher: Fetcher = fetch, now = new Date()): Promise<LiveCatalogue> {
   const retrievedAt = now.toISOString();
   const raw = await pages<SfProduct>(ep, PRODUCTS, {}, (d: { products?: Page<SfProduct> }) => d.products, fetcher);
@@ -291,8 +314,10 @@ export async function buildLiveCatalogue(ep: Endpoint, fetcher: Fetcher = fetch,
     for (const h of order) byHandle.get(h)!.collections.push(c.handle);
   });
   for (const p of products) p.collections.sort();
-  const out = buildOutputs(products, collectionMeta, { generatedAt: retrievedAt, currency: 'EGP' }) as { index: string; shards: Record<string, string> };
-  return { index: out.index, shards: out.shards, generatedAt: retrievedAt, productCount: products.length };
+  const kept = dropHidden(products, collectionMeta);
+
+  const out = buildOutputs(kept.products, collectionMeta, { generatedAt: retrievedAt, currency: 'EGP' }) as { index: string; shards: Record<string, string> };
+  return { index: out.index, shards: out.shards, generatedAt: retrievedAt, productCount: kept.products.length };
 }
 
 /* ── Cart (Storefront API) ───────────────────────────────────────────── */

@@ -17,7 +17,7 @@
  * stock is still enforced at Shopify checkout; the hold is a soft pause.
  */
 // @ts-expect-error: plain ESM module shared with the Node sync scripts
-import { normalizeStorefrontProduct } from '../../scripts/lib/normalize.mjs';
+import { isHiddenProduct, normalizeStorefrontProduct } from '../../scripts/lib/normalize.mjs';
 // @ts-expect-error: plain ESM module shared with the Node sync scripts
 import { buildOutputs } from '../../scripts/lib/outputs.mjs';
 import { mapLimit, type Fetcher, type LiveCatalogue } from './shopify.js';
@@ -52,6 +52,27 @@ async function getJson<T>(url: string, fetcher: Fetcher, tries = 3): Promise<T> 
 interface RawProduct {
   handle: string;
   [k: string]: unknown;
+}
+
+/**
+ * Drop the products the 2000s site must never show, then drop them from every
+ * collection's order so counts and listings agree. Shared by all three
+ * catalogue paths (snapshot, Storefront API, public JSON).
+ */
+function dropHidden(
+  products: { handle: string }[],
+  collectionMeta: Record<string, { title: string; count: number; order: string[] }>,
+) {
+  const keep = products.filter((p) => !isHiddenProduct(p));
+  const hidden = products.length - keep.length;
+  if (hidden) {
+    const alive = new Set(keep.map((p) => p.handle));
+    for (const c of Object.values(collectionMeta)) {
+      c.order = c.order.filter((h) => alive.has(h));
+      c.count = c.order.length;
+    }
+  }
+  return { products: keep, hidden };
 }
 
 /**
@@ -115,6 +136,8 @@ export async function buildLiveCataloguePublic(domain: string, fetcher: Fetcher 
   });
   for (const p of products) p.collections.sort();
 
-  const out = buildOutputs(products, collectionMeta, { generatedAt: retrievedAt, currency: 'EGP' }) as { index: string; shards: Record<string, string> };
-  return { index: out.index, shards: out.shards, generatedAt: retrievedAt, productCount: products.length };
+  const kept = dropHidden(products, collectionMeta);
+
+  const out = buildOutputs(kept.products, collectionMeta, { generatedAt: retrievedAt, currency: 'EGP' }) as { index: string; shards: Record<string, string> };
+  return { index: out.index, shards: out.shards, generatedAt: retrievedAt, productCount: kept.products.length };
 }

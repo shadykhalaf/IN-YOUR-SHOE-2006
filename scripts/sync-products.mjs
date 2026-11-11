@@ -51,6 +51,7 @@ import {
   isInternationalMarketUrl,
   normalizeAjaxProduct,
   normalizeJsonLdProduct,
+  isHiddenProduct,
   normalizeStorefrontProduct,
   sitemapLocs,
   validateCatalogue,
@@ -239,7 +240,7 @@ async function main() {
   // storefront's own All Products order, then everything else by handle.
   const allOrder = membership['all-products'] ?? [];
   const pos = new Map(allOrder.map((h, i) => [h, i]));
-  const products = [...normalized.values()].sort((a, b) => (pos.get(a.handle) ?? 1e9) - (pos.get(b.handle) ?? 1e9) || a.handle.localeCompare(b.handle));
+  let products = [...normalized.values()].sort((a, b) => (pos.get(a.handle) ?? 1e9) - (pos.get(b.handle) ?? 1e9) || a.handle.localeCompare(b.handle));
 
   // ── Care guides (official, per product) ───────────────────────────────
   const care = await syncCareGuides(products);
@@ -297,6 +298,19 @@ async function main() {
     navCollections,
     report: { ...report, missingFromSync: report.missingFromSync.length ? report.missingFromSync : [] },
   };
+  // The 2000s site never shows test products or anything the merchant has
+  // tagged out; drop them here too so a re-sync cannot bring them back.
+  const hiddenProducts = products.filter((p) => isHiddenProduct(p));
+  if (hiddenProducts.length) {
+    const alive = new Set(products.filter((p) => !isHiddenProduct(p)).map((p) => p.handle));
+    for (const c of Object.values(collectionMeta)) {
+      c.order = c.order.filter((h) => alive.has(h));
+      c.count = c.order.length;
+    }
+    products = products.filter((p) => !isHiddenProduct(p));
+    console.log(`hidden from the 2000s site: ${hiddenProducts.length} (${hiddenProducts.map((p) => p.handle).join(', ')})`);
+  }
+
   const out = buildOutputs(products, collectionMeta, meta);
   rmSync(resolve(root, 'public/catalogue'), { recursive: true, force: true });
   mkdirSync(resolve(root, 'public/catalogue'), { recursive: true });
