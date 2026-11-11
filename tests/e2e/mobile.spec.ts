@@ -53,6 +53,51 @@ test('mobile touch targets are at least 44px', async ({ page }) => {
   }
 });
 
+test('MENU › RECYCLE BIN › Not Important › Really Not Important › DONT OPEN › Please › Amr Throwback; ◀ BACK walks back up', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'IYS MENU' }).click();
+  await page.getByRole('button', { name: 'RECYCLE BIN' }).click();
+  const title = page.locator('.m-title');
+  const path = page.locator('.m-recycle__path');
+  await expect(title).toHaveText('IYS MOBILE › RECYCLE BIN');
+  await expect(page.locator('.m-h1')).toHaveText('RECYCLE BIN');
+  await expect(path).toHaveText('C:\\IYS\\RECYCLE BIN\\');
+  await expect(page.locator('.m-menu__static')).toContainText('BORING_OUTFITS');
+  const names = ['Not Important', 'Really Not Important', 'DONT OPEN', 'Please'];
+  let where = 'C:\\IYS\\RECYCLE BIN\\';
+  for (const name of names) {
+    const folder = page.getByRole('button', { name: new RegExp(`^${name}.*1 item$`) });
+    expect((await folder.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+    await folder.click();
+    where += `${name}\\`;
+    await expect(title).toHaveText(`IYS MOBILE › RECYCLE BIN › ${name}`);
+    await expect(page.locator('.m-h1')).toHaveText(name);
+    await expect(path).toHaveText(where);
+  }
+  const tile = page.getByRole('button', { name: 'Open Amr_Throwback.jpg: Amr Throwback' });
+  await expect.poll(() => tile.locator('img').evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
+  await tile.click();
+  await expect(title).toHaveText('IYS MOBILE › RECYCLE BIN › Amr_Throwback.jpg');
+  const photo = page.locator('.m-viewer img');
+  await expect(photo).toHaveAttribute('alt', /^Amr Throwback/);
+  await expect.poll(() => photo.evaluate((i: HTMLImageElement) => i.naturalWidth)).toBe(960);
+  await expect(page.locator('.m-viewer__cap')).toHaveText('Amr_Throwback.jpg · Amr Throwback');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+  const back = page.getByRole('button', { name: /BACK/ });
+  for (const name of [...names].reverse()) {
+    await back.click();
+    await expect(title).toHaveText(`IYS MOBILE › RECYCLE BIN › ${name}`);
+  }
+  await back.click();
+  await expect(title).toHaveText('IYS MOBILE › RECYCLE BIN');
+  await back.click();
+  await expect(title).toHaveText('IYS MOBILE');
+  // opening it again starts at the top
+  await page.getByRole('button', { name: 'IYS MENU' }).click();
+  await page.getByRole('button', { name: 'RECYCLE BIN' }).click();
+  await expect(path).toHaveText('C:\\IYS\\RECYCLE BIN\\');
+});
+
 test('mobile primary CTA opens the newest drop', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /^Shop the drop/ }).click();

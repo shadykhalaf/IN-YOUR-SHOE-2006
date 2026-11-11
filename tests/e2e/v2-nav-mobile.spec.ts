@@ -307,6 +307,11 @@ test.describe('the bar: SHOP ALL · SEARCH · GAMES · STORES · MSG', () => {
         await bar(page).getByRole('button', { name: /^STORES/ }).tap();
         await bagKey(page).tap();
       }],
+      ['deep in the RECYCLE BIN', 'RECYCLE BIN › Please', async () => {
+        await page.getByRole('button', { name: 'IYS MENU' }).tap();
+        await page.getByRole('button', { name: 'RECYCLE BIN' }).tap();
+        for (const name of ['Not Important', 'Really Not Important', 'DONT OPEN', 'Please']) await page.getByRole('button', { name: new RegExp(`^${name}.*1 item$`) }).tap();
+      }],
     ];
     for (const [name, title, openIt] of overlays) {
       await openIt();

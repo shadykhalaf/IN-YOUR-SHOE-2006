@@ -961,6 +961,15 @@ body:has(.m-splash) {
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+/* Portrait photos (the RECYCLE BIN's) show whole, not cropped to 4:3. */
+.m-photos--portrait img {
+  aspect-ratio: 3 / 4;
+}
+/* RECYCLE BIN: the folder path wraps on a phone instead of running off the side. */
+.m-recycle__path {
+  font-family: var(--mono-font);
+  overflow-wrap: anywhere;
+}
 .m-viewer {
   padding: 8px;
   background: #111;
@@ -1036,7 +1045,8 @@ body:has(.m-splash) {
   border-top: 1px solid #d6dde7;
 }
 .m-menu button,
-.m-menu a {
+.m-menu a,
+.m-menu__static {
   display: flex;
   align-items: center;
   gap: 10px;

@@ -6,6 +6,8 @@ import { RealSwitch } from '../components/os/RealSwitch';
 import { CRT, TransferDialog } from '../components/os/Overlays';
 import { brand } from '../data/assets';
 import { concept } from '../data/copy';
+import type { BinItem } from '../data/recycleBin';
+import { decorativeFilename } from '../lib/catalogue/format';
 import { useCatalogue } from '../lib/catalogue/load';
 import { play } from '../lib/sound';
 import { collectionTitle } from '../lib/useShopQuery';
@@ -19,12 +21,13 @@ import { VISIBLE_GAMES, gameMeta, type GameId } from '../games/registry';
 import { MBar, StatusBar, useCenterKey, type BarKey } from './mobile/chrome';
 import { MGames } from './mobile/games';
 import { MBag, MCamera, MChat, MFilters, MMenu } from './mobile/overlays';
+import { MRecycle } from './mobile/recycle';
 import { MFavorites, MHome, MList, MNotFound, MProduct, MSearch, MStores, type Overlay } from './mobile/screens';
 import '../styles/os.css';
 import '../styles/apps.css';
 import '../styles/mobile.css';
 
-const OVERLAY_TITLES: Record<Exclude<Overlay, null>, string> = { bag: 'MY BAG', camera: 'CAMERA', chat: 'MESSAGES', menu: 'MENU', filters: 'OPTIONS', games: 'GAMES' };
+const OVERLAY_TITLES: Record<Exclude<Overlay, null>, string> = { bag: 'MY BAG', camera: 'CAMERA', chat: 'MESSAGES', menu: 'MENU', filters: 'OPTIONS', games: 'GAMES', recycle: 'RECYCLE BIN' };
 
 /**
  * IYS MOBILE — an original 2005–07 mobile-internet shell (status bar, path
@@ -41,6 +44,8 @@ export default function MobileShell() {
   const markBoot = useSession((s) => s.markBoot);
   const [overlay, setOverlay] = useState<Overlay>(null);
   const [game, setGame] = useState<GameId | null>(null);
+  /** RECYCLE BIN: what's open inside it, from the top (folders, then the photo). */
+  const [bin, setBin] = useState<BinItem[]>([]);
   const [splash, setSplash] = useState(() => !useSession.getState().bootSeen && location.pathname === '/');
   const unread = usePjoysUnread();
   const [toast, setToast] = useState<string | null>(null);
@@ -84,6 +89,7 @@ export default function MobileShell() {
   const open = (o: Overlay) => {
     if (o === 'chat') useSession.getState().markPjoysRead();
     setGame(null);
+    setBin([]);
     setOverlay(o);
     content.current?.scrollTo(0, 0);
   };
@@ -96,7 +102,9 @@ export default function MobileShell() {
   const path = location.pathname;
   const home = path === '/' && !overlay;
   let title = 'IYS MOBILE';
+  const binLast = bin[bin.length - 1];
   if (overlay === 'games' && game) title = `IYS MOBILE › GAMES › ${gameMeta(game)?.title ?? ''}`;
+  else if (overlay === 'recycle' && binLast) title = `IYS MOBILE › RECYCLE BIN › ${binLast.kind === 'folder' ? binLast.name : decorativeFilename(binLast.title)}`;
   else if (overlay) title = `IYS MOBILE › ${OVERLAY_TITLES[overlay]}`;
   else if (path === '/shop') title = 'IYS MOBILE › SHOP';
   else if (path.startsWith('/collections/')) {
@@ -131,6 +139,7 @@ export default function MobileShell() {
   const back = () => {
     play('click');
     if (overlay === 'games' && game) return setGame(null);
+    if (overlay === 'recycle' && bin.length) return setBin(bin.slice(0, -1));
     if (overlay) return setOverlay(null);
     if ((window.history.state?.idx ?? 0) > 0) navigate(-1);
     else navigate('/');
@@ -226,6 +235,7 @@ export default function MobileShell() {
         {overlay === 'menu' && <MMenu close={() => setOverlay(null)} openOverlay={open} />}
         {overlay === 'filters' && <MFilters close={() => setOverlay(null)} />}
         {overlay === 'games' && <MGames game={game} setGame={setGame} close={() => setOverlay(null)} />}
+        {overlay === 'recycle' && <MRecycle trail={bin} setTrail={setBin} close={() => setOverlay(null)} />}
         <div className="m-routes" hidden={Boolean(overlay)}>
           <Routes>
             <Route path="/" element={<MHome />} />

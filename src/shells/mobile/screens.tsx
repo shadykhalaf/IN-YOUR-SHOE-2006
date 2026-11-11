@@ -39,7 +39,7 @@ import { usePreferences, useSession } from '../../state/preferences';
 import { play } from '../../lib/sound';
 import { useClaimCenter } from './chrome';
 
-export type Overlay = 'bag' | 'camera' | 'chat' | 'menu' | 'filters' | 'games' | null;
+export type Overlay = 'bag' | 'camera' | 'chat' | 'menu' | 'filters' | 'games' | 'recycle' | null;
 const PER = 24;
 
 function useTitle(t: string) {

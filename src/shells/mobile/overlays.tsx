@@ -176,7 +176,7 @@ export function MChat({ close }: { close: () => void }) {
   );
 }
 
-export function MMenu({ close, openOverlay }: { close: () => void; openOverlay: (o: 'camera' | 'chat' | 'games') => void }) {
+export function MMenu({ close, openOverlay }: { close: () => void; openOverlay: (o: 'camera' | 'chat' | 'games' | 'recycle') => void }) {
   const menu = useMenu(); // the store's own menu once loaded
   const cat = useCatalogue();
   const navigate = useNavigate();
@@ -212,6 +212,12 @@ export function MMenu({ close, openOverlay }: { close: () => void; openOverlay: 
           <button type="button" onClick={() => openOverlay('games')}>
             <Icon name="games" size={24} />
             <span>IYS GAMES · {VISIBLE_GAMES.length} GAMES</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" onClick={() => openOverlay('recycle')}>
+            <Icon name="recycle" size={24} />
+            <span>{concept.recycle.title}</span>
           </button>
         </li>
         <li>
