@@ -1,12 +1,10 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Icon } from '../../components/os/Icon';
 import { Window } from '../../components/os/Window';
 import { Pagination } from '../../components/shop/Pagination';
 import { Price } from '../../components/shop/Price';
 import { RemoteImage } from '../../components/shop/RemoteImage';
 import { WARDROBE, type Folder } from '../../data/taxonomy';
-import { withPhotos, type WardrobePhoto } from '../../data/wardrobePhotos';
-import { openViewer } from '../../lib/actions';
 import { collectionProducts } from '../../lib/catalogue/hydrate';
 import { decorativeFilename, formatCount } from '../../lib/catalogue/format';
 import { useCatalogue } from '../../lib/catalogue/load';
@@ -24,29 +22,6 @@ const findPath = (list: Folder[], id: string, trail: Folder[] = []): Folder[] | 
   }
   return null;
 };
-const openPhoto = (ph: WardrobePhoto) =>
-  openViewer([{ src: ph.src, full: ph.src, title: ph.title, filename: decorativeFilename(ph.title), alt: ph.alt, width: ph.width, height: ph.height }]);
-
-/**
- * How many columns the thumbnail grid has right now. It is CSS auto-fill, so this changes
- * with the window width. Pinned photos use it to land in their row and column. The last
- * count is kept while the grid is hidden (Details view), so both views list the same order.
- */
-function useGridColumns(grid: HTMLElement | null, fallback: number) {
-  const [columns, setColumns] = useState(fallback);
-  useLayoutEffect(() => {
-    if (!grid) return;
-    const read = () => {
-      const n = getComputedStyle(grid).gridTemplateColumns.split(/\s+/).filter((t) => t.endsWith('px')).length;
-      if (n) setColumns(n);
-    };
-    read();
-    const ro = new ResizeObserver(read);
-    ro.observe(grid);
-    return () => ro.disconnect();
-  }, [grid]);
-  return columns;
-}
 
 export default function Wardrobe({ win }: { win: Win }) {
   const cat = useCatalogue();
@@ -61,9 +36,6 @@ export default function Wardrobe({ win }: { win: Win }) {
   const subfolders = folder ? visible(folder.children ?? []) : visible(WARDROBE);
   const items = useMemo(() => (cat && folder ? collectionProducts(cat, folder.collection) : []), [cat, folder]);
   const pg = paginate(items, page, 48);
-  const [grid, setGrid] = useState<HTMLUListElement | null>(null);
-  const columns = useGridColumns(grid, 4);
-  const entries = folder ? withPhotos(pg.items, folder.collection, pg.page, columns) : [];
   const go = (id: string | null) => {
     setCurrent(id);
     setPage(1);
@@ -158,34 +130,20 @@ export default function Wardrobe({ win }: { win: Win }) {
                   </ul>
                 )}
                 {folder && view === 'thumbs' && (
-                  <ul className="files" ref={setGrid} aria-label={`${folder.label} items`}>
-                    {entries.map((e) =>
-                      e.kind === 'photo' ? (
-                        <li key={e.photo.id}>
-                          <button type="button" className="files__item" onClick={() => openPhoto(e.photo)} title={`${e.photo.title} - open`}>
-                            <span className="files__thumb">
-                              <img src={e.photo.thumb} alt="" width={96} height={128} loading="lazy" decoding="async" />
-                            </span>
-                            <span className="files__name" aria-hidden="true">
-                              {decorativeFilename(e.photo.title)}
-                            </span>
-                            <span className="files__title">{e.photo.title}</span>
-                          </button>
-                        </li>
-                      ) : (
-                        <li key={e.product.handle}>
-                          <button type="button" className="files__item" onClick={() => browse(productPath(e.product.handle))} title={`${e.product.title} - open`}>
-                            <span className="files__thumb">
-                              <RemoteImage src={e.product.image} alt="" title={e.product.title} base={180} sizes="96px" max={240} />
-                            </span>
-                            <span className="files__name" aria-hidden="true">
-                              {decorativeFilename(e.product.title)}
-                            </span>
-                            <span className="files__title">{e.product.title}</span>
-                          </button>
-                        </li>
-                      ),
-                    )}
+                  <ul className="files" aria-label={`${folder.label} items`}>
+                    {pg.items.map((p) => (
+                      <li key={p.handle}>
+                        <button type="button" className="files__item" onClick={() => browse(productPath(p.handle))} title={`${p.title} - open`}>
+                          <span className="files__thumb">
+                            <RemoteImage src={p.image} alt="" title={p.title} base={180} sizes="96px" max={240} />
+                          </span>
+                          <span className="files__name" aria-hidden="true">
+                            {decorativeFilename(p.title)}
+                          </span>
+                          <span className="files__title">{p.title}</span>
+                        </button>
+                      </li>
+                    ))}
                   </ul>
                 )}
                 {folder && view === 'details' && (
@@ -200,33 +158,20 @@ export default function Wardrobe({ win }: { win: Win }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {entries.map((e) =>
-                        e.kind === 'photo' ? (
-                          <tr key={e.photo.id}>
-                            <td>
-                              <button type="button" className="link" onClick={() => openPhoto(e.photo)}>
-                                <Icon name="image" size={16} /> {e.photo.title}
-                              </button>
-                            </td>
-                            <td>Photo</td>
-                            <td>-</td>
-                            <td>-</td>
-                          </tr>
-                        ) : (
-                          <tr key={e.product.handle}>
-                            <td>
-                              <button type="button" className="link" onClick={() => browse(productPath(e.product.handle))}>
-                                <Icon name="image" size={16} /> {e.product.title}
-                              </button>
-                            </td>
-                            <td>{e.product.productType ?? '-'}</td>
-                            <td>
-                              <Price price={e.product.price} compareAt={e.product.compareAtPrice} />
-                            </td>
-                            <td>{e.product.sizes.map((s) => s.label).join(', ') || '-'}</td>
-                          </tr>
-                        ),
-                      )}
+                      {pg.items.map((p) => (
+                        <tr key={p.handle}>
+                          <td>
+                            <button type="button" className="link" onClick={() => browse(productPath(p.handle))}>
+                              <Icon name="image" size={16} /> {p.title}
+                            </button>
+                          </td>
+                          <td>{p.productType ?? '-'}</td>
+                          <td>
+                            <Price price={p.price} compareAt={p.compareAtPrice} />
+                          </td>
+                          <td>{p.sizes.map((s) => s.label).join(', ') || '-'}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 )}

@@ -1467,6 +1467,11 @@ img.is-loading {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+/* A long path is cut at its start, so the folder you're in stays readable ("…\DONT OPEN\Please\"). */
+.explorer__address .input--tail {
+  direction: rtl;
+  text-align: left;
+}
 .explorer__split {
   flex: 1;
   min-height: 0;

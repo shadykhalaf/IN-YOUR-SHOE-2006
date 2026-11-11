@@ -155,45 +155,43 @@ test.describe('apps', () => {
     await expect(w.getByRole('button', { name: new RegExp(`PJOYS.*${pjoys} items`) }).first()).toBeVisible();
   });
 
-  test('wardrobe: Amr Throwback sits in row 3, column 3 of CREWNECKS at any window size and opens in the image viewer', async ({ page }) => {
+  test('recycle bin: Not Important › Really Not Important › DONT OPEN › Please › Amr Throwback opens in the image viewer', async ({ page }) => {
     await desktop(page);
+    await page.getByRole('button', { name: 'Open Recycle Bin' }).click();
+    const bin = page.getByRole('dialog', { name: 'RECYCLE BIN' });
+    const address = bin.locator('.explorer__address .input');
+    const up = bin.getByRole('button', { name: 'Up one folder' });
+    let path = 'C:\\IYS\\RECYCLE BIN\\';
+    await expect(address).toHaveText(path);
+    await expect(bin).toContainText('BORING_OUTFITS');
+    await expect(bin.locator('.statusbar')).toHaveText('2 objects');
+    await expect(up).toBeDisabled();
+    for (const name of ['Not Important', 'Really Not Important', 'DONT OPEN', 'Please']) {
+      await bin.getByRole('button', { name: new RegExp(`^${name}.*1 item$`) }).click();
+      path += `${name}\\`;
+      await expect(address).toHaveText(path);
+      await expect(bin.locator('.statusbar')).toHaveText('1 object');
+    }
+    const photo = bin.getByRole('button', { name: 'Amr Throwback' });
+    await expect(photo).toContainText('Amr_Throwback.jpg');
+    await expect(photo).toBeFocused(); // keyboard focus follows into each folder
+    await expect.poll(() => photo.locator('img').evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
+    await photo.click();
+    const viewer = page.getByRole('dialog', { name: 'Amr Throwback - image viewer' });
+    await expect(viewer).toContainText('Amr_Throwback.jpg - IYS IMAGE VIEWER');
+    await expect.poll(() => viewer.locator('.viewer__stage img').evaluate((i: HTMLImageElement) => i.naturalWidth)).toBe(960);
+    await viewer.getByRole('button', { name: /^Close/ }).click();
+    for (let i = 0; i < 4; i++) await up.click();
+    await expect(address).toHaveText('C:\\IYS\\RECYCLE BIN\\');
+    await expect(bin.locator('.statusbar')).toHaveText('2 objects');
+    await expect(up).toBeDisabled();
+    // it lives only here now: MY WARDROBE › CREWNECKS is back to the catalogue's tiles
     await page.getByRole('button', { name: /Open My Wardrobe/ }).click();
     const w = page.getByRole('dialog', { name: 'MY WARDROBE' });
     await w.getByRole('button', { name: /^CREWNECKS/ }).first().click();
-    const tiles = w.getByRole('list', { name: 'CREWNECKS items' }).getByRole('listitem');
-    const amr = tiles.filter({ hasText: 'Amr_Throwback.jpg' });
-    await expect(amr.getByRole('button', { name: 'Amr Throwback' })).toBeAttached();
-    // row and column as laid out on screen, plus its place in the list (keyboard order)
-    const cell = () =>
-      tiles.evaluateAll((els) => {
-        const boxes = els.map((e) => e.getBoundingClientRect());
-        const rows = [...new Set(boxes.map((b) => Math.round(b.top)))].sort((a, b) => a - b);
-        const cols = [...new Set(boxes.map((b) => Math.round(b.left)))].sort((a, b) => a - b);
-        const i = els.findIndex((e) => e.textContent?.includes('Amr_Throwback.jpg'));
-        return { row: rows.indexOf(Math.round(boxes[i]!.top)) + 1, column: cols.indexOf(Math.round(boxes[i]!.left)) + 1, columns: cols.length, index: i };
-      });
-    await expect.poll(cell).toMatchObject({ row: 3, column: 3 });
-    const normal = await cell();
-    expect(normal.columns).toBeGreaterThanOrEqual(3);
-    expect(normal.index).toBe(2 * normal.columns + 2);
-    // maximized: more columns, same cell
-    await w.getByRole('button', { name: 'Maximize MY WARDROBE' }).click();
-    await expect.poll(async () => (await cell()).columns).toBeGreaterThan(normal.columns);
-    await expect.poll(cell).toMatchObject({ row: 3, column: 3 });
-    const max = await cell();
-    expect(max.index).toBe(2 * max.columns + 2);
-    await amr.scrollIntoViewIfNeeded();
-    await expect.poll(() => amr.locator('img').evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
-    // the folder total stays the catalogue's
-    const idx = await import('./fixtures').then((m) => m.index);
-    const crew = idx.collections.find((c: { h: string }) => c.h === 'crewnecks').n;
-    await expect(tiles).toHaveCount(crew + 1);
-    await expect(w.locator('.statusbar')).toContainText(`${crew} objects`);
-    await amr.getByRole('button').click();
-    const viewer = page.getByRole('dialog', { name: 'Amr Throwback - image viewer' });
-    await expect(viewer).toContainText('Amr_Throwback.jpg - IYS IMAGE VIEWER');
-    await expect(viewer).toContainText('960 × 1280');
-    await expect.poll(() => viewer.locator('.viewer__stage img').evaluate((i: HTMLImageElement) => i.naturalWidth)).toBe(960);
+    const crew = (await import('./fixtures').then((m) => m.index)).collections.find((c: { h: string }) => c.h === 'crewnecks').n;
+    await expect(w.getByRole('list', { name: 'CREWNECKS items' }).getByRole('listitem')).toHaveCount(crew);
+    await expect(w).not.toContainText('Amr_Throwback.jpg');
   });
 
   test('control panel: tabs work by keyboard; catalogue facts are generated', async ({ page }) => {
