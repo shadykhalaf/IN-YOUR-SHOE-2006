@@ -233,7 +233,7 @@
     { k: "played",           label: "Played IYS or not",       note: "swiped at least one card" },
     { k: "invited_a_friend", label: "Invited a friend",        note: "copied their invite link" },
     { k: "password_tried",   label: "Tried the password",      note: "sent a word to the lock" },
-    { k: "password_ok",      label: "Got in",                  note: "the word was right" }
+    { k: "password_ok",      label: "Got in",                  note: "the word was right", per: "password_tried", perText: "of password tries were right" }
   ];
 
   function status(kind, text) {
@@ -246,9 +246,11 @@
     $("funnel").innerHTML = STEPS.map(function (s) {
       var n = f ? (f[s.k] || 0) : null;
       var pct = f && f.visits ? Math.round((n / base) * 100) : null;
+      var extra = "";
+      if (s.per && f && f[s.per]) extra = " &middot; " + (Math.round((n / f[s.per]) * 1000) / 10) + "% " + s.perText;
       return '<div class="step' + (s.side ? " side" : "") + '">' +
         '<div class="bar" style="width:' + (pct == null ? 0 : Math.min(100, pct)) + '%"></div>' +
-        '<div><span class="label">' + s.label + '</span><span class="note">' + s.note + '</span></div>' +
+        '<div><span class="label">' + s.label + '</span><span class="note">' + s.note + extra + '</span></div>' +
         '<div class="n">' + fmt(n) + '</div>' +
         '<div class="pct">' + (pct == null ? "" : pct + "%") + '</div>' +
         '</div>';
